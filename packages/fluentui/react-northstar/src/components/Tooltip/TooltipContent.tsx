@@ -1,7 +1,7 @@
 import { Accessibility } from '@fluentui/accessibility';
 import { getElementType, useUnhandledProps, useAccessibility, useStyles, useTelemetry } from '@fluentui/react-bindings';
 import * as customPropTypes from '@fluentui/react-proptypes';
-import Popper from 'popper.js';
+import { Placement } from '@popperjs/core';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 // @ts-ignore
@@ -107,7 +107,7 @@ TooltipContent.className = 'ui-tooltip__content';
 
 TooltipContent.propTypes = {
   ...commonPropTypes.createCommon(),
-  placement: PropTypes.oneOf<Popper.Placement>([
+  placement: PropTypes.oneOf<Placement>([
     'auto-start',
     'auto',
     'auto-end',

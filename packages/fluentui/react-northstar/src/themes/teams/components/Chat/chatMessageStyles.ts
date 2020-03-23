@@ -57,7 +57,7 @@ const chatMessageStyles: ComponentSlotStylesPrepared<ChatMessageStylesProps, Cha
           opacity: 1,
           width: 'auto',
 
-          '[x-out-of-boundaries]': {
+          '[data-popper-reference-hidden]': {
             opacity: 0,
           },
         },
@@ -106,7 +106,7 @@ const chatMessageStyles: ComponentSlotStylesPrepared<ChatMessageStylesProps, Cha
       width: v.showActionMenu ? 'auto' : 0,
     }),
 
-    '[x-out-of-boundaries]': {
+    '[data-popper-reference-hidden]': {
       opacity: 0,
     },
   }),
