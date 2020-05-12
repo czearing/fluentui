@@ -18,6 +18,7 @@ import {
   warnMutuallyExclusive,
 } from '../../Utilities';
 import { ITextField, ITextFieldProps, ITextFieldStyleProps, ITextFieldStyles } from './TextField.types';
+import { useId, useBoolean } from '@uifabric/react-hooks';
 
 const getClassNames = classNamesFunction<ITextFieldStyleProps, ITextFieldStyles>();
 
@@ -47,6 +48,99 @@ export interface ITextFieldSnapshot {
 
 const DEFAULT_STATE_VALUE = '';
 const COMPONENT_NAME = 'TextField';
+
+export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) => {
+  const textElement = React.useRef<HTMLTextAreaElement | HTMLInputElement>(null);
+  const fallbackId = useId(COMPONENT_NAME);
+  const descriptionId = useId(COMPONENT_NAME + 'Description');
+  const labelId = useId(COMPONENT_NAME + 'Label');
+  const delayedValidate: (value: string | undefined) => void;
+  const lastValidation = 0;
+  let { defaultValue = DEFAULT_STATE_VALUE } = props;
+  if (typeof defaultValue === 'number') {
+    // This isn't allowed per the props, but happens anyway.
+    defaultValue = String(defaultValue);
+  }
+  const [uncontrolledValue, setUncontrolledValue] = React.useState(isControlled ? undefined : defaultValue);
+  const [isFocused] = useBoolean(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  const {
+    borderless,
+    className,
+    disabled,
+    iconProps,
+    inputClassName,
+    label,
+    multiline,
+    required,
+    underlined,
+    prefix,
+    resizable,
+    suffix,
+    theme,
+    styles,
+    autoAdjustHeight,
+    // onRenderPrefix = onRenderPrefix,
+    // onRenderSuffix = onRenderSuffix,
+    // onRenderLabel = onRenderLabel,
+    // onRenderDescription = onRenderDescription,
+  } = props;
+  const classNames = getClassNames(styles!, {
+    theme: theme!,
+    className,
+    disabled,
+    focused: isFocused,
+    required,
+    multiline,
+    hasLabel: !!label,
+    hasErrorMessage: !!errorMessage,
+    borderless,
+    resizable,
+    hasIcon: !!iconProps,
+    underlined,
+    inputClassName,
+    autoAdjustHeight,
+  });
+  if (process.env.NODE_ENV !== 'production') {
+    warnMutuallyExclusive(COMPONENT_NAME, props, {
+      errorMessage: 'onGetErrorMessage',
+    });
+  }
+  warnControlledUsage();
+
+  return (
+    <div className={classNames.root}>
+      <div className={classNames.wrapper}>
+        {onRenderLabel(props, onRenderLabel)}
+        <div className={classNames.fieldGroup}>
+          {(prefix !== undefined || props.onRenderPrefix) && (
+            <div className={classNames.prefix}>{onRenderPrefix(props, onRenderPrefix)}</div>
+          )}
+          {multiline ? renderTextArea() : renderInput()}
+          {iconProps && <Icon className={classNames.icon} {...iconProps} />}
+          {(suffix !== undefined || props.onRenderSuffix) && (
+            <div className={classNames.suffix}>{onRenderSuffix(props, onRenderSuffix)}</div>
+          )}
+        </div>
+      </div>
+      {isDescriptionAvailable && (
+        <span id={descriptionId}>
+          {onRenderDescription(props, onRenderDescription)}
+          {errorMessage && (
+            <div role="alert">
+              <DelayedRender>
+                <p className={classNames.errorMessage}>
+                  <span data-automation-id="error-message">{errorMessage}</span>
+                </p>
+              </DelayedRender>
+            </div>
+          )}
+        </span>
+      )}
+    </div>
+  );
+};
 
 export class TextFieldBase extends React.Component<ITextFieldProps, ITextFieldState, ITextFieldSnapshot>
   implements ITextField {
@@ -151,19 +245,15 @@ export class TextFieldBase extends React.Component<ITextFieldProps, ITextFieldSt
     if (prevValue !== value) {
       // Handle controlled/uncontrolled warnings and status
       this._warnControlledUsage(prevProps);
-
       // Clear error message if needed
       // TODO: is there any way to do this without an extra render?
       if (this.state.errorMessage && !props.errorMessage) {
         this.setState({ errorMessage: '' });
       }
-
       // Adjust height if needed based on new value
       this._adjustInputHeight();
-
       // Reset the record of the last value seen by a change/input event
       this._lastChangeValue = undefined;
-
       // TODO: #5875 added logic to trigger validation in componentWillReceiveProps and other places.
       // This seems a bit odd and hard to integrate with the new approach.
       // (Starting to think we should just put the validation logic in a separate wrapper component...?)
