@@ -48,6 +48,51 @@ export interface ITextFieldSnapshot {
 
 const DEFAULT_STATE_VALUE = '';
 const COMPONENT_NAME = 'TextField';
+const onRenderStyles = { paddingBottom: '1px' };
+
+// const useComponentRef = (
+//   props: ITextFieldProps,
+//   textElement: React.RefObject<ITextField>,
+//   value: number
+// ) => {
+//   React.useImperativeHandle(
+//     props.componentRef,
+//     () => ({
+//       get value() {
+//         return value;
+//       }
+//       focus() {
+//         if (textElement.current) {
+//           textElement.current.focus();
+//           textElement.current.select();
+//           textElement.current.blur();
+//           textElement.current.selectionStart = value;
+//           textElement.current.selectionEnd = value;
+
+//         }
+//       },
+//     }),
+//     [value],
+//   );
+// };
+
+/**
+ * If `validateOnFocusIn` or `validateOnFocusOut` is true, validation should run **only** on that event.
+ * Otherwise, validation should run on every change.
+ */
+
+const getValue = (props: ITextFieldProps, uncontrolledValue): string | undefined => {
+  const { value = uncontrolledValue } = props;
+  if (typeof value === 'number') {
+    // not allowed per typings, but happens anyway
+    return String(value);
+  }
+  return value;
+};
+
+const shouldValidateAllChanges = (props: ITextFieldProps): boolean => {
+  return !(props.validateOnFocusIn || props.validateOnFocusOut);
+};
 
 export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) => {
   const textElement = React.useRef<HTMLTextAreaElement | HTMLInputElement>(null);
@@ -61,8 +106,10 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
     // This isn't allowed per the props, but happens anyway.
     defaultValue = String(defaultValue);
   }
-  const [uncontrolledValue, setUncontrolledValue] = React.useState(isControlled ? undefined : defaultValue);
-  const [isFocused] = useBoolean(false);
+  const [uncontrolledValue, setUncontrolledValue] = React.useState(
+    isControlled(props, 'value') ? undefined : defaultValue,
+  );
+  const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
   const {
@@ -107,35 +154,209 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
       errorMessage: 'onGetErrorMessage',
     });
   }
-  warnControlledUsage();
+
+  const onFocus = (ev: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    if (props.onFocus) {
+      props.onFocus(ev);
+    }
+    toggleIsFocused();
+    if (props.validateOnFocusIn) {
+      validate(getValue(props, uncontrolledValue));
+    }
+  };
+
+  const onBlur = (ev: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    if (props.onBlur) {
+      props.onBlur(ev);
+    }
+    toggleIsFocused();
+    if (props.validateOnFocusOut) {
+      validate(getValue(props, uncontrolledValue));
+    }
+  };
+
+  const onRenderLabel = (): JSX.Element | null => {
+    // IProcessedStyleSet definition requires casting for what Label expects as its styles prop
+    const labelStyles = classNames.subComponentStyles
+      ? (classNames.subComponentStyles.label as IStyleFunctionOrObject<ILabelStyleProps, ILabelStyles>)
+      : undefined;
+
+    if (label) {
+      return (
+        <Label
+          required={required}
+          htmlFor={props.id || fallbackId}
+          styles={labelStyles}
+          disabled={props.disabled}
+          id={labelId}
+        >
+          {props.label}
+        </Label>
+      );
+    }
+    return null;
+  };
+
+  const onRenderDescription = (): JSX.Element | null => {
+    if (props.description) {
+      return <span className={classNames.description}>{props.description}</span>;
+    }
+    return null;
+  };
+
+  const onRenderPrefix = (): JSX.Element => {
+    return <span style={onRenderStyles}>{prefix}</span>;
+  };
+
+  const onRenderSuffix = (): JSX.Element => {
+    return <span style={onRenderStyles}>{suffix}</span>;
+  };
+
+  /**
+   * Current error message from either `props.errorMessage` or the result of `props.onGetErrorMessage`.
+   *
+   * - If there is no validation error or we have not validated the input value, errorMessage is an empty string.
+   * - If we have done the validation and there is validation error, errorMessage is the validation error message.
+   */
+  const currentErrorMessage = (): string | JSX.Element => {
+    return errorMessage || '';
+  };
+
+  /**
+   * If a custom description render function is supplied then treat description as always available.
+   * Otherwise defer to the presence of description or error message text.
+   */
+  const isDescriptionAvailable = (): boolean => {
+    return !!(props.onRenderDescription || props.description || errorMessage || '');
+  };
+
+  const renderTextArea = (): React.ReactElement<React.HTMLAttributes<HTMLAreaElement>> => {
+    const textAreaProps = getNativeProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>>(props, textAreaProperties, [
+      'defaultValue',
+    ]);
+    const ariaLabelledBy = props['aria-labelledby'] || (props.label ? labelId : undefined);
+    return (
+      <textarea
+        id={props.id || fallbackId}
+        {...textAreaProps}
+        ref={textElement as React.RefObject<HTMLTextAreaElement>}
+        value={getValue(props, uncontrolledValue) || ''}
+        onInput={onInputChange}
+        onChange={onInputChange}
+        className={classNames.field}
+        aria-labelledby={ariaLabelledBy}
+        aria-describedby={isDescriptionAvailable ? descriptionId : props['aria-describedby']}
+        aria-invalid={!!errorMessage}
+        aria-label={props.ariaLabel}
+        readOnly={props.readOnly}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
+    );
+  };
+
+  const renderInput = (): React.ReactElement<React.HTMLAttributes<HTMLInputElement>> => {
+    const inputProps = getNativeProps<React.HTMLAttributes<HTMLInputElement>>(props, inputProperties, ['defaultValue']);
+    const ariaLabelledBy = props['aria-labelledby'] || (props.label ? labelId : undefined);
+    return (
+      <input
+        type={'text'}
+        id={props.id || fallbackId}
+        aria-labelledby={ariaLabelledBy}
+        {...inputProps}
+        ref={textElement as React.RefObject<HTMLInputElement>}
+        value={getValue(props, uncontrolledValue) || ''}
+        onInput={onInputChange}
+        onChange={onInputChange}
+        className={classNames.field}
+        aria-label={props.ariaLabel}
+        aria-describedby={isDescriptionAvailable ? descriptionId : props['aria-describedby']}
+        aria-invalid={!!errorMessage}
+        readOnly={props.readOnly}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
+    );
+  };
+
+  const adjustInputHeight = (): void => {
+    if (textElement.current && props.autoAdjustHeight && props.multiline) {
+      const textField = textElement.current;
+      textField.style.height = '';
+      textField.style.height = textField.scrollHeight + 'px';
+    }
+  };
+
+  const onInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    // Previously, we needed to call both onInput and onChange due to some weird IE/React issues,
+    // which have *probably* been fixed now:
+    // - https://github.com/microsoft/fluentui/issues/744 (likely fixed)
+    // - https://github.com/microsoft/fluentui/issues/824 (confirmed fixed)
+
+    // TODO (Fabric 8?) - Switch to calling only onChange. This switch is pretty disruptive for
+    // tests (ours and maybe consumers' too), so it seemed best to do the switch in a major bump.
+
+    const element = event.target as HTMLInputElement;
+    const value = element.value;
+    // Ignore this event if the value is undefined (in case one of the IE bugs comes back)
+    if (value === undefined || value === lastChangeValue) {
+      return;
+    }
+    lastChangeValue = value;
+
+    // This is so developers can access the event properties in asynchronous callbacks
+    // https://reactjs.org/docs/events.html#event-pooling
+    event.persist();
+    let isSameValue: boolean;
+    this.setState(
+      (prevState: ITextFieldState, props: ITextFieldProps) => {
+        const prevValue = getValue(props, prevState) || '';
+        isSameValue = value === prevValue;
+        // Avoid doing unnecessary work when the value has not changed.
+        if (isSameValue) {
+          return null;
+        }
+
+        // ONLY if this is an uncontrolled component, update the displayed value.
+        // (Controlled components must update the `value` prop from `onChange`.)
+        return isControlled ? null : { uncontrolledValue: value };
+      },
+      () => {
+        // If the value actually changed, call onChange (for either controlled or uncontrolled)
+        const { onChange } = this.props;
+        if (!isSameValue && onChange) {
+          onChange(event, value);
+        }
+      },
+    );
+  };
+
+  // warnControlledUsage();
 
   return (
     <div className={classNames.root}>
       <div className={classNames.wrapper}>
-        {onRenderLabel(props, onRenderLabel)}
+        {onRenderLabel}
         <div className={classNames.fieldGroup}>
-          {(prefix !== undefined || props.onRenderPrefix) && (
-            <div className={classNames.prefix}>{onRenderPrefix(props, onRenderPrefix)}</div>
-          )}
+          {(prefix !== undefined || props.onRenderPrefix) && <div className={classNames.prefix}>{onRenderPrefix}</div>}
           {multiline ? renderTextArea() : renderInput()}
           {iconProps && <Icon className={classNames.icon} {...iconProps} />}
-          {(suffix !== undefined || props.onRenderSuffix) && (
-            <div className={classNames.suffix}>{onRenderSuffix(props, onRenderSuffix)}</div>
-          )}
+          {(suffix !== undefined || props.onRenderSuffix) && <div className={classNames.suffix}>{onRenderSuffix}</div>}
         </div>
       </div>
       {isDescriptionAvailable && (
         <span id={descriptionId}>
-          {onRenderDescription(props, onRenderDescription)}
-          {errorMessage && (
-            <div role="alert">
-              <DelayedRender>
-                <p className={classNames.errorMessage}>
-                  <span data-automation-id="error-message">{errorMessage}</span>
-                </p>
-              </DelayedRender>
-            </div>
-          )}
+          {onRenderDescription}
+          {errorMessage ||
+            ('' && (
+              <div role="alert">
+                <DelayedRender>
+                  <p className={classNames.errorMessage || ''}>
+                    <span data-automation-id="error-message">{errorMessage || ''}</span>
+                  </p>
+                </DelayedRender>
+              </div>
+            ))}
         </span>
       )}
     </div>
