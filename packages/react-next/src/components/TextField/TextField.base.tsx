@@ -91,15 +91,14 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
   let lastChangeValue: string | undefined = undefined;
   let lastValidation = 0;
   let { defaultValue = DEFAULT_STATE_VALUE } = props;
-  // const [start, end] = selection;
   if (typeof defaultValue === 'number') {
     // This isn't allowed per the props, but happens anyway.
     defaultValue = String(defaultValue);
   }
+
   const [uncontrolledValue, setUncontrolledValue] = React.useState(
     isControlled(props, 'value') ? undefined : defaultValue,
   );
-
   const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
   const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>('');
 
@@ -169,11 +168,13 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
     required,
     underlined,
     prefix,
-    resizable,
+    resizable = true,
     suffix,
     theme,
     styles,
     autoAdjustHeight,
+    deferredValidationTime = 200,
+    validateOnLoad = true,
     onRenderPrefix = renderPrefix,
     onRenderSuffix = renderSuffix,
     onRenderLabel = renderLabel,
@@ -366,7 +367,7 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
     };
   };
 
-  useComponentRef(props, textElement, getValue());
+  // useComponentRef(props, textElement, getValue());
   // warnControlledUsage();
 
   return (
