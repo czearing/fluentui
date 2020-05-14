@@ -50,48 +50,35 @@ const DEFAULT_STATE_VALUE = '';
 const COMPONENT_NAME = 'TextField';
 const onRenderStyles = { paddingBottom: '1px' };
 
-const useComponentRef = (
-  props: ITextFieldProps,
-  textElement: React.RefObject<ITextField>,
-  value: string | undefined,
-) => {
-  React.useImperativeHandle(
-    props.componentRef,
-    () => ({
-      get value() {
-        return value;
-      },
-      focus() {
-        if (textElement.current) {
-          textElement.current.focus();
-          textElement.current.select();
-          textElement.current.blur();
-          textElement.current.selectionStart = value;
-          textElement.current.selectionEnd = value;
-        }
-      },
-    }),
-    [value],
-  );
-};
-
-/**
- * If `validateOnFocusIn` or `validateOnFocusOut` is true, validation should run **only** on that event.
- * Otherwise, validation should run on every change.
- */
-
-const getValue = (props: ITextFieldProps, prevState: any): string | undefined => {
-  const { value = prevState } = props;
-  if (typeof value === 'number') {
-    // not allowed per typings, but happens anyway
-    return String(value);
-  }
-  return value;
-};
-
-const shouldValidateAllChanges = (props: ITextFieldProps): boolean => {
-  return !(props.validateOnFocusIn || props.validateOnFocusOut);
-};
+// const useComponentRef = (
+//   props: ITextFieldProps,
+//   textElement: React.RefObject<ITextField>,
+//   value: string | undefined,
+//   // start: number,
+//   // end: number,
+// ) => {
+//   React.useImperativeHandle(
+//     props.componentRef,
+//     () => ({
+//       get value() {
+//         return value;
+//       },
+//       focus() {
+//         textElement.current ? textElement.current.selectionStart : -1,
+//         textElement.current ? textElement.current.selectionEnd : -1,
+//         if (textElement.current) {
+//           textElement.current.focus();
+//           textElement.current.select();
+//           textElement.current.blur();
+//           textElement.current.selectionStart = value;
+//           textElement.current.selectionEnd = value;
+//           // (textElement.current as HTMLInputElement).setSelectionRange(start, end);
+//         },
+//       },
+//     }),
+//     [value],
+//   );
+// };
 
 export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) => {
   const textElement = React.useRef(null);
@@ -104,6 +91,7 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
   let lastChangeValue: string | undefined = undefined;
   let lastValidation = 0;
   let { defaultValue = DEFAULT_STATE_VALUE } = props;
+  // const [start, end] = selection;
   if (typeof defaultValue === 'number') {
     // This isn't allowed per the props, but happens anyway.
     defaultValue = String(defaultValue);
@@ -113,7 +101,16 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
   );
 
   const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>('');
+
+  const getValue = (): string | undefined => {
+    const { value = uncontrolledValue } = props;
+    if (typeof value === 'number') {
+      // not allowed per typings, but happens anyway
+      return String(value);
+    }
+    return value;
+  };
 
   const renderLabel = (): JSX.Element | null => {
     // IProcessedStyleSet definition requires casting for what Label expects as its styles prop
@@ -150,6 +147,15 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
 
   const renderSuffix = (): JSX.Element => {
     return <span style={onRenderStyles}>{suffix}</span>;
+  };
+
+  /**
+   * If `validateOnFocusIn` or `validateOnFocusOut` is true, validation should run **only** on that event.
+   * Otherwise, validation should run on every change.
+   */
+
+  const shouldValidateAllChanges = (): boolean => {
+    return !(props.validateOnFocusIn || props.validateOnFocusOut);
   };
 
   const {
@@ -197,38 +203,38 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
     });
   }
 
-  const validate = (value: string | undefined): void => {
+  const validate = (): void => {
     // In case _validate is called again while validation promise is executing
-    if (latestValidateValue === value && shouldValidateAllChanges(props)) {
+    if (latestValidateValue === getValue() && shouldValidateAllChanges()) {
       return;
     }
-    latestValidateValue = value;
+
+    latestValidateValue = getValue();
     const onGetErrorMessage = props.onGetErrorMessage;
-    const result = onGetErrorMessage && onGetErrorMessage(value || '');
+    const result = onGetErrorMessage && onGetErrorMessage(getValue() || '');
 
     if (result !== undefined) {
       if (typeof result === 'string' || !('then' in result)) {
         setErrorMessage(result);
-        notifyAfterValidate(value, result);
+        notifyAfterValidate(result);
       } else {
         const currentValidation: number = ++lastValidation;
 
-        result.then((errorMessageProp: string | JSX.Element) => {
+        result.then((errorMessageValue: string | JSX.Element) => {
           if (currentValidation === lastValidation) {
-            setErrorMessage(errorMessageProp);
-            // this.setState({ errorMessage });
+            setErrorMessage(errorMessageValue);
           }
-          notifyAfterValidate(value, errorMessage);
+          notifyAfterValidate(errorMessage);
         });
       }
     } else {
-      notifyAfterValidate(value, '');
+      notifyAfterValidate('');
     }
   };
 
-  const notifyAfterValidate = (valueProp: string | undefined, errorMessageProp: string | JSX.Element): void => {
-    if (valueProp === getValue(props, prevState) || ('' && props.onNotifyValidationResult)) {
-      props.onNotifyValidationResult(errorMessageProp, valueProp);
+  const notifyAfterValidate = (errorMessageProp: string | JSX.Element): void => {
+    if (getValue() && props.onNotifyValidationResult) {
+      props.onNotifyValidationResult(errorMessageProp, getValue());
     }
   };
 
@@ -238,7 +244,7 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
     }
     toggleIsFocused();
     if (props.validateOnFocusIn) {
-      validate(getValue(props, prevState));
+      validate();
     }
   };
 
@@ -248,7 +254,7 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
     }
     toggleIsFocused();
     if (props.validateOnFocusOut) {
-      validate(getValue(props, prevState));
+      validate();
     }
   };
 
@@ -270,7 +276,7 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
         id={props.id || fallbackId}
         {...textAreaProps}
         ref={textElement as React.RefObject<HTMLTextAreaElement>}
-        value={getValue(props, prevState) || ''}
+        value={getValue() || ''}
         onInput={onInputChange}
         onChange={onInputChange}
         className={classNames.field}
@@ -295,7 +301,7 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
         aria-labelledby={ariaLabelledBy}
         {...inputProps}
         ref={textElement as React.RefObject<HTMLInputElement>}
-        value={getValue(props, prevState) || ''}
+        value={getValue() || ''}
         onInput={onInputChange}
         onChange={onInputChange}
         className={classNames.field}
@@ -339,13 +345,17 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
     event.persist();
     let isSameValue: boolean;
 
-    (prevState: ITextFieldState) => {
-      const prevValue = getValue(props, prevState) || '';
+    () => {
+      const prevValue = getValue() || '';
       isSameValue = value === prevValue;
+      // Avoid doing unnecessary work when the value has not changed.
       if (isSameValue) {
         return null;
       }
-      return isControlled ? null : { uncontrolledValue: value };
+
+      // ONLY if this is an uncontrolled component, update the displayed value.
+      // (Controlled components must update the `value` prop from `onChange`.)
+      return isControlled ? null : setUncontrolledValue(value);
     };
     () => {
       // If the value actually changed, call onChange (for either controlled or uncontrolled)
@@ -356,7 +366,7 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
     };
   };
 
-  useComponentRef(props, textElement, getValue(props, prevState));
+  useComponentRef(props, textElement, getValue());
   // warnControlledUsage();
 
   return (
