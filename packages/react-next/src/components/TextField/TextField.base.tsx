@@ -91,6 +91,7 @@ export const TextFieldBase: React.FunctionComponent = (props: ITextFieldProps) =
   let lastChangeValue: string | undefined = undefined;
   let lastValidation = 0;
   let { defaultValue = DEFAULT_STATE_VALUE } = props;
+
   if (typeof defaultValue === 'number') {
     // This isn't allowed per the props, but happens anyway.
     defaultValue = String(defaultValue);
