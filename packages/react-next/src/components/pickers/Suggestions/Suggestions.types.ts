@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { IRefObject, IRenderFunction, KeyCodes, IStyleFunctionOrObject } from '../../../Utilities';
-import { IPersonaProps } from '../../Persona/Persona.types';
+import { IPersonaProps } from 'office-ui-fabric-react/src/components/Persona/Persona.types';
 import { IStyle, ITheme } from '../../../Styling';
-import { ISpinnerStyleProps } from '../../Spinner/Spinner.types';
+import { ISpinnerStyleProps } from 'office-ui-fabric-react/src/components/Spinner/Spinner.types';
 import { ISuggestionItemProps } from './SuggestionsItem.types';
 
 /**
