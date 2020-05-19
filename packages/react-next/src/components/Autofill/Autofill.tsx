@@ -30,19 +30,40 @@ const SELECTION_BACKWARD = 'backward';
 //   );
 // };
 
-// const useComponentRef = (props: IAutofillProps, inputElement: React.RefObject<HTMLInputElement>) => {
-//   React.useImperativeHandle(
-//     props.componentRef,
-//     () => ({
-//       focus() {
-//         if (inputElement.current) {
-//           inputElement.current.focus();
-//         }
-//       },
-//     }),
-//     [],
-//   );
-// };
+const useComponentRef = (
+  props: IAutofillProps,
+  inputElement: React.RefObject<HTMLInputElement>,
+  autoFillEnabled: boolean,
+  updateValue: any,
+) => {
+  React.useImperativeHandle(
+    props.componentRef,
+    () => ({
+      focus() {
+        if (inputElement.current) {
+          inputElement.current.focus();
+        }
+      },
+      clear() {
+        autoFillEnabled = true;
+        updateValue('', false);
+        inputElement.current && inputElement.current.setSelectionRange(0, 0);
+      },
+      cursorLocation() {
+        if (inputElement.current) {
+          if (inputElement.current.selectionDirection !== SELECTION_FORWARD) {
+            return inputElement.current.selectionEnd;
+          } else {
+            return inputElement.current.selectionStart;
+          }
+        } else {
+          return -1;
+        }
+      },
+    }),
+    [],
+  );
+};
 
 const COMPONENT_NAME = 'Autofill';
 
@@ -53,24 +74,6 @@ export const Autofill = (props: IAutofillProps) => {
   let value: string = props.defaultVisibleValue || '';
   let autoFillEnabled = true;
   let isComposing: boolean = false;
-
-  const cursorLocation = (): number | null => {
-    if (inputElement.current) {
-      if (inputElement.current.selectionDirection !== SELECTION_FORWARD) {
-        return inputElement.current.selectionEnd;
-      } else {
-        return inputElement.current.selectionStart;
-      }
-    } else {
-      return -1;
-    }
-  };
-
-  const clear = () => {
-    autoFillEnabled = true;
-    updateValue('', false);
-    inputElement.current && inputElement.current.setSelectionRange(0, 0);
-  };
 
   // Composition events are used when the character/text requires several keystrokes to be completed.
   // Some examples of this are mobile text input and langauges like Japanese or Arabic.
@@ -193,8 +196,9 @@ export const Autofill = (props: IAutofillProps) => {
 
   /**
    * Updates the current input value as well as getting a new display value.
-   * @param newValue - The new value from the input
+
    */
+
   const updateValue = (newValue: string, composing: boolean) => {
     // Only proceed if the value is nonempty and is different from the old value
     // This is to work around the fact that, in IE 11, inputs with a placeholder fire an onInput event on focus
@@ -277,6 +281,7 @@ export const Autofill = (props: IAutofillProps) => {
     }
   }
 
+  useComponentRef(props, inputElement, autoFillEnabled, updateValue());
   const nativeProps = getNativeProps<React.InputHTMLAttributes<HTMLInputElement>>(props, inputProperties);
 
   return (
