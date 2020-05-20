@@ -260,7 +260,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     }
     return delta;
   };
-
+  //
   const onEnterKeyboardMoveMode = () => {
     lastSetX = x;
     lastSetY = y;
