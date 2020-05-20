@@ -138,7 +138,9 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
     }
     props.checked, props.defaultChecked, props.onChange;
     const [uncontrolledValue, setUncontrolledValue] = useControllableValue(
-      isControlled(props, 'value') ? undefined : defaultValue,
+      isControlled(props, 'value'),
+      props.defaultValue,
+      props.onChange,
     );
     const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
     const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>('');
@@ -415,6 +417,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       }
     };
 
+    useWarnControlledUsage();
     if (process.env.NODE_ENV !== 'production') {
       warnMutuallyExclusive(COMPONENT_NAME, props, {
         errorMessage: 'onGetErrorMessage',
@@ -422,7 +425,6 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
     }
 
     useComponentRef(props, textElement, getValue());
-    useWarnControlledUsage();
 
     return (
       <div className={classNames.root} ref={ref}>
