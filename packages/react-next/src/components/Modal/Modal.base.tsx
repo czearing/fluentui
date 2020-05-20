@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   classNamesFunction,
-  getId,
   allowScrollOnElement,
   allowOverscrollOnElement,
   KeyCodes,
@@ -41,9 +40,9 @@ export interface IDialogState {
 const getClassNames = classNamesFunction<IModalStyleProps, IModalStyles>();
 const COMPONENT_NAME = 'Modal';
 
-export const ModalBase = (props: IModalProps) => {
+export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const focusTrapZone = React.useRef<IFocusTrapZone>(null);
-  const [id, setId] = React.useState(getId('Modal'));
+  // const [id, setId] = React.useState(getId('Modal'));
   const [isModalMenuOpen, setIsModalMenuOpen] = React.useState();
   const [isInKeyboardMoveMode, setisInKeyboardMoveMode] = React.useState();
   const [modalRectangleTop, setModalRectangleTop] = React.useState();
@@ -389,6 +388,6 @@ export const ModalBase = (props: IModalProps) => {
         </Layer>
       );
     }
-    return null;
   }
+  return null;
 };

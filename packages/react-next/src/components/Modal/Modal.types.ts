@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ModalBase } from './Modal.base';
 import { IWithResponsiveModeState } from 'office-ui-fabric-react/lib/utilities/decorators/withResponsiveMode';
 import { IAccessiblePopupProps } from '../../common/IAccessiblePopupProps';
 import { IStyle, ITheme } from '../../Styling';
@@ -50,7 +49,7 @@ export interface IModal {
 /**
  * {@docCategory Modal}
  */
-export interface IModalProps extends React.ClassAttributes<ModalBase>, IWithResponsiveModeState, IAccessiblePopupProps {
+export interface IModalProps extends IWithResponsiveModeState, IAccessiblePopupProps {
   /**
    * Optional callback to access the IDialog interface. Use this instead of ref for accessing
    * the public methods and properties of the component.

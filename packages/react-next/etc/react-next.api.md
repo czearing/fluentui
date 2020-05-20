@@ -360,7 +360,7 @@ export interface IModal {
 }
 
 // @public (undocumented)
-export interface IModalProps extends React.ClassAttributes<ModalBase>, IWithResponsiveModeState, IAccessiblePopupProps {
+export interface IModalProps extends IWithResponsiveModeState, IAccessiblePopupProps {
     allowTouchBodyScroll?: boolean;
     className?: string;
     componentRef?: IRefObject<IModal>;
@@ -1001,23 +1001,7 @@ export const MeasuredContext: React.Context<{
 export const Modal: React.FunctionComponent<IModalProps>;
 
 // @public (undocumented)
-export class ModalBase extends React.Component<IModalProps, IDialogState> implements IModal {
-    constructor(props: IModalProps);
-    // (undocumented)
-    componentDidMount(): void;
-    // (undocumented)
-    componentDidUpdate(prevProps: IModalProps, prevState: IDialogState): void;
-    // (undocumented)
-    componentWillUnmount(): void;
-    // (undocumented)
-    static defaultProps: IModalProps;
-    // (undocumented)
-    focus(): void;
-    // (undocumented)
-    render(): JSX.Element | null;
-    // (undocumented)
-    UNSAFE_componentWillReceiveProps(newProps: IModalProps): void;
-}
+export const ModalBase: (props: React.PropsWithChildren<IModalProps>) => JSX.Element | null;
 
 // @public (undocumented)
 export const ONKEYDOWN_TIMEOUT_DURATION = 1000;
