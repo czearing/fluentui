@@ -8,23 +8,33 @@ import { IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import { IButtonProps as IButtonProps_2 } from 'office-ui-fabric-react/lib/components/Button/Button.types';
 import { IButtonStyles } from 'office-ui-fabric-react/lib/Button';
 import { IComponentAs } from 'office-ui-fabric-react/lib/Utilities';
+import { ICustomizerContext } from 'office-ui-fabric-react/lib/Utilities';
 import { IFocusZoneProps } from '@fluentui/react-focus';
 import { IIconProps } from 'office-ui-fabric-react/lib/Icon';
 import { IKeytipProps } from 'office-ui-fabric-react/lib/Keytip';
 import { IRefObject } from 'office-ui-fabric-react/lib/Utilities';
 import { IRenderFunction } from 'office-ui-fabric-react/lib/Utilities';
+import { ISettings } from 'office-ui-fabric-react/lib/Utilities';
+import { ISettingsFunction } from 'office-ui-fabric-react/lib/Utilities';
 import { IStyle } from 'office-ui-fabric-react/lib/Styling';
 import { IStyleFunctionOrObject } from 'office-ui-fabric-react/lib/Utilities';
 import { IStyleSet } from 'office-ui-fabric-react/lib/Styling';
 import { ITheme } from 'office-ui-fabric-react/lib/Styling';
 import { Position } from 'office-ui-fabric-react/lib/utilities/positioning';
 import * as React from 'react';
+import { ThemeProviderProps } from '@fluentui/react-theme-provider';
 
 // @public (undocumented)
 export const Checkbox: React.FunctionComponent<ICheckboxProps>;
 
 // @public (undocumented)
 export const CheckboxBase: React.ForwardRefExoticComponent<ICheckboxProps & React.RefAttributes<HTMLDivElement>>;
+
+// @public
+export const Customizer: React.FunctionComponent<ICustomizerProps>;
+
+// @public (undocumented)
+export const DEFAULT_MASK_CHAR = "_";
 
 // @public (undocumented)
 export const DEFAULT_MASK_CHAR = "_";
@@ -115,6 +125,14 @@ export interface ICheckboxStyles {
 }
 
 // @public (undocumented)
+export interface ICustomizerProps {
+    contextTransform?: (context: Readonly<ICustomizerContext>) => ICustomizerContext;
+    disableThemeProvider?: boolean;
+    scopedSettings?: ISettings | ISettingsFunction;
+    settings?: ISettings | ISettingsFunction;
+}
+
+// @public (undocumented)
 export interface IFabricProps extends React.HTMLAttributes<HTMLDivElement> {
     applyTheme?: boolean;
     applyThemeToBody?: boolean;
@@ -194,6 +212,79 @@ export interface IImageStyleProps {
 // @public (undocumented)
 export interface IImageStyles {
     image: IStyle;
+    root: IStyle;
+}
+
+// @public (undocumented)
+export interface ILink {
+    focus(): void;
+}
+
+// @public (undocumented)
+export interface ILinkHTMLAttributes<T> extends React.HTMLAttributes<T> {
+    // (undocumented)
+    [index: string]: any;
+    // (undocumented)
+    autoFocus?: boolean;
+    // (undocumented)
+    disabled?: boolean;
+    // (undocumented)
+    download?: any;
+    // (undocumented)
+    form?: string;
+    // (undocumented)
+    formAction?: string;
+    // (undocumented)
+    formEncType?: string;
+    // (undocumented)
+    formMethod?: string;
+    // (undocumented)
+    formNoValidate?: boolean;
+    // (undocumented)
+    formTarget?: string;
+    // (undocumented)
+    href?: string;
+    // (undocumented)
+    hrefLang?: string;
+    // (undocumented)
+    media?: string;
+    // (undocumented)
+    name?: string;
+    // (undocumented)
+    rel?: string;
+    // (undocumented)
+    target?: string;
+    // (undocumented)
+    type?: string;
+    // (undocumented)
+    value?: string | string[] | number;
+}
+
+// @public (undocumented)
+export interface ILinkProps extends ILinkHTMLAttributes<HTMLAnchorElement | HTMLButtonElement | HTMLElement> {
+    as?: string | React.ComponentClass | React.FunctionComponent;
+    componentRef?: IRefObject<ILink>;
+    disabled?: boolean;
+    keytipProps?: IKeytipProps;
+    styles?: IStyleFunctionOrObject<ILinkStyleProps, ILinkStyles>;
+    theme?: ITheme;
+}
+
+// @public (undocumented)
+export interface ILinkStyleProps {
+    // (undocumented)
+    className?: string;
+    // (undocumented)
+    isButton?: boolean;
+    // (undocumented)
+    isDisabled?: boolean;
+    // (undocumented)
+    theme: ITheme;
+}
+
+// @public (undocumented)
+export interface ILinkStyles {
+    // (undocumented)
     root: IStyle;
 }
 
@@ -286,7 +377,7 @@ export interface IPivot {
 export interface IPivotItemProps extends React.HTMLAttributes<HTMLDivElement> {
     ariaLabel?: string;
     componentRef?: IRefObject<{}>;
-    headerButtonProps?: {
+    headerButtonProps?: IButtonProps & {
         [key: string]: string | number | boolean;
     };
     headerText?: string;
@@ -486,7 +577,7 @@ export interface ISlider {
 }
 
 // @public (undocumented)
-export interface ISliderProps extends React.ClassAttributes<SliderBase> {
+export interface ISliderProps extends React.ClassAttributes<HTMLElement> {
     ariaLabel?: string;
     ariaValueText?: (value: number) => string;
     buttonProps?: React.HTMLAttributes<HTMLButtonElement>;
@@ -508,14 +599,6 @@ export interface ISliderProps extends React.ClassAttributes<SliderBase> {
     value?: number;
     valueFormat?: (value: number) => string;
     vertical?: boolean;
-}
-
-// @public (undocumented)
-export interface ISliderState {
-    // (undocumented)
-    renderedValue?: number;
-    // (undocumented)
-    value?: number;
 }
 
 // @public (undocumented)
@@ -571,7 +654,6 @@ export interface ISpinButtonProps extends React.HTMLAttributes<HTMLDivElement> {
     inputProps?: React.InputHTMLAttributes<HTMLElement | HTMLInputElement>;
     keytipProps?: IKeytipProps;
     label?: string;
-    // (undocumented)
     labelPosition?: Position;
     max?: number;
     min?: number;
@@ -787,6 +869,15 @@ export enum KeyboardSpinDirection {
 }
 
 // @public (undocumented)
+<<<<<<< HEAD
+=======
+export const Link: React.FunctionComponent<ILinkProps>;
+
+// @public (undocumented)
+export const LinkBase: React.FunctionComponent;
+
+// @public (undocumented)
+>>>>>>> b9d1f305e0d7235fa0b635816bfb4bb3795ab0d8
 export class MaskedTextField extends React.Component<ITextFieldProps, IMaskedTextFieldState> implements ITextField {
     constructor(props: ITextFieldProps);
     // (undocumented)
@@ -928,18 +1019,7 @@ export class SearchBoxBase extends React.Component<ISearchBoxProps, ISearchBoxSt
 export const Slider: React.FunctionComponent<ISliderProps>;
 
 // @public (undocumented)
-export class SliderBase extends React.Component<ISliderProps, ISliderState> implements ISlider {
-    constructor(props: ISliderProps);
-    // (undocumented)
-    componentWillUnmount(): void;
-    // (undocumented)
-    static defaultProps: ISliderProps;
-    // (undocumented)
-    focus(): void;
-    // (undocumented)
-    render(): React.ReactElement<{}>;
-    readonly value: number | undefined;
-}
+export const SliderBase: React.ForwardRefExoticComponent<Pick<ISliderProps, "max" | "disabled" | "label" | "vertical" | "key" | "step" | "theme" | "styles" | "className" | "defaultValue" | "onChange" | "componentRef" | "min" | "value" | "ariaLabel" | "onChanged" | "showValue" | "ariaValueText" | "snapToStep" | "buttonProps" | "valueFormat" | "originFromZero"> & React.RefAttributes<HTMLDivElement>>;
 
 // @public (undocumented)
 export class SpinButton extends React.Component<ISpinButtonProps, ISpinButtonState> implements ISpinButton {
@@ -955,6 +1035,45 @@ export class SpinButton extends React.Component<ISpinButtonProps, ISpinButtonSta
     UNSAFE_componentWillReceiveProps(newProps: ISpinButtonProps): void;
     readonly value: string | undefined;
     }
+
+// @public (undocumented)
+export const TextField: React.FunctionComponent<ITextFieldProps>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "TextFieldBase" is marked as @public, but its signature references "ITextFieldState" which is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "TextFieldBase" is marked as @public, but its signature references "ITextFieldSnapshot" which is marked as @internal
+//
+// @public (undocumented)
+export class TextFieldBase extends React.Component<ITextFieldProps, ITextFieldState, ITextFieldSnapshot> implements ITextField {
+    constructor(props: ITextFieldProps);
+    blur(): void;
+    // (undocumented)
+    componentDidMount(): void;
+    // (undocumented)
+    componentDidUpdate(prevProps: ITextFieldProps, prevState: ITextFieldState, snapshot: ITextFieldSnapshot): void;
+    // (undocumented)
+    componentWillUnmount(): void;
+    // (undocumented)
+    static defaultProps: ITextFieldProps;
+    focus(): void;
+    // (undocumented)
+    getSnapshotBeforeUpdate(prevProps: ITextFieldProps, prevState: ITextFieldState): ITextFieldSnapshot | null;
+    // (undocumented)
+    render(): JSX.Element;
+    select(): void;
+    readonly selectionEnd: number | null;
+    readonly selectionStart: number | null;
+    setSelectionEnd(value: number): void;
+    setSelectionRange(start: number, end: number): void;
+    setSelectionStart(value: number): void;
+    readonly value: string | undefined;
+    }
+
+// @public
+export const ThemeProvider: React.FunctionComponent<ThemeProviderProps & {
+    ref?: React.Ref<HTMLDivElement>;
+}>;
+
+export { ThemeProviderProps }
 
 // @public (undocumented)
 export const TextField: React.FunctionComponent<ITextFieldProps>;
@@ -1031,7 +1150,6 @@ export * from "office-ui-fabric-react/lib/KeytipData";
 export * from "office-ui-fabric-react/lib/KeytipLayer";
 export * from "office-ui-fabric-react/lib/Label";
 export * from "office-ui-fabric-react/lib/Layer";
-export * from "office-ui-fabric-react/lib/Link";
 export * from "office-ui-fabric-react/lib/List";
 export * from "office-ui-fabric-react/lib/MarqueeSelection";
 export * from "office-ui-fabric-react/lib/MessageBar";

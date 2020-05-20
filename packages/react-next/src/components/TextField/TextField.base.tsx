@@ -138,9 +138,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
     }
     props.checked, props.defaultChecked, props.onChange;
     const [uncontrolledValue, setUncontrolledValue] = useControllableValue(
-      isControlled(props, 'value'),
-      props.defaultValue,
-      props.onChange,
+      isControlled(props, 'value') ? undefined : defaultValue,
     );
     const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
     const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>('');
