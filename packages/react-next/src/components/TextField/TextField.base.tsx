@@ -7,7 +7,6 @@ import {
   classNamesFunction,
   getNativeProps,
   inputProperties,
-  isControlled,
   textAreaProperties,
   warn,
   warnControlledUsage,
@@ -44,7 +43,7 @@ export interface ITextFieldSnapshot {
 
 const useComponentRef = (
   props: ITextFieldProps,
-  textElement: React.RefObject<ITextField>,
+  textElement: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
   value: string | undefined,
 ) => {
   React.useImperativeHandle(
@@ -123,7 +122,7 @@ const onRenderStyles = { paddingBottom: '1px' };
 
 export const TextFieldBase: React.FunctionComponent = React.forwardRef(
   (props: ITextFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const textElement = React.useRef(null);
+    const textElement = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
     const fallbackId = useId(COMPONENT_NAME);
     const descriptionId = useId(COMPONENT_NAME + 'Description');
     const labelId = useId(COMPONENT_NAME + 'Label');
@@ -137,16 +136,11 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       defaultValue = String(defaultValue);
     }
     props.checked, props.defaultChecked, props.onChange;
-    const [uncontrolledValue, setUncontrolledValue] = useControllableValue(
-      isControlled(props, 'value'),
-      props.defaultValue,
-      props.onChange,
-    );
+    const [value, setValue] = useControllableValue(props.value, props.defaultValue, props.onChange);
     const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
     const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>('');
 
     const getValue = (): string | undefined => {
-      const { value = uncontrolledValue } = props;
       if (typeof value === 'number') {
         // not allowed per typings, but happens anyway
         return String(value);
@@ -306,7 +300,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         <textarea
           id={props.id || fallbackId}
           {...textAreaProps}
-          ref={textElement as React.RefObject<HTMLTextAreaElement>}
+          ref={textElement as React.Ref<HTMLTextAreaElement>}
           value={getValue() || ''}
           onInput={onInputChange}
           onChange={onInputChange}
@@ -329,7 +323,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       }
     };
 
-    const onInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    const onInputChange = (ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
       // Previously, we needed to call both onInput and onChange due to some weird IE/React issues,
       // which have *probably* been fixed now:
       // - https://github.com/microsoft/fluentui/issues/744 (likely fixed)
@@ -338,36 +332,21 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       // TODO (Fabric 8?) - Switch to calling only onChange. This switch is pretty disruptive for
       // tests (ours and maybe consumers' too), so it seemed best to do the switch in a major bump.
 
-      const element = event.target as HTMLInputElement;
-      const value = element.value;
+      const element = ev.target as HTMLInputElement;
+      const elementValue = element.value;
       // Ignore this event if the value is undefined (in case one of the IE bugs comes back)
-      if (value === undefined || value === lastChangeValue) {
+      if (elementValue === undefined || elementValue === lastChangeValue) {
         return;
       }
-      lastChangeValue = value;
+      lastChangeValue = elementValue;
 
       // This is so developers can access the event properties in asynchronous callbacks
       // https://reactjs.org/docs/events.html#event-pooling
-      event.persist();
+      ev.persist();
 
-      let isSameValue: boolean;
-      () => {
-        const prevValue = getValue();
-        isSameValue = value === prevValue;
-        if (isSameValue) {
-          return null;
-        }
-        // ONLY if this is an uncontrolled component, update the displayed value.
-        // (Controlled components must update the `value` prop from `onChange`.)
-        return isControlled ? null : setUncontrolledValue(value);
-      };
-      () => {
-        // If the value actually changed, call onChange (for either controlled or uncontrolled)
-        const { onChange } = props;
-        if (!isSameValue && onChange) {
-          onChange(event, value);
-        }
-      };
+      if (elementValue !== value) {
+        setValue(elementValue, ev);
+      }
     };
 
     const renderInput = (): React.ReactElement<React.HTMLAttributes<HTMLInputElement>> => {
