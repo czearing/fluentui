@@ -98,7 +98,7 @@ export const Autofill = (props: IAutofillProps) => {
     tryEnableAutofill(inputValue, false, true);
     isComposing = false;
     // Due to timing, this needs to be async, otherwise no text will be selected.
-    this._async.setTimeout(() => {
+    async.setTimeout(() => {
       // it's technically possible that the value of _isComposing is reset during this timeout,
       // so explicitly trigger this with composing=true here, since it is supposed to be the
       // update for composition end
@@ -243,7 +243,7 @@ export const Autofill = (props: IAutofillProps) => {
     setDisplayValue(newDisplayValue);
   }
 
-  const { suggestedDisplayValue, shouldSelectFullInputValueInComponentDidUpdate, preventValueSelection } = this.props;
+  const { suggestedDisplayValue, shouldSelectFullInputValueInComponentDidUpdate, preventValueSelection } = props;
   let differenceIndex = 0;
 
   if (preventValueSelection) {
