@@ -25,18 +25,14 @@ const useComponentRef = (
     () => ({
       get cursorLocation() {
         if (inputElement.current) {
-          const inputElement = inputElement.current;
-          if (inputElement.selectionDirection !== SELECTION_FORWARD) {
-            return inputElement.selectionEnd;
+          if (inputElement.current.selectionDirection !== SELECTION_FORWARD) {
+            return inputElement.current.selectionEnd;
           } else {
-            return inputElement.selectionStart;
+            return inputElement.current.selectionStart;
           }
         } else {
           return -1;
         }
-      },
-      get isValueSelected(): boolean {
-        return Boolean(inputElement && inputElement.selectionStart !== inputElement.selectionEnd);
       },
       get value(): string {
         return value;
@@ -47,8 +43,14 @@ const useComponentRef = (
       get selectionEnd(): number | null {
         return inputElement.current ? inputElement.current.selectionEnd : -1;
       },
+
       get inputElement(): HTMLInputElement | null {
-        return this._inputElement.current;
+        return inputElement.current;
+      },
+      get isValueSelected(): boolean {
+        return Boolean(
+          inputElement.current && inputElement.current.selectionStart !== inputElement.current.selectionEnd,
+        );
       },
       focus() {
         inputElement.current && inputElement.current.focus();
@@ -59,7 +61,7 @@ const useComponentRef = (
         inputElement.current && inputElement.current.setSelectionRange(0, 0);
       },
     }),
-    [],
+    [value, updateValue, autoFillEnabled],
   );
 };
 
@@ -272,7 +274,7 @@ export const Autofill = (props: IAutofillProps) => {
     }
   }
 
-  useComponentRef(props, inputElement, autoFillEnabled, updateValue(currentValue, isComposingValue), value);
+  useComponentRef(props, inputElement, autoFillEnabled, value);
   const nativeProps = getNativeProps<React.InputHTMLAttributes<HTMLInputElement>>(props, inputProperties);
 
   return (
