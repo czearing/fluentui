@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { IAutofillProps, IAutofill } from './Autofill.types';
-import { KeyCodes, getNativeProps, inputProperties, isIE11, Async, initializeComponentRef } from '../../Utilities';
+import { IAutofillProps } from './Autofill.types';
+import { KeyCodes, getNativeProps, inputProperties, isIE11 } from '../../Utilities';
 
 export interface IAutofillState {
   displayValue?: string;
@@ -13,52 +13,50 @@ const SELECTION_BACKWARD = 'backward';
  * {@docCategory Autofill}
  */
 
-// const useComponentRef = (props: IAutofillProps, inputElement: React.RefObject<HTMLInputElement>) => {
-//   React.useImperativeHandle(
-//     props.componentRef,
-//     () => ({
-//       get value() {
-//         return value;
-//       },
-//       focus() {
-//         if (thumb.current) {
-//           thumb.current.focus();
-//         }
-//       },
-//     }),
-//     [value],
-//   );
-// };
-
 const useComponentRef = (
   props: IAutofillProps,
   inputElement: React.RefObject<HTMLInputElement>,
   autoFillEnabled: boolean,
   updateValue: any,
+  value: string,
 ) => {
   React.useImperativeHandle(
     props.componentRef,
     () => ({
-      focus() {
+      get cursorLocation() {
         if (inputElement.current) {
-          inputElement.current.focus();
+          const inputElement = inputElement.current;
+          if (inputElement.selectionDirection !== SELECTION_FORWARD) {
+            return inputElement.selectionEnd;
+          } else {
+            return inputElement.selectionStart;
+          }
+        } else {
+          return -1;
         }
+      },
+      get isValueSelected(): boolean {
+        return Boolean(inputElement && inputElement.selectionStart !== inputElement.selectionEnd);
+      },
+      get value(): string {
+        return value;
+      },
+      get selectionStart(): number | null {
+        return inputElement.current ? inputElement.current.selectionStart : -1;
+      },
+      get selectionEnd(): number | null {
+        return inputElement.current ? inputElement.current.selectionEnd : -1;
+      },
+      get inputElement(): HTMLInputElement | null {
+        return this._inputElement.current;
+      },
+      focus() {
+        inputElement.current && inputElement.current.focus();
       },
       clear() {
         autoFillEnabled = true;
         updateValue('', false);
         inputElement.current && inputElement.current.setSelectionRange(0, 0);
-      },
-      cursorLocation() {
-        if (inputElement.current) {
-          if (inputElement.current.selectionDirection !== SELECTION_FORWARD) {
-            return inputElement.current.selectionEnd;
-          } else {
-            return inputElement.current.selectionStart;
-          }
-        } else {
-          return -1;
-        }
       },
     }),
     [],
@@ -118,7 +116,6 @@ export const Autofill = (props: IAutofillProps) => {
     if (props.onKeyDown) {
       props.onKeyDown(ev);
     }
-
     // If the event is actively being composed, then don't alert autofill.
     // Right now typing does not have isComposing, once that has been fixed any should be removed.
     if (!(ev.nativeEvent as any).isComposing) {
@@ -146,11 +143,9 @@ export const Autofill = (props: IAutofillProps) => {
 
   const onInputChanged = (ev: React.FormEvent<HTMLElement>) => {
     const currentValue: string = getCurrentInputValue(ev);
-
     if (!isComposing) {
       tryEnableAutofill(currentValue, (ev.nativeEvent as any).isComposing);
     }
-
     // If it is not IE11 and currently composing, update the value
     if (!(isIE11() && isComposing)) {
       const nativeEventComposing = (ev.nativeEvent as any).isComposing;
@@ -194,11 +189,7 @@ export const Autofill = (props: IAutofillProps) => {
     }
   };
 
-  /**
-   * Updates the current input value as well as getting a new display value.
-
-   */
-
+  // Updates the current input value as well as getting a new display value.
   const updateValue = (newValue: string, composing: boolean) => {
     // Only proceed if the value is nonempty and is different from the old value
     // This is to work around the fact that, in IE 11, inputs with a placeholder fire an onInput event on focus
@@ -281,7 +272,7 @@ export const Autofill = (props: IAutofillProps) => {
     }
   }
 
-  useComponentRef(props, inputElement, autoFillEnabled, updateValue());
+  useComponentRef(props, inputElement, autoFillEnabled, updateValue(currentValue, isComposingValue), value);
   const nativeProps = getNativeProps<React.InputHTMLAttributes<HTMLInputElement>>(props, inputProperties);
 
   return (
