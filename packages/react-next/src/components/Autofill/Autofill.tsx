@@ -274,7 +274,7 @@ export const Autofill = (props: IAutofillProps) => {
     }
   }
 
-  useComponentRef(props, inputElement, autoFillEnabled, value);
+  useComponentRef(props, inputElement, autoFillEnabled, updateValue, value);
   const nativeProps = getNativeProps<React.InputHTMLAttributes<HTMLInputElement>>(props, inputProperties);
 
   return (
