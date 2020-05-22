@@ -4,8 +4,12 @@ import { ISliderProps, ISliderStyleProps, ISliderStyles } from './Slider.types';
 import { classNamesFunction, getNativeProps, divProperties } from '../../Utilities';
 import { Label } from '../../Label';
 import { useId, useBoolean, useControllableValue } from '@uifabric/react-hooks';
+import { useFocusRects } from 'office-ui-fabric-react';
 
-const getClassNames = classNamesFunction<ISliderStyleProps, ISliderStyles>();
+const getClassNames = classNamesFunction<ISliderStyleProps, ISliderStyles>({
+  useStaticStyles: true,
+});
+
 const COMPONENT_NAME = 'SliderBase';
 export const ONKEYDOWN_TIMEOUT_DURATION = 1000;
 
@@ -80,6 +84,7 @@ export const SliderBase = React.forwardRef((props: ISliderProps, ref: React.Ref<
     ? getNativeProps<React.HTMLAttributes<HTMLDivElement>>(buttonProps, divProperties)
     : undefined;
 
+  useFocusRects(thumb);
   warnMutuallyExclusive(COMPONENT_NAME, props, {
     value: 'defaultValue',
   });
