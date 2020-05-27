@@ -81,17 +81,35 @@ const useComponentRef = (
   );
 };
 
+interface IFocusTrapZoneState {
+  previouslyFocusedElementOutsideTrapZone: HTMLElement;
+  previouslyFocusedElementInTrapZone?: HTMLElement;
+  disposeFocusHandler: (() => void) | undefined;
+  disposeClickHandler: (() => void) | undefined;
+  focusStack: [];
+}
+
 export const FocusTrapZone: React.FunctionComponent = (props: IFocusTrapZoneProps) => {
-  let focusStack: IFocusTrapZone[] = [];
+  // let focusStack: IFocusTrapZone[] = [];
   const root = React.useRef<HTMLDivElement>(null);
   const firstBumper = React.useRef<HTMLDivElement>(null);
   const lastBumper = React.useRef<HTMLDivElement>(null);
   const doc = getDocument(root.current);
   let hasFocus: boolean = false;
-  let previouslyFocusedElementOutsideTrapZone: HTMLElement;
-  let previouslyFocusedElementInTrapZone: HTMLElement;
   let disposeFocusHandler: (() => void) | undefined;
   let disposeClickHandler: (() => void) | undefined;
+
+  const [state] = React.useState<IFocusTrapZoneState>({
+    previouslyFocusedElementOutsideTrapZone: HTMLElement,
+    previouslyFocusedElementInTrapZone: HTMLElement,
+    focusStack: [],
+    disposeFocusHandler,
+    disposeClickHandler,
+    // foo: undefined
+  });
+  // state.foo = dfsfdsa;
+
+  //   state.disposeFocusHandler = fasjklasdfjkfadsjkl;
 
   const { className, disabled = false, ariaLabelledBy } = props;
 
@@ -169,12 +187,12 @@ export const FocusTrapZone: React.FunctionComponent = (props: IFocusTrapZoneProp
     if (disabled) {
       return;
     }
-    focusStack.push();
+    state.focusStack.push();
 
-    previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss
+    state.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss
       ? elementToFocusOnDismiss
       : (useGetDocument().activeElement as HTMLElement);
-    if (!disableFirstFocus && !elementContains(root.current, previouslyFocusedElementOutsideTrapZone)) {
+    if (!disableFirstFocus && !elementContains(root.current, state.previouslyFocusedElementOutsideTrapZone)) {
       focus();
     }
   };
@@ -229,7 +247,7 @@ export const FocusTrapZone: React.FunctionComponent = (props: IFocusTrapZoneProp
     if (ev.target !== ev.currentTarget && !isBumper(ev.target)) {
       // every time focus changes within the trap zone, remember the focused element so that
       // it can be restored if focus leaves the pane and returns via keystroke (i.e. via a call to this.focus(true))
-      previouslyFocusedElementInTrapZone = ev.target as HTMLElement;
+      state.previouslyFocusedElementInTrapZone = ev.target as HTMLElement;
     }
   };
 
@@ -242,7 +260,7 @@ export const FocusTrapZone: React.FunctionComponent = (props: IFocusTrapZoneProp
       return;
     }
 
-    if (focusStack.length && this === focusStack[focusStack.length - 1]) {
+    if (state.focusStack.length && this === state.focusStack[state.focusStack.length - 1]) {
       const focusedElement = useGetDocument().activeElement as HTMLElement;
 
       if (!elementContains(root.current, focusedElement)) {
@@ -259,7 +277,7 @@ export const FocusTrapZone: React.FunctionComponent = (props: IFocusTrapZoneProp
       return;
     }
 
-    if (focusStack.length && this === focusStack[focusStack.length - 1]) {
+    if (state.focusStack.length && this === state.focusStack[state.focusStack.length - 1]) {
       const clickedElement = ev.target as HTMLElement;
 
       if (clickedElement && !elementContains(root.current, clickedElement)) {
@@ -275,40 +293,56 @@ export const FocusTrapZone: React.FunctionComponent = (props: IFocusTrapZoneProp
     return getDocument(root.current)!;
   };
 
+  const useUnmount = (unmountFunction: () => void) => {
+    const unmountRef = React.useRef(unmountFunction);
+
+    unmountRef.current = unmountFunction;
+
+    React.useEffect(
+      () => () => {
+        if (unmountRef.current) {
+          unmountRef.current();
+        }
+      },
+      [],
+    );
+  };
+
   returnFocusToInitiator();
   bringFocusIntoZone();
-  updateEventHandlers(props);
+
   const { elementToFocusOnDismiss } = props;
-
-  // don't handle return focus unless forceFocusInsideTrap is true or focus is still within FocusTrapZone
-  if (doc) {
-    if (
-      !props.disabled ||
-      props.forceFocusInsideTrap ||
-      !elementContains(root.current, doc.activeElement as HTMLElement)
-    ) {
-      returnFocusToInitiator();
-    }
-  }
-  // Dispose of event handlers so their closures can be garbage-collected
-  if (disposeClickHandler) {
-    disposeClickHandler();
-    disposeClickHandler = undefined;
-  }
-
-  if (disposeFocusHandler) {
-    disposeFocusHandler();
-    disposeFocusHandler = undefined;
-  }
-
-  // Dispose of element references so the DOM Nodes can be garbage-collected
-  // delete previouslyFocusedElementInTrapZone;
-  // delete previouslyFocusedElementOutsideTrapZone;
-
-  if (elementToFocusOnDismiss && previouslyFocusedElementOutsideTrapZone !== elementToFocusOnDismiss) {
-    previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
+  if (elementToFocusOnDismiss && state.previouslyFocusedElementOutsideTrapZone !== elementToFocusOnDismiss) {
+    state.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
   }
   updateEventHandlers(props);
+
+  useUnmount(() => {
+    if (doc) {
+      // don't handle return focus unless forceFocusInsideTrap is true or focus is still within FocusTrapZone
+      if (
+        !props.disabled ||
+        props.forceFocusInsideTrap ||
+        !elementContains(root.current, doc.activeElement as HTMLElement)
+      ) {
+        returnFocusToInitiator();
+      }
+    }
+    // Dispose of event handlers so their closures can be garbage-collected
+    if (disposeClickHandler) {
+      disposeClickHandler();
+      disposeClickHandler = undefined;
+    }
+
+    if (disposeFocusHandler) {
+      disposeFocusHandler();
+      disposeFocusHandler = undefined;
+    }
+
+    // Dispose of element references so the DOM Nodes can be garbage-collected
+    delete state.previouslyFocusedElementInTrapZone;
+    delete state.previouslyFocusedElementOutsideTrapZone;
+  });
 
   const prevForceFocusInsideTrap = props.forceFocusInsideTrap !== undefined ? props.forceFocusInsideTrap : true;
   const newForceFocusInsideTrap = props.forceFocusInsideTrap !== undefined ? props.forceFocusInsideTrap : true;
@@ -325,7 +359,7 @@ export const FocusTrapZone: React.FunctionComponent = (props: IFocusTrapZoneProp
     returnFocusToInitiator();
   }
 
-  useComponentRef(props, previouslyFocusedElementInTrapZone, root, firstBumper, lastBumper);
+  useComponentRef(props, state.previouslyFocusedElementInTrapZone, root, firstBumper, lastBumper);
 
   return (
     <div
