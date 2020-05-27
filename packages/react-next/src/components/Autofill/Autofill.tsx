@@ -3,6 +3,9 @@ import { IAutofillProps } from './Autofill.types';
 import { KeyCodes, getNativeProps, inputProperties, isIE11 } from '../../Utilities';
 
 export interface IAutofillState {
+  value: string;
+  autoFillEnabled: boolean;
+  isComposing: boolean;
   displayValue?: string;
 }
 
@@ -71,16 +74,18 @@ export const Autofill = (props: IAutofillProps) => {
   const [displayValue, setDisplayValue] = React.useState(props.defaultVisibleValue || '');
   const inputElement = React.useRef<HTMLInputElement>(null);
 
-  let value: string = props.defaultVisibleValue || '';
-  let autoFillEnabled = true;
-  let isComposing: boolean = false;
+  const [state] = React.useState<IAutofillState>({
+    value: props.defaultVisibleValue || '',
+    autoFillEnabled: true,
+    isComposing: false,
+  });
 
   // Composition events are used when the character/text requires several keystrokes to be completed.
   // Some examples of this are mobile text input and langauges like Japanese or Arabic.
   // Find out more at https://developer.mozilla.org/en-US/docs/Web/Events/compositionstart
   const onCompositionStart = (ev: React.CompositionEvent<HTMLInputElement>) => {
-    isComposing = true;
-    autoFillEnabled = false;
+    state.isComposing = true;
+    state.autoFillEnabled = false;
   };
 
   // Composition events are used when the character/text requires several keystrokes to be completed.
@@ -98,19 +103,19 @@ export const Autofill = (props: IAutofillProps) => {
   const onCompositionEnd = (ev: React.CompositionEvent<HTMLInputElement>) => {
     const inputValue = getCurrentInputValue();
     tryEnableAutofill(inputValue, false, true);
-    isComposing = false;
+    state.isComposing = false;
     // Due to timing, this needs to be async, otherwise no text will be selected.
-    async.setTimeout(() => {
-      // it's technically possible that the value of _isComposing is reset during this timeout,
-      // so explicitly trigger this with composing=true here, since it is supposed to be the
-      // update for composition end
-      updateValue(getCurrentInputValue(), false);
-    }, 0);
+    // async.setTimeout(() => {
+    // it's technically possible that the value of _isComposing is reset during this timeout,
+    // so explicitly trigger this with composing=true here, since it is supposed to be the
+    // update for composition end
+    // updateValue(getCurrentInputValue(), false);
+    // }, 0);
   };
 
   const onClick = () => {
-    if (value && value !== '' && autoFillEnabled) {
-      autoFillEnabled = false;
+    if (state.value && state.value !== '' && state.autoFillEnabled) {
+      state.autoFillEnabled = false;
     }
   };
 
@@ -123,19 +128,19 @@ export const Autofill = (props: IAutofillProps) => {
     if (!(ev.nativeEvent as any).isComposing) {
       switch (ev.which) {
         case KeyCodes.backspace:
-          autoFillEnabled = false;
+          state.autoFillEnabled = false;
           break;
         case KeyCodes.left:
         case KeyCodes.right:
-          if (autoFillEnabled) {
-            value = displayValue!;
-            autoFillEnabled = false;
+          if (state.autoFillEnabled) {
+            state.value = displayValue!;
+            state.autoFillEnabled = false;
           }
           break;
         default:
-          if (!autoFillEnabled) {
+          if (!state.autoFillEnabled) {
             if (props.enableAutofillOnKeyPress!.indexOf(ev.which) !== -1) {
-              autoFillEnabled = true;
+              state.autoFillEnabled = true;
             }
           }
           break;
@@ -145,13 +150,13 @@ export const Autofill = (props: IAutofillProps) => {
 
   const onInputChanged = (ev: React.FormEvent<HTMLElement>) => {
     const currentValue: string = getCurrentInputValue(ev);
-    if (!isComposing) {
+    if (!state.isComposing) {
       tryEnableAutofill(currentValue, (ev.nativeEvent as any).isComposing);
     }
     // If it is not IE11 and currently composing, update the value
-    if (!(isIE11() && isComposing)) {
+    if (!(isIE11() && state.isComposing)) {
       const nativeEventComposing = (ev.nativeEvent as any).isComposing;
-      const isComposingValue = nativeEventComposing === undefined ? isComposing : nativeEventComposing;
+      const isComposingValue = nativeEventComposing === undefined ? state.isComposing : nativeEventComposing;
       updateValue(currentValue, isComposingValue);
     }
   };
@@ -178,10 +183,10 @@ export const Autofill = (props: IAutofillProps) => {
       newValue &&
       inputElement.current &&
       inputElement.current.selectionStart === newValue.length &&
-      !autoFillEnabled &&
-      (newValue.length > value.length || isComposedProps)
+      !state.autoFillEnabled &&
+      (newValue.length > state.value.length || isComposedProps)
     ) {
-      autoFillEnabled = true;
+      state.autoFillEnabled = true;
     }
   };
 
@@ -195,12 +200,12 @@ export const Autofill = (props: IAutofillProps) => {
   const updateValue = (newValue: string, composing: boolean) => {
     // Only proceed if the value is nonempty and is different from the old value
     // This is to work around the fact that, in IE 11, inputs with a placeholder fire an onInput event on focus
-    if (!newValue && newValue === value) {
+    if (!newValue && newValue === state.value) {
       return;
     }
-    value = props.onInputChange ? props.onInputChange(newValue, composing) : newValue;
-    setDisplayValue(getDisplayValue(value));
-    notifyInputChange(value, composing);
+    state.value = props.onInputChange ? props.onInputChange(newValue, composing) : newValue;
+    setDisplayValue(getDisplayValue(state.value));
+    notifyInputChange(state.value, composing);
   };
 
   /**
@@ -216,7 +221,7 @@ export const Autofill = (props: IAutofillProps) => {
       props.suggestedDisplayValue &&
       inputValue &&
       doesTextStartWith(props.suggestedDisplayValue, displayedValue) &&
-      autoFillEnabled
+      state.autoFillEnabled
     ) {
       displayedValue = props.suggestedDisplayValue;
     }
@@ -234,12 +239,12 @@ export const Autofill = (props: IAutofillProps) => {
     const updatedInputValue = props.updateValueInWillReceiveProps();
     // Don't update if we have a null value or the value isn't changing
     // the value should still update if an empty string is passed in
-    if (updatedInputValue !== null && updatedInputValue !== value) {
-      value = updatedInputValue;
+    if (updatedInputValue !== null && updatedInputValue !== state.value) {
+      state.value = updatedInputValue;
     }
   }
 
-  const newDisplayValue = getDisplayValue(value);
+  const newDisplayValue = getDisplayValue(state.value);
 
   if (typeof newDisplayValue === 'string') {
     setDisplayValue(newDisplayValue);
@@ -252,7 +257,12 @@ export const Autofill = (props: IAutofillProps) => {
     return;
   }
 
-  if (autoFillEnabled && value && suggestedDisplayValue && doesTextStartWith(suggestedDisplayValue, value)) {
+  if (
+    state.autoFillEnabled &&
+    state.value &&
+    suggestedDisplayValue &&
+    doesTextStartWith(suggestedDisplayValue, state.value)
+  ) {
     let shouldSelectFullRange = false;
 
     if (shouldSelectFullInputValueInComponentDidUpdate) {
@@ -263,8 +273,8 @@ export const Autofill = (props: IAutofillProps) => {
       inputElement.current.setSelectionRange(0, suggestedDisplayValue.length, SELECTION_BACKWARD);
     } else {
       while (
-        differenceIndex < value.length &&
-        value[differenceIndex].toLocaleLowerCase() === suggestedDisplayValue[differenceIndex].toLocaleLowerCase()
+        differenceIndex < state.value.length &&
+        state.value[differenceIndex].toLocaleLowerCase() === suggestedDisplayValue[differenceIndex].toLocaleLowerCase()
       ) {
         differenceIndex++;
       }
@@ -274,7 +284,7 @@ export const Autofill = (props: IAutofillProps) => {
     }
   }
 
-  useComponentRef(props, inputElement, autoFillEnabled, updateValue, value);
+  useComponentRef(props, inputElement, state.autoFillEnabled, updateValue, state.value);
   const nativeProps = getNativeProps<React.InputHTMLAttributes<HTMLInputElement>>(props, inputProperties);
 
   return (
