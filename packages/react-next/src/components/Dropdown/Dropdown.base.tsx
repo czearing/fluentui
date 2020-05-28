@@ -63,6 +63,7 @@ export interface IDropdownState {
 }
 
 @withResponsiveMode
+export const DropdownBase: React.FunctionComponent = (props: IDropdownInternalProps) => {};
 export class DropdownBase extends React.Component<IDropdownInternalProps, IDropdownState> implements IDropdown {
   public static defaultProps = {
     options: [] as any[],
