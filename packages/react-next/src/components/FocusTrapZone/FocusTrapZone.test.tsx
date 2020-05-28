@@ -23,7 +23,7 @@ class FocusTrapZoneTestComponent extends React.Component<{}, { isShowingFirst: b
   public render() {
     return (
       <div>
-        <FocusTrapZone forceFocusInsideTrap={true} isClickableOutsideFocusTrap={false}>
+        <FocusTrapZone forceFocusInsideTrap isClickableOutsideFocusTrap={false}>
           <button className={'a'} onClick={this._toggleFirst}>
             a
           </button>
@@ -33,7 +33,7 @@ class FocusTrapZoneTestComponent extends React.Component<{}, { isShowingFirst: b
         </FocusTrapZone>
 
         {this.state.isShowingFirst && (
-          <FocusTrapZone forceFocusInsideTrap={false} isClickableOutsideFocusTrap={false}>
+          <FocusTrapZone forceFocusInsideTrap isClickableOutsideFocusTrap={false}>
             <FocusZone data-is-visible={true}>First</FocusZone>
           </FocusTrapZone>
         )}
@@ -257,21 +257,21 @@ describe('FocusTrapZone', () => {
 
       const topLevelDiv = (ReactTestUtils.renderIntoDocument(
         <div onFocusCapture={_onFocus}>
-          <button className={'z1'}>z1</button>
+          <button className="z1">z1</button>
           <FocusTrapZone forceFocusInsideTrap={false} className={ftzClassname}>
             <FocusZone direction={FocusZoneDirection.horizontal} data-is-visible={true}>
-              <button className={'a'}>a</button>
-              <button className={'b'}>b</button>
-              <button className={'c'}>c</button>
+              <button className="a">a</button>
+              <button className="b">b</button>
+              <button className="c">c</button>
             </FocusZone>
-            <button className={'d'}>d</button>
+            <button className="d">d</button>
             <FocusZone direction={FocusZoneDirection.horizontal} data-is-visible={true}>
-              <button className={'e'}>e</button>
-              <button className={'f'}>f</button>
-              <button className={'g'}>g</button>
+              <button className="e">e</button>
+              <button className="f">f</button>
+              <button className="g">g</button>
             </FocusZone>
           </FocusTrapZone>
-          <button className={'z2'}>z2</button>
+          <button className="z2">z2</button>
         </div>,
       ) as unknown) as HTMLElement;
 
@@ -620,14 +620,12 @@ describe('FocusTrapZone', () => {
 
   describe('Focusing the FTZ', () => {
     function setupTest(focusPreviouslyFocusedInnerElement: boolean) {
-      const focusTrapZoneRef = React.createRef<FocusTrapZone>();
       const topLevelDiv = (ReactTestUtils.renderIntoDocument(
         <div onFocusCapture={_onFocus}>
           <FocusTrapZone
             forceFocusInsideTrap={false}
             focusPreviouslyFocusedInnerElement={focusPreviouslyFocusedInnerElement}
             data-is-focusable={true}
-            ref={focusTrapZoneRef}
           >
             <button className={'f'}>f</button>
             <FocusZone>
