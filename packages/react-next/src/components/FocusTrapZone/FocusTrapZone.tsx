@@ -10,7 +10,24 @@ import {
   focusAsync,
   on,
 } from '../../Utilities';
-import { IFocusTrapZone, IFocusTrapZoneProps } from './FocusTrapZone.types';
+import { IFocusTrapZoneProps } from './FocusTrapZone.types';
+import { useId } from '@uifabric/react-hooks';
+import { getWindow } from '../../Utilities';
+
+const useUnmount = (unmountFunction: () => void) => {
+  const unmountRef = React.useRef(unmountFunction);
+
+  unmountRef.current = unmountFunction;
+
+  React.useEffect(
+    () => () => {
+      if (unmountRef.current) {
+        unmountRef.current();
+      }
+    },
+    [unmountFunction],
+  );
+};
 
 const useComponentRef = (
   props: IFocusTrapZoneProps,
@@ -37,18 +54,18 @@ interface IFocusTrapZoneState {
   disposeClickHandler: (() => void) | undefined;
   previouslyFocusedElementOutsideTrapZone: HTMLElement | undefined;
   previouslyFocusedElementInTrapZone: HTMLElement | undefined;
-  // focusStack: IFocusTrapZone[];
   hasFocus: boolean;
 }
 
 const COMPONENT_NAME = 'FocusTrapZone';
 
-export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { focusStack: IFocusTrapZone[] } = (
+export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { focusStack: string[] } = (
   props: IFocusTrapZoneProps,
 ) => {
   const root = React.useRef<HTMLDivElement>(null);
   const firstBumper = React.useRef<HTMLDivElement>(null);
   const lastBumper = React.useRef<HTMLDivElement>(null);
+  const id = useId();
   const doc = getDocument(root.current);
   const { className, disabled = false, ariaLabelledBy } = props;
   const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);
@@ -103,7 +120,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
         );
       }
     }
-
+    π;
     if (firstFocusableChild) {
       if (firstFocusableChild) {
         if (!(firstFocusableChild === firstBumper.current || firstFocusableChild === lastBumper.current)) {
@@ -185,7 +202,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     if (disabled) {
       return;
     }
-    FocusTrapZone.focusStack.push();
+    FocusTrapZone.focusStack.push(id);
 
     state.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss
       ? elementToFocusOnDismiss
@@ -203,8 +220,8 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
 
   const returnFocusToInitiator = (): void => {
     const { ignoreExternalFocusing } = props;
-    FocusTrapZone.focusStack = FocusTrapZone.focusStack.filter((value: IFocusTrapZone) => {
-      return this !== value;
+    FocusTrapZone.focusStack = FocusTrapZone.focusStack.filter((value: string) => {
+      return id !== value;
     });
     if (doc) {
       const activeElement = doc.activeElement as HTMLElement;
@@ -221,16 +238,17 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
 
   const updateEventHandlers = (newProps: IFocusTrapZoneProps): void => {
     const { isClickableOutsideFocusTrap = false, forceFocusInsideTrap = true } = newProps;
+    const win = getWindow(root.current)!;
 
     if (forceFocusInsideTrap && !state.disposeFocusHandler) {
-      state.disposeFocusHandler = on(window, 'focus', forceFocusInTrap, true);
+      state.disposeFocusHandler = on(win, 'focus', forceFocusInTrap, true);
     } else if (!forceFocusInsideTrap && state.disposeFocusHandler) {
       state.disposeFocusHandler();
       state.disposeFocusHandler = undefined;
     }
 
     if (!isClickableOutsideFocusTrap && !state.disposeClickHandler) {
-      state.disposeClickHandler = on(window, 'click', forceClickInTrap, true);
+      state.disposeClickHandler = on(win, 'click', forceClickInTrap, true);
     } else if (isClickableOutsideFocusTrap && state.disposeClickHandler) {
       state.disposeClickHandler();
       state.disposeClickHandler = undefined;
@@ -258,7 +276,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       return;
     }
 
-    if (FocusTrapZone.focusStack.length && this === FocusTrapZone.focusStack[FocusTrapZone.focusStack.length - 1]) {
+    if (FocusTrapZone.focusStack.length && id === FocusTrapZone.focusStack[FocusTrapZone.focusStack.length - 1]) {
       const focusedElement = useGetDocument().activeElement as HTMLElement;
 
       if (!elementContains(root.current, focusedElement)) {
@@ -275,7 +293,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       return;
     }
 
-    if (FocusTrapZone.focusStack.length && this === FocusTrapZone.focusStack[FocusTrapZone.focusStack.length - 1]) {
+    if (FocusTrapZone.focusStack.length && id === FocusTrapZone.focusStack[FocusTrapZone.focusStack.length - 1]) {
       const clickedElement = ev.target as HTMLElement;
 
       if (clickedElement && !elementContains(root.current, clickedElement)) {
@@ -289,21 +307,6 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
 
   const useGetDocument = (): Document => {
     return getDocument(root.current)!;
-  };
-
-  const useUnmount = (unmountFunction: () => void) => {
-    const unmountRef = React.useRef(unmountFunction);
-
-    unmountRef.current = unmountFunction;
-
-    React.useEffect(
-      () => () => {
-        if (unmountRef.current) {
-          unmountRef.current();
-        }
-      },
-      [],
-    );
   };
 
   returnFocusToInitiator();
