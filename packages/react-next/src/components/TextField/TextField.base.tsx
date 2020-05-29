@@ -19,17 +19,10 @@ const getClassNames = classNamesFunction<ITextFieldStyleProps, ITextFieldStyles>
 
 /** @internal */
 export interface ITextFieldState {
-  /** The currently displayed value if uncontrolled. */
-  uncontrolledValue: string | undefined;
-
-  /** Is true when the control has focus. */
-  isFocused?: boolean;
-
-  /**
-   * Dynamic error message returned by `onGetErrorMessage`.
-   * Use `this._errorMessage` to get the actual current error message.
-   */
-  errorMessage: string | JSX.Element;
+  latestValidateValue: string | undefined;
+  lastChangeValue: string | undefined;
+  hasWarnedNullValue: boolean | undefined;
+  lastValidation: number;
 }
 
 /** @internal */
@@ -40,6 +33,10 @@ export interface ITextFieldSnapshot {
    */
   selection?: [number | null, number | null];
 }
+
+const DEFAULT_STATE_VALUE = '';
+const COMPONENT_NAME = 'TextField';
+const onRenderStyles = { paddingBottom: '1px' };
 
 const useComponentRef = (
   props: ITextFieldProps,
@@ -116,20 +113,19 @@ const useComponentRef = (
   );
 };
 
-const DEFAULT_STATE_VALUE = '';
-const COMPONENT_NAME = 'TextField';
-const onRenderStyles = { paddingBottom: '1px' };
-
 export const TextFieldBase: React.FunctionComponent = React.forwardRef(
   (props: ITextFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const textElement = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
     const fallbackId = useId(COMPONENT_NAME);
     const descriptionId = useId(COMPONENT_NAME + 'Description');
     const labelId = useId(COMPONENT_NAME + 'Label');
-    let latestValidateValue: string | undefined = undefined;
-    let lastChangeValue: string | undefined = undefined;
-    let hasWarnedNullValue: boolean | undefined = undefined;
-    let lastValidation = 0;
+    const [state] = React.useState<ITextFieldState>({
+      latestValidateValue: undefined,
+      lastChangeValue: undefined,
+      hasWarnedNullValue: undefined,
+      lastValidation: 0,
+    });
+
     let { defaultValue = DEFAULT_STATE_VALUE } = props;
     if (typeof defaultValue === 'number') {
       // This isn't allowed per the props, but happens anyway.
@@ -233,10 +229,10 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
 
     const validate = (): void => {
       // In case _validate is called again while validation promise is executing
-      if (latestValidateValue === getValue() && shouldValidateAllChanges()) {
+      if (state.latestValidateValue === getValue() && shouldValidateAllChanges()) {
         return;
       }
-      latestValidateValue = getValue();
+      state.latestValidateValue = getValue();
       const onGetErrorMessage = props.onGetErrorMessage;
       const result = onGetErrorMessage && onGetErrorMessage(getValue() || '');
       if (result !== undefined) {
@@ -244,9 +240,9 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
           setErrorMessage(result);
           notifyAfterValidate(result);
         } else {
-          const currentValidation: number = ++lastValidation;
+          const currentValidation: number = ++state.lastValidation;
           result.then((errorMessageValue: string | JSX.Element) => {
-            if (currentValidation === lastValidation) {
+            if (currentValidation === state.lastValidation) {
               setErrorMessage(errorMessageValue);
             }
             notifyAfterValidate(errorMessage);
@@ -335,10 +331,10 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       const element = ev.target as HTMLInputElement;
       const elementValue = element.value;
       // Ignore this event if the value is undefined (in case one of the IE bugs comes back)
-      if (elementValue === undefined || elementValue === lastChangeValue) {
+      if (elementValue === undefined || elementValue === state.lastChangeValue) {
         return;
       }
-      lastChangeValue = elementValue;
+      state.lastChangeValue = elementValue;
 
       // This is so developers can access the event properties in asynchronous callbacks
       // https://reactjs.org/docs/events.html#event-pooling
@@ -387,8 +383,8 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         onChangeProp: 'onChange',
         readOnlyProp: 'readOnly',
       });
-      if (props.value === null && !hasWarnedNullValue) {
-        hasWarnedNullValue = true;
+      if (props.value === null && !state.hasWarnedNullValue) {
+        state.hasWarnedNullValue = true;
         warn(
           `Warning: 'value' prop on '${COMPONENT_NAME}' should not be null. Consider using an ` +
             'empty string to clear the component or undefined to indicate an uncontrolled component.',
@@ -402,7 +398,6 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         errorMessage: 'onGetErrorMessage',
       });
     }
-
     useComponentRef(props, textElement, getValue());
 
     return (
