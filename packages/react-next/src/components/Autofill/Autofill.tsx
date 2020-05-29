@@ -9,6 +9,7 @@ export interface IAutofillState {
   displayValue?: string;
 }
 
+const COMPONENT_NAME = 'Autofill';
 const SELECTION_FORWARD = 'forward';
 const SELECTION_BACKWARD = 'backward';
 
@@ -68,12 +69,9 @@ const useComponentRef = (
   );
 };
 
-const COMPONENT_NAME = 'Autofill';
-
 export const Autofill = (props: IAutofillProps) => {
   const [displayValue, setDisplayValue] = React.useState(props.defaultVisibleValue || '');
   const inputElement = React.useRef<HTMLInputElement>(null);
-
   const [state] = React.useState<IAutofillState>({
     value: props.defaultVisibleValue || '',
     autoFillEnabled: true,
@@ -105,12 +103,12 @@ export const Autofill = (props: IAutofillProps) => {
     tryEnableAutofill(inputValue, false, true);
     state.isComposing = false;
     // Due to timing, this needs to be async, otherwise no text will be selected.
-    // async.setTimeout(() => {
-    // it's technically possible that the value of _isComposing is reset during this timeout,
-    // so explicitly trigger this with composing=true here, since it is supposed to be the
-    // update for composition end
-    // updateValue(getCurrentInputValue(), false);
-    // }, 0);
+    async.setTimeout(() => {
+      // it's technically possible that the value of _isComposing is reset during this timeout,
+      // so explicitly trigger this with composing=true here, since it is supposed to be the
+      // update for composition end
+      updateValue(getCurrentInputValue(), false);
+    }, 0);
   };
 
   const onClick = () => {
@@ -148,6 +146,16 @@ export const Autofill = (props: IAutofillProps) => {
     }
   };
 
+  const getCurrentInputValue = (ev?: React.FormEvent<HTMLElement>): string => {
+    if (ev && ev.target && (ev.target as any).value) {
+      return (ev.target as any).value;
+    } else if (inputElement.current && inputElement.current.value) {
+      return inputElement.current.value;
+    } else {
+      return '';
+    }
+  };
+
   const onInputChanged = (ev: React.FormEvent<HTMLElement>) => {
     const currentValue: string = getCurrentInputValue(ev);
     if (!state.isComposing) {
@@ -167,13 +175,9 @@ export const Autofill = (props: IAutofillProps) => {
     return;
   };
 
-  const getCurrentInputValue = (ev?: React.FormEvent<HTMLElement>): string => {
-    if (ev && ev.target && (ev.target as any).value) {
-      return (ev.target as any).value;
-    } else if (inputElement.current && inputElement.current.value) {
-      return inputElement.current.value;
-    } else {
-      return '';
+  const notifyInputChange = (newValue: string, composing: boolean): void => {
+    if (props.onInputValueChange) {
+      props.onInputValueChange(newValue, composing);
     }
   };
 
@@ -187,12 +191,6 @@ export const Autofill = (props: IAutofillProps) => {
       (newValue.length > state.value.length || isComposedProps)
     ) {
       state.autoFillEnabled = true;
-    }
-  };
-
-  const notifyInputChange = (newValue: string, composing: boolean): void => {
-    if (props.onInputValueChange) {
-      props.onInputValueChange(newValue, composing);
     }
   };
 
@@ -243,46 +241,47 @@ export const Autofill = (props: IAutofillProps) => {
       state.value = updatedInputValue;
     }
   }
-
   const newDisplayValue = getDisplayValue(state.value);
-
   if (typeof newDisplayValue === 'string') {
     setDisplayValue(newDisplayValue);
   }
 
-  const { suggestedDisplayValue, shouldSelectFullInputValueInComponentDidUpdate, preventValueSelection } = props;
-  let differenceIndex = 0;
+  React.useEffect(() => {
+    const { suggestedDisplayValue, shouldSelectFullInputValueInComponentDidUpdate, preventValueSelection } = props;
+    let differenceIndex = 0;
 
-  if (preventValueSelection) {
-    return;
-  }
-
-  if (
-    state.autoFillEnabled &&
-    state.value &&
-    suggestedDisplayValue &&
-    doesTextStartWith(suggestedDisplayValue, state.value)
-  ) {
-    let shouldSelectFullRange = false;
-
-    if (shouldSelectFullInputValueInComponentDidUpdate) {
-      shouldSelectFullRange = shouldSelectFullInputValueInComponentDidUpdate();
+    if (preventValueSelection) {
+      return;
     }
 
-    if (shouldSelectFullRange && inputElement.current) {
-      inputElement.current.setSelectionRange(0, suggestedDisplayValue.length, SELECTION_BACKWARD);
-    } else {
-      while (
-        differenceIndex < state.value.length &&
-        state.value[differenceIndex].toLocaleLowerCase() === suggestedDisplayValue[differenceIndex].toLocaleLowerCase()
-      ) {
-        differenceIndex++;
+    if (
+      state.autoFillEnabled &&
+      state.value &&
+      suggestedDisplayValue &&
+      doesTextStartWith(suggestedDisplayValue, state.value)
+    ) {
+      let shouldSelectFullRange = false;
+
+      if (shouldSelectFullInputValueInComponentDidUpdate) {
+        shouldSelectFullRange = shouldSelectFullInputValueInComponentDidUpdate();
       }
-      if (differenceIndex > 0 && inputElement.current) {
-        inputElement.current.setSelectionRange(differenceIndex, suggestedDisplayValue.length, SELECTION_BACKWARD);
+
+      if (shouldSelectFullRange && inputElement.current) {
+        inputElement.current.setSelectionRange(0, suggestedDisplayValue.length, SELECTION_BACKWARD);
+      } else {
+        while (
+          differenceIndex < state.value.length &&
+          state.value[differenceIndex].toLocaleLowerCase() ===
+            suggestedDisplayValue[differenceIndex].toLocaleLowerCase()
+        ) {
+          differenceIndex++;
+        }
+        if (differenceIndex > 0 && inputElement.current) {
+          inputElement.current.setSelectionRange(differenceIndex, suggestedDisplayValue.length, SELECTION_BACKWARD);
+        }
       }
     }
-  }
+  }, [state, displayValue]);
 
   useComponentRef(props, inputElement, state.autoFillEnabled, updateValue, state.value);
   const nativeProps = getNativeProps<React.InputHTMLAttributes<HTMLInputElement>>(props, inputProperties);
@@ -307,3 +306,4 @@ export const Autofill = (props: IAutofillProps) => {
     />
   );
 };
+Autofill.displayName = COMPONENT_NAME;
