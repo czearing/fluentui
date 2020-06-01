@@ -8,11 +8,11 @@ import { resetIds, setWarningCallback, IRefObject, resetControlledWarnings } fro
 import { mountAttached, mockEvent, flushPromises } from '../../common/testUtilities';
 
 import { TextField } from './TextField';
-import { TextFieldBase, ITextFieldState } from './TextField.base';
+import { ITextFieldState } from './TextField.base';
 import { ITextFieldProps, ITextFieldStyles, ITextField } from './TextField.types';
 
 // tslint:disable:jsx-no-lambda
-
+//
 /**
  * The currently rendered ITextField.
  * ONLY set if `componentRef={textFieldRef}` is included in the TextField's props.
@@ -23,7 +23,7 @@ const textFieldRef: IRefObject<ITextField> = (ref: ITextField | null) => {
   textField = ref!;
 };
 /** Wrapper of the TextField currently being tested */
-let wrapper: ReactWrapper<ITextFieldProps, ITextFieldState, TextFieldBase> | undefined;
+let wrapper: ReactWrapper<ITextFieldProps, ITextFieldState> | undefined;
 const noOp = () => undefined;
 
 function sharedBeforeEach() {

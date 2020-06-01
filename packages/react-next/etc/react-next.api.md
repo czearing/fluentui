@@ -38,9 +38,6 @@ export const Customizer: React.FunctionComponent<ICustomizerProps>;
 export const DEFAULT_MASK_CHAR = "_";
 
 // @public (undocumented)
-export const DEFAULT_MASK_CHAR = "_";
-
-// @public (undocumented)
 export type DefaultProps = Required<Pick<ISpinButtonProps, 'step' | 'min' | 'max' | 'disabled' | 'labelPosition' | 'label' | 'incrementButtonIcon' | 'decrementButtonIcon'>>;
 
 // @public (undocumented)
@@ -821,9 +818,14 @@ export interface ITextFieldSnapshot {
 //
 // @internal (undocumented)
 export interface ITextFieldState {
-    errorMessage: string | JSX.Element;
-    isFocused?: boolean;
-    uncontrolledValue: string | undefined;
+    // (undocumented)
+    hasWarnedNullValue: boolean | undefined;
+    // (undocumented)
+    lastChangeValue: string | undefined;
+    // (undocumented)
+    lastValidation: number;
+    // (undocumented)
+    latestValidateValue: string | undefined;
 }
 
 // @public (undocumented)
@@ -928,8 +930,6 @@ export enum KeyboardSpinDirection {
 }
 
 // @public (undocumented)
-<<<<<<< HEAD
-=======
 export const Link: React.FunctionComponent<ILinkProps>;
 
 // @public (undocumented)
@@ -941,7 +941,6 @@ export type LinkSlotProps = {
 };
 
 // @public (undocumented)
->>>>>>> b9d1f305e0d7235fa0b635816bfb4bb3795ab0d8
 export class MaskedTextField extends React.Component<ITextFieldProps, IMaskedTextFieldState> implements ITextField {
     constructor(props: ITextFieldProps);
     // (undocumented)
@@ -1098,34 +1097,8 @@ export class SpinButton extends React.Component<ISpinButtonProps, ISpinButtonSta
 // @public (undocumented)
 export const TextField: React.FunctionComponent<ITextFieldProps>;
 
-// Warning: (ae-incompatible-release-tags) The symbol "TextFieldBase" is marked as @public, but its signature references "ITextFieldState" which is marked as @internal
-// Warning: (ae-incompatible-release-tags) The symbol "TextFieldBase" is marked as @public, but its signature references "ITextFieldSnapshot" which is marked as @internal
-//
 // @public (undocumented)
-export class TextFieldBase extends React.Component<ITextFieldProps, ITextFieldState, ITextFieldSnapshot> implements ITextField {
-    constructor(props: ITextFieldProps);
-    blur(): void;
-    // (undocumented)
-    componentDidMount(): void;
-    // (undocumented)
-    componentDidUpdate(prevProps: ITextFieldProps, prevState: ITextFieldState, snapshot: ITextFieldSnapshot): void;
-    // (undocumented)
-    componentWillUnmount(): void;
-    // (undocumented)
-    static defaultProps: ITextFieldProps;
-    focus(): void;
-    // (undocumented)
-    getSnapshotBeforeUpdate(prevProps: ITextFieldProps, prevState: ITextFieldState): ITextFieldSnapshot | null;
-    // (undocumented)
-    render(): JSX.Element;
-    select(): void;
-    readonly selectionEnd: number | null;
-    readonly selectionStart: number | null;
-    setSelectionEnd(value: number): void;
-    setSelectionRange(start: number, end: number): void;
-    setSelectionStart(value: number): void;
-    readonly value: string | undefined;
-    }
+export const TextFieldBase: React.FunctionComponent;
 
 // @public
 export const ThemeProvider: React.FunctionComponent<ThemeProviderProps & {
@@ -1135,48 +1108,16 @@ export const ThemeProvider: React.FunctionComponent<ThemeProviderProps & {
 export { ThemeProviderProps }
 
 // @public (undocumented)
-export const TextField: React.FunctionComponent<ITextFieldProps>;
-
-// Warning: (ae-incompatible-release-tags) The symbol "TextFieldBase" is marked as @public, but its signature references "ITextFieldState" which is marked as @internal
-// Warning: (ae-incompatible-release-tags) The symbol "TextFieldBase" is marked as @public, but its signature references "ITextFieldSnapshot" which is marked as @internal
-//
-// @public (undocumented)
-export class TextFieldBase extends React.Component<ITextFieldProps, ITextFieldState, ITextFieldSnapshot> implements ITextField {
-    constructor(props: ITextFieldProps);
-    blur(): void;
-    // (undocumented)
-    componentDidMount(): void;
-    // (undocumented)
-    componentDidUpdate(prevProps: ITextFieldProps, prevState: ITextFieldState, snapshot: ITextFieldSnapshot): void;
-    // (undocumented)
-    componentWillUnmount(): void;
-    // (undocumented)
-    static defaultProps: ITextFieldProps;
-    focus(): void;
-    // (undocumented)
-    getSnapshotBeforeUpdate(prevProps: ITextFieldProps, prevState: ITextFieldState): ITextFieldSnapshot | null;
-    // (undocumented)
-    render(): JSX.Element;
-    select(): void;
-    readonly selectionEnd: number | null;
-    readonly selectionStart: number | null;
-    setSelectionEnd(value: number): void;
-    setSelectionRange(start: number, end: number): void;
-    setSelectionStart(value: number): void;
-    readonly value: string | undefined;
-    }
-
-// @public (undocumented)
 export const Toggle: React.FunctionComponent<IToggleProps>;
 
 // @public (undocumented)
 export const ToggleBase: import("@fluentui/react-compose").ComponentWithAs<"div", IToggleProps>;
 
 // @public
-export const useLink: (props: ILinkProps, options: ComposePreparedOptions<{}, {}>) => any;
+export const useLink: (props: ILinkProps, options: ComposePreparedOptions<{}>) => any;
 
 // @public (undocumented)
-export const useToggle: (props: IToggleProps, options: ComposePreparedOptions<{}, {}>) => any;
+export const useToggle: (props: IToggleProps, options: ComposePreparedOptions<{}>) => any;
 
 
 export * from "office-ui-fabric-react/lib/ActivityItem";

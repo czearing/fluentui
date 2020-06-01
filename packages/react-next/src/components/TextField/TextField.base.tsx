@@ -12,7 +12,7 @@ import {
   warnControlledUsage,
   warnMutuallyExclusive,
 } from '../../Utilities';
-import { ITextField, ITextFieldProps, ITextFieldStyleProps, ITextFieldStyles } from './TextField.types';
+import { ITextFieldProps, ITextFieldStyleProps, ITextFieldStyles } from './TextField.types';
 import { useId, useBoolean, useControllableValue } from '@uifabric/react-hooks';
 
 const getClassNames = classNamesFunction<ITextFieldStyleProps, ITextFieldStyles>();
@@ -23,6 +23,9 @@ export interface ITextFieldState {
   lastChangeValue: string | undefined;
   hasWarnedNullValue: boolean | undefined;
   lastValidation: number;
+  prevProps: ITextFieldProps;
+  prevIsFocused: boolean;
+  uncontrolledValue: string | undefined;
 }
 
 /** @internal */
@@ -93,6 +96,12 @@ const useComponentRef = (
         }
       },
 
+      getSnapshotBeforeUpdate(prevProps: ITextFieldProps, prevState: ITextFieldState): ITextFieldSnapshot | null {
+        return {
+          selection: [this.selectionStart, this.selectionEnd],
+        };
+      },
+
       // Sets the selection end of the text field to a specified value
       setSelectionEnd(index: number) {
         if (textElement.current) {
@@ -119,11 +128,23 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
     const fallbackId = useId(COMPONENT_NAME);
     const descriptionId = useId(COMPONENT_NAME + 'Description');
     const labelId = useId(COMPONENT_NAME + 'Label');
+    props.checked, props.defaultChecked, props.onChange;
+    const [currentValue, setCurrentValue] = useControllableValue(props.value, props.defaultValue, props.onChange);
+    const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
+    const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>('');
+
     const [state] = React.useState<ITextFieldState>({
       latestValidateValue: undefined,
       lastChangeValue: undefined,
       hasWarnedNullValue: undefined,
       lastValidation: 0,
+      prevProps: props,
+      prevIsFocused: isFocused,
+      uncontrolledValue: undefined,
+    });
+
+    const [snapshot] = React.useState<ITextFieldSnapshot>({
+      selection: [null, null],
     });
 
     let { defaultValue = DEFAULT_STATE_VALUE } = props;
@@ -132,12 +153,8 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       defaultValue = String(defaultValue);
     }
 
-    props.checked, props.defaultChecked, props.onChange;
-    const [value, setValue] = useControllableValue(props.value, props.defaultValue, props.onChange);
-    const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
-    const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>('');
-
-    const getValue = (): string | undefined => {
+    const getValue = (currentProps: ITextFieldProps): string | undefined => {
+      const { value = state.uncontrolledValue } = currentProps;
       if (typeof value === 'number') {
         // not allowed per typings, but happens anyway
         return String(value);
@@ -204,7 +221,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       styles,
       autoAdjustHeight,
       deferredValidationTime = 200,
-      validateOnLoad = true,
+      // validateOnLoad = true,
       onRenderPrefix = renderPrefix,
       onRenderSuffix = renderSuffix,
       onRenderLabel = renderLabel,
@@ -228,35 +245,35 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       autoAdjustHeight,
     });
 
-    const validate = (): void => {
+    const validate = (validatedValue: string | undefined): void => {
       // In case _validate is called again while validation promise is executing
-      if (state.latestValidateValue === getValue() && shouldValidateAllChanges()) {
+      if (state.latestValidateValue === validatedValue && shouldValidateAllChanges()) {
         return;
       }
-      state.latestValidateValue = getValue();
+      state.latestValidateValue = validatedValue;
       const onGetErrorMessage = props.onGetErrorMessage;
-      const result = onGetErrorMessage && onGetErrorMessage(getValue() || '');
+      const result = onGetErrorMessage && onGetErrorMessage(validatedValue || '');
       if (result !== undefined) {
         if (typeof result === 'string' || !('then' in result)) {
           setErrorMessage(result);
-          notifyAfterValidate(result);
+          notifyAfterValidate(validatedValue, result);
         } else {
           const currentValidation: number = ++state.lastValidation;
           result.then((errorMessageValue: string | JSX.Element) => {
             if (currentValidation === state.lastValidation) {
               setErrorMessage(errorMessageValue);
             }
-            notifyAfterValidate(errorMessage);
+            notifyAfterValidate(validatedValue, errorMessage);
           });
         }
       } else {
-        notifyAfterValidate('');
+        notifyAfterValidate(validatedValue, '');
       }
     };
 
-    const notifyAfterValidate = (errorMessageProp: string | JSX.Element): void => {
-      if (getValue() && props.onNotifyValidationResult) {
-        props.onNotifyValidationResult(errorMessageProp, getValue());
+    const notifyAfterValidate = (validatedValue: string | undefined, errorMessageProp: string | JSX.Element): void => {
+      if (validatedValue && props.onNotifyValidationResult) {
+        props.onNotifyValidationResult(errorMessageProp, validatedValue);
       }
     };
 
@@ -266,7 +283,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       }
       toggleIsFocused();
       if (props.validateOnFocusIn) {
-        validate();
+        validate(getValue(props));
       }
     };
 
@@ -276,7 +293,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       }
       toggleIsFocused();
       if (props.validateOnFocusOut) {
-        validate();
+        validate(getValue(props));
       }
     };
 
@@ -298,7 +315,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
           id={props.id || fallbackId}
           {...textAreaProps}
           ref={textElement as React.Ref<HTMLTextAreaElement>}
-          value={getValue() || ''}
+          value={getValue(props) || ''}
           onInput={onInputChange}
           onChange={onInputChange}
           className={classNames.field}
@@ -341,8 +358,8 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       // https://reactjs.org/docs/events.html#event-pooling
       ev.persist();
 
-      if (elementValue !== value) {
-        setValue(elementValue, ev);
+      if (elementValue !== currentValue) {
+        setCurrentValue(elementValue, ev);
       }
     };
 
@@ -358,7 +375,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
           aria-labelledby={ariaLabelledBy}
           {...inputProps}
           ref={textElement as React.RefObject<HTMLInputElement>}
-          value={getValue() || ''}
+          value={getValue(props) || ''}
           onInput={onInputChange}
           onChange={onInputChange}
           className={classNames.field}
@@ -399,15 +416,59 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         errorMessage: 'onGetErrorMessage',
       });
     }
-    useComponentRef(props, textElement, getValue());
+    useComponentRef(props, textElement, getValue(props));
+
+    const delayedValidate = (validateValue: string | undefined) =>
+      React.useEffect(() => {
+        const timeoutId = setTimeout(() => {
+          validate(validateValue);
+        }, deferredValidationTime);
+        state.lastValidation = 0;
+        return () => clearTimeout(timeoutId);
+      }, [validate, validateValue]);
 
     React.useEffect(() => {
-      const timer = setTimeout(() => {
-        validate();
-      }, deferredValidationTime);
-      state.lastValidation = 0;
-      return () => clearTimeout(timer);
-    }, [validate]);
+      const { selection = [null, null] } = snapshot || {};
+      const [start, end] = selection;
+
+      if (props.multiline && state.prevProps.multiline !== props.multiline && state.prevIsFocused) {
+        state.prevProps.multiline = props.multiline;
+        state.prevIsFocused = isFocused;
+        // The text field has just changed between single- and multi-line, so we need to reset focus
+        // and selection/cursor.
+        if (textElement.current) {
+          textElement.current.focus();
+          if (start !== null && end !== null && start >= 0 && end >= 0) {
+            (textElement.current as HTMLInputElement).setSelectionRange(start, end);
+          }
+        }
+      }
+
+      const prevValue = getValue(state.prevProps);
+      if (prevValue !== currentValue) {
+        // Handle controlled/uncontrolled warnings and status
+        warnControlledUsage(state.prevProps);
+
+        // Clear error message if needed
+        // TODO: is there any way to do this without an extra render?
+        if (errorMessage && !props.errorMessage) {
+          setErrorMessage('');
+        }
+
+        // Adjust height if needed based on new value
+        adjustInputHeight();
+
+        // Reset the record of the last value seen by a change/input event
+        state.lastChangeValue = undefined;
+
+        // TODO: #5875 added logic to trigger validation in componentWillReceiveProps and other places.
+        // This seems a bit odd and hard to integrate with the new approach.
+        // (Starting to think we should just put the validation logic in a separate wrapper component...?)
+        if (shouldValidateAllChanges()) {
+          delayedValidate(prevValue);
+        }
+      }
+    }, [currentValue]);
 
     return (
       <div className={classNames.root} ref={ref}>
