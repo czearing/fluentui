@@ -191,8 +191,9 @@ describe('Autofill', () => {
       });
 
       ReactTestUtils.Simulate.compositionEnd(inputRef.current!, {});
-      inputRef.current!.value = '🆘';
+      jest.runOnlyPendingTimers();
 
+      inputRef.current!.value = '🆘';
       ReactTestUtils.Simulate.input(inputRef.current!, {
         target: inputRef.current!,
         nativeEvent: {

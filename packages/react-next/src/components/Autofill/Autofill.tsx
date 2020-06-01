@@ -288,7 +288,14 @@ export const Autofill = React.forwardRef<HTMLInputElement, React.PropsWithChildr
           }
         }
       }
-    }, [state, displayValue]);
+    }, [
+      props.suggestedDisplayValue,
+      props.shouldSelectFullInputValueInComponentDidUpdate,
+      props.preventValueSelection,
+      state.autoFillEnabled,
+      state.value,
+      displayValue,
+    ]);
 
     useComponentRef(props, inputElement, updateValue, state);
     const nativeProps = getNativeProps<React.InputHTMLAttributes<HTMLInputElement>>(props, inputProperties);
