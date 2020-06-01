@@ -9,6 +9,7 @@ import {
   EventGroup,
 } from '../../Utilities';
 import { FocusTrapZone, IFocusTrapZone } from 'office-ui-fabric-react/src/components/FocusTrapZone/index';
+import { animationDuration } from './Modal.styles';
 import { IModalProps, IModalStyleProps, IModalStyles } from './Modal.types';
 import { Overlay } from '../../Overlay';
 import { ILayerProps, Layer } from '../../Layer';
@@ -17,6 +18,7 @@ import { ResponsiveMode } from 'office-ui-fabric-react/lib/utilities/decorators/
 import { DirectionalHint } from 'office-ui-fabric-react/src/components/Callout/index';
 import { Icon } from 'office-ui-fabric-react/src/components/Icon/index';
 import { DraggableZone, IDragData } from 'office-ui-fabric-react/lib/utilities/DraggableZone/index';
+import { useSetTimeout } from '@uifabric/react-hooks';
 
 // @TODO - need to change this to a panel whenever the breakpoint is under medium (verify the spec)
 
@@ -37,11 +39,20 @@ export interface IDialogState {
   y: number;
 }
 
+export interface IModalState {
+  scrollableContent: HTMLDivElement | null;
+  lastSetX: number;
+  lastSetY: number;
+  hasRegisteredKeyUp: boolean;
+  onModalCloseTimer: number;
+  prevProps: IModalProps;
+}
+
 const getClassNames = classNamesFunction<IModalStyleProps, IModalStyles>();
 const COMPONENT_NAME = 'Modal';
 
 export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
-  const focusTrapZone = React.useRef<IModalStyle>(null);
+  const focusTrapZone = React.useRef<IFocusTrapZone>(null);
   // const [id, setId] = React.useState(getId('Modal'));
   const [isModalMenuOpen, setIsModalMenuOpen] = React.useState();
   const [isInKeyboardMoveMode, setisInKeyboardMoveMode] = React.useState();
@@ -51,15 +62,17 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const [hasBeenOpened, setHasBeenOpened] = React.useState(props.isOpen);
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
-
-  const [state] = React.useState<IModalState>({});
-
-  let scrollableContent: HTMLDivElement | null = null;
   const events = new EventGroup(this);
-  let lastSetX: number;
-  let lastSetY: number;
-  let hasRegisteredKeyUp: boolean = false;
   const { allowTouchBodyScroll = false } = props;
+
+  const [state] = React.useState<IModalState>({
+    scrollableContent: null,
+    lastSetX: 0,
+    lastSetY: 0,
+    hasRegisteredKeyUp: false,
+    onModalCloseTimer: 0,
+    prevProps: props,
+  });
 
   warnDeprecations(COMPONENT_NAME, props, {
     onLayerDidMount: 'layerProps.onLayerDidMount',
@@ -129,9 +142,9 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
         allowScrollOnElement(elt, events);
       }
     } else {
-      events.off(scrollableContent);
+      events.off(state.scrollableContent);
     }
-    scrollableContent = elt;
+    state.scrollableContent = elt;
   };
 
   const onModalContextMenuClose = (): void => {
@@ -139,8 +152,8 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   };
 
   const onModalClose = (): void => {
-    lastSetX = 0;
-    lastSetY = 0;
+    state.lastSetX = 0;
+    state.lastSetY = 0;
     setIsOpen(false);
     setX(0);
     setY(0);
@@ -150,7 +163,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     setX(0);
     setY(0);
 
-    if (props.dragOptions && hasRegisteredKeyUp) {
+    if (props.dragOptions && state.hasRegisteredKeyUp) {
       events.off(window, 'keyup', onKeyUp, true /* useCapture */);
     }
 
@@ -182,7 +195,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     if (event.altKey && event.ctrlKey && event.keyCode === KeyCodes.space) {
       // Since this is a global handler, we should make sure the target is within the dialog
       // before opening the dropdown
-      if (elementContains(scrollableContent, event.target as HTMLElement)) {
+      if (elementContains(state.scrollableContent, event.target as HTMLElement)) {
         setIsModalMenuOpen(!isModalMenuOpen);
         event.preventDefault();
         event.stopPropagation();
@@ -216,11 +229,11 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
 
       switch (event.keyCode) {
         case KeyCodes.escape:
-          setX(lastSetX);
-          setY(lastSetY);
+          setX(state.lastSetX);
+          setY(state.lastSetY);
         case KeyCodes.enter: {
-          lastSetX = 0;
-          lastSetY = 0;
+          state.lastSetX = 0;
+          state.lastSetY = 0;
           setisInKeyboardMoveMode(false);
           break;
         }
@@ -262,28 +275,30 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     }
     return delta;
   };
-  //
+
   const onEnterKeyboardMoveMode = () => {
-    lastSetX = x;
-    lastSetY = y;
+    state.lastSetX = x;
+    state.lastSetY = y;
     setisInKeyboardMoveMode(true);
     setIsModalMenuOpen(false);
     events.on(window, 'keydown', onKeyDown, true /* useCapture */);
   };
 
   const onExitKeyboardMoveMode = () => {
-    lastSetX = 0;
-    lastSetY = 0;
+    state.lastSetX = 0;
+    state.lastSetY = 0;
     setisInKeyboardMoveMode(false);
     events.off(window, 'keydown', onKeyDown, true /* useCapture */);
   };
 
   const registerForKeyUp = (): void => {
-    if (!hasRegisteredKeyUp) {
+    if (!state.hasRegisteredKeyUp) {
       events.on(window, 'keyup', onKeyUp, true /* useCapture */);
-      hasRegisteredKeyUp = true;
+      state.hasRegisteredKeyUp = true;
     }
   };
+
+  const safeSetTimeout = useSetTimeout();
 
   const modalContent = (
     <FocusTrapZone
@@ -319,7 +334,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
             directionalHint={DirectionalHint.topLeftEdge}
             directionalHintFixed
             shouldFocusOnMount
-            target={scrollableContent}
+            target={state.scrollableContent}
           />
         )}
         {props.children}
@@ -327,6 +342,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     </FocusTrapZone>
   );
 
+  clearTimeout(state.onModalCloseTimer);
   // Opening the dialog
   if (props.isOpen) {
     if (!isOpen) {
@@ -349,7 +365,30 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
           setModalRectangleTop(modalRectangle.top);
         }
       }
+
+      // Closing the dialog
+      if (!props.isOpen && isOpen) {
+        state.onModalCloseTimer = safeSetTimeout(() => {
+          onModalClose();
+        }, parseFloat(animationDuration) * 1000);
+        setIsVisible(false);
+      }
     }
+
+    // Component did mount
+    React.useEffect(() => {
+      if (isOpen && isVisible) {
+        registerForKeyUp();
+      }
+    }, [isOpen, isVisible]);
+
+    // Component did update
+    React.useEffect(() => {
+      if (!state.prevProps.isOpen && !isVisible) {
+        setIsVisible(true);
+        state.prevProps = props;
+      }
+    }, [state.prevProps, isOpen]);
 
     if (responsiveMode! >= ResponsiveMode.small) {
       return (
@@ -391,5 +430,4 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
       );
     }
   }
-  return null;
 };
