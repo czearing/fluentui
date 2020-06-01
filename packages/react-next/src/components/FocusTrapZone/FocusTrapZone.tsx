@@ -52,6 +52,7 @@ interface IFocusTrapZoneState {
   previouslyFocusedElementOutsideTrapZone: HTMLElement | undefined;
   previouslyFocusedElementInTrapZone: HTMLElement | undefined;
   hasFocus: boolean;
+  prevProps: IFocusTrapZoneProps;
 }
 
 const COMPONENT_NAME = 'FocusTrapZone';
@@ -73,6 +74,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     disposeFocusHandler: undefined,
     disposeClickHandler: undefined,
     hasFocus: false,
+    prevProps: props,
   });
 
   const focus = () => {
@@ -343,9 +345,10 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
   });
 
   React.useEffect(() => {
-    const prevForceFocusInsideTrap = props.forceFocusInsideTrap !== undefined ? props.forceFocusInsideTrap : true;
+    const prevForceFocusInsideTrap =
+      state.prevProps.forceFocusInsideTrap !== undefined ? state.prevProps.forceFocusInsideTrap : true;
     const newForceFocusInsideTrap = props.forceFocusInsideTrap !== undefined ? props.forceFocusInsideTrap : true;
-    const prevDisabled = props.disabled !== undefined ? props.disabled : false;
+    const prevDisabled = state.prevProps.disabled !== undefined ? state.prevProps.disabled : false;
     const newDisabled = props.disabled !== undefined ? props.disabled : false;
 
     if ((!prevForceFocusInsideTrap && newForceFocusInsideTrap) || (prevDisabled && !newDisabled)) {
@@ -357,6 +360,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       // Emulate what happens when a FocusTrapZone gets unmounted.
       returnFocusToInitiator();
     }
+    state.prevProps = props;
   }, [props]);
 
   useComponentRef(props, state.previouslyFocusedElementInTrapZone, focus);
