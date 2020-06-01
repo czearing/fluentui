@@ -41,7 +41,7 @@ const getClassNames = classNamesFunction<IModalStyleProps, IModalStyles>();
 const COMPONENT_NAME = 'Modal';
 
 export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
-  const focusTrapZone = React.useRef<IFocusTrapZone>(null);
+  const focusTrapZone = React.useRef<IModalStyle>(null);
   // const [id, setId] = React.useState(getId('Modal'));
   const [isModalMenuOpen, setIsModalMenuOpen] = React.useState();
   const [isInKeyboardMoveMode, setisInKeyboardMoveMode] = React.useState();
@@ -51,6 +51,8 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const [hasBeenOpened, setHasBeenOpened] = React.useState(props.isOpen);
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
+
+  const [state] = React.useState<IModalState>({});
 
   let scrollableContent: HTMLDivElement | null = null;
   const events = new EventGroup(this);
