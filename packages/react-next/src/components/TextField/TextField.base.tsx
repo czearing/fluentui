@@ -131,6 +131,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       // This isn't allowed per the props, but happens anyway.
       defaultValue = String(defaultValue);
     }
+
     props.checked, props.defaultChecked, props.onChange;
     const [value, setValue] = useControllableValue(props.value, props.defaultValue, props.onChange);
     const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
@@ -399,6 +400,13 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       });
     }
     useComponentRef(props, textElement, getValue());
+
+    React.useEffect(() => {
+      const timer = setTimeout(() => {
+        validate();
+      }, deferredValidationTime);
+      return () => clearTimeout(timer);
+    }, [validate]);
 
     return (
       <div className={classNames.root} ref={ref}>
