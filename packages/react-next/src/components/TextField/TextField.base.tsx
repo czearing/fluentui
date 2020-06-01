@@ -405,6 +405,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       const timer = setTimeout(() => {
         validate();
       }, deferredValidationTime);
+      state.lastValidation = 0;
       return () => clearTimeout(timer);
     }, [validate]);
 
