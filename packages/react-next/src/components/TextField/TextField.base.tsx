@@ -162,7 +162,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       return value;
     };
 
-    const renderLabel = (): JSX.Element | null => {
+    const renderLabel = (labelProps: ITextFieldProps): JSX.Element | null => {
       // IProcessedStyleSet definition requires casting for what Label expects as its styles prop
       const labelStyles = classNames.subComponentStyles
         ? (classNames.subComponentStyles.label as IStyleFunctionOrObject<ILabelStyleProps, ILabelStyles>)
@@ -173,19 +173,19 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
             required={required}
             htmlFor={props.id || fallbackId}
             styles={labelStyles}
-            disabled={props.disabled}
+            disabled={labelProps.disabled}
             id={labelId}
           >
-            {props.label}
+            {labelProps.label}
           </Label>
         );
       }
       return null;
     };
 
-    const renderDescription = (): JSX.Element | null => {
-      if (props.description) {
-        return <span className={classNames.description}>{props.description}</span>;
+    const renderDescription = (descriptionProps: ITextFieldProps): JSX.Element | null => {
+      if (descriptionProps.description) {
+        return <span className={classNames.description}>{descriptionProps.description}</span>;
       }
       return null;
     };
@@ -221,7 +221,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       styles,
       autoAdjustHeight,
       deferredValidationTime = 200,
-      // validateOnLoad = true,
+      validateOnLoad = true,
       onRenderPrefix = renderPrefix,
       onRenderSuffix = renderSuffix,
       onRenderLabel = renderLabel,
@@ -389,13 +389,13 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       );
     };
 
-    const useWarnControlledUsage = (): void => {
+    const callWarnControlledUsage = (prevProps?: ITextFieldProps): void => {
       // Show warnings if props are being used in an invalid way
       warnControlledUsage({
         componentId: props.id || fallbackId,
         componentName: COMPONENT_NAME,
         props: props,
-        oldProps: props,
+        oldProps: prevProps,
         valueProp: 'value',
         defaultValueProp: 'defaultValue',
         onChangeProp: 'onChange',
@@ -410,12 +410,13 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       }
     };
 
-    useWarnControlledUsage();
     if (process.env.NODE_ENV !== 'production') {
       warnMutuallyExclusive(COMPONENT_NAME, props, {
         errorMessage: 'onGetErrorMessage',
       });
     }
+
+    callWarnControlledUsage();
     useComponentRef(props, textElement, getValue(props));
 
     const delayedValidate = (validateValue: string | undefined) =>
@@ -447,7 +448,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       const prevValue = getValue(state.prevProps);
       if (prevValue !== currentValue) {
         // Handle controlled/uncontrolled warnings and status
-        warnControlledUsage(state.prevProps);
+        callWarnControlledUsage(state.prevProps);
 
         // Clear error message if needed
         // TODO: is there any way to do this without an extra render?
@@ -470,34 +471,40 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       }
     }, [currentValue]);
 
+    React.useEffect(() => {
+      adjustInputHeight();
+      if (validateOnLoad) {
+        validate(getValue(props));
+      }
+    }, []);
+
     return (
       <div className={classNames.root} ref={ref}>
         <div className={classNames.wrapper}>
-          {onRenderLabel}
+          {onRenderLabel(props)}
           <div className={classNames.fieldGroup}>
             {(prefix !== undefined || props.onRenderPrefix) && (
-              <div className={classNames.prefix}>{onRenderPrefix}</div>
+              <div className={classNames.prefix}>{onRenderPrefix(props, renderPrefix)}</div>
             )}
             {multiline ? renderTextArea() : renderInput()}
             {iconProps && <Icon className={classNames.icon} {...iconProps} />}
             {(suffix !== undefined || props.onRenderSuffix) && (
-              <div className={classNames.suffix}>{onRenderSuffix}</div>
+              <div className={classNames.suffix}>{onRenderSuffix(props, renderSuffix)}</div>
             )}
           </div>
         </div>
         {isDescriptionAvailable && (
           <span id={descriptionId}>
-            {onRenderDescription}
-            {errorMessage ||
-              ('' && (
-                <div role="alert">
-                  <DelayedRender>
-                    <p className={classNames.errorMessage || ''}>
-                      <span data-automation-id="error-message">{errorMessage || ''}</span>
-                    </p>
-                  </DelayedRender>
-                </div>
-              ))}
+            {onRenderDescription(props)}
+            {errorMessage && (
+              <div role="alert">
+                <DelayedRender>
+                  <p className={classNames.errorMessage}>
+                    <span data-automation-id="error-message">{errorMessage}</span>
+                  </p>
+                </DelayedRender>
+              </div>
+            )}
           </span>
         )}
       </div>
