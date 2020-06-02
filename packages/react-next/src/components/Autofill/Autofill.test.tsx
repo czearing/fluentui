@@ -167,11 +167,11 @@ describe('Autofill', () => {
 
   it('handles composition events when multiple compositionEnd events are dispatched without a compositionStart', () => {
     const onInputChange = jest.fn((a: string, b: boolean) => a);
-    ReactTestUtils.act(() => {
-      wrapper = mount(
-        <Autofill ref={inputRef} componentRef={autofillRef} onInputChange={onInputChange} suggestedDisplayValue="he" />,
-      );
+    wrapper = mount(
+      <Autofill ref={inputRef} componentRef={autofillRef} onInputChange={onInputChange} suggestedDisplayValue="he" />,
+    );
 
+    ReactTestUtils.act(() => {
       inputRef.current!.value = 'hel';
       ReactTestUtils.Simulate.input(inputRef.current!);
       expect(autofillRef.current!.value).toBe('hel');
@@ -191,7 +191,6 @@ describe('Autofill', () => {
       });
 
       ReactTestUtils.Simulate.compositionEnd(inputRef.current!, {});
-      jest.runOnlyPendingTimers();
 
       inputRef.current!.value = '🆘';
       ReactTestUtils.Simulate.input(inputRef.current!, {
@@ -200,8 +199,11 @@ describe('Autofill', () => {
           isComposing: true,
         } as any,
       });
+      // });
+
       jest.runOnlyPendingTimers();
 
+      // ReactTestUtils.act(() => {
       ReactTestUtils.Simulate.keyDown(inputRef.current!, {
         keyCode: KeyCodes.m,
         which: KeyCodes.m,
@@ -209,7 +211,9 @@ describe('Autofill', () => {
           isComposing: true,
         } as any,
       });
+
       inputRef.current!.value = '🆘m';
+
       ReactTestUtils.Simulate.input(inputRef.current!, {
         target: inputRef.current!,
         nativeEvent: {
@@ -225,17 +229,21 @@ describe('Autofill', () => {
           isComposing: false,
         } as any,
       });
+
       jest.runOnlyPendingTimers();
     });
+
     expect(onInputChange.mock.calls).toEqual([
       ['hel', false],
       ['help', true],
       ['🆘', true], // from input event
+      ['', false], // The blank value here....
       ['🆘', false], // from timeout on compositionEnd event
       ['🆘m', true],
       ['🆘Ⓜ', false], // from input event
       ['🆘Ⓜ', false], // from  timeout on compositionEnd event
     ]);
+
     expect(autofillRef.current!.value).toBe('🆘Ⓜ');
   });
 
