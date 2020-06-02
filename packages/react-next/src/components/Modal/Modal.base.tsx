@@ -21,7 +21,7 @@ import { DraggableZone, IDragData } from 'office-ui-fabric-react/lib/utilities/D
 import { useSetTimeout } from '@uifabric/react-hooks';
 
 // @TODO - need to change this to a panel whenever the breakpoint is under medium (verify the spec)
-
+//
 const DefaultLayerProps: ILayerProps = {
   eventBubblingEnabled: false,
 };
