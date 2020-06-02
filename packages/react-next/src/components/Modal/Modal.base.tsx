@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   classNamesFunction,
+  getId,
   allowScrollOnElement,
   allowOverscrollOnElement,
   KeyCodes,
@@ -19,9 +20,10 @@ import { DirectionalHint } from 'office-ui-fabric-react/src/components/Callout/i
 import { Icon } from 'office-ui-fabric-react/src/components/Icon/index';
 import { DraggableZone, IDragData } from 'office-ui-fabric-react/lib/utilities/DraggableZone/index';
 import { useSetTimeout } from '@uifabric/react-hooks';
+import { FocusTrapZoneBoxClickExample } from '../FocusTrapZone/examples/FocusTrapZone.Box.Click.Example';
 
 // @TODO - need to change this to a panel whenever the breakpoint is under medium (verify the spec)
-//
+
 const DefaultLayerProps: ILayerProps = {
   eventBubblingEnabled: false,
 };
@@ -48,12 +50,26 @@ export interface IModalState {
   prevProps: IModalProps;
 }
 
+const useComponentRef = (props: IModalProps, focusTrapZone: React.RefObject<IFocusTrapZone>) => {
+  React.useImperativeHandle(
+    props.componentRef,
+    () => ({
+      focus() {
+        if (focusTrapZone.current) {
+          focusTrapZone.current.focus();
+        }
+      },
+    }),
+    [focusTrapZone],
+  );
+};
+
 const getClassNames = classNamesFunction<IModalStyleProps, IModalStyles>();
 const COMPONENT_NAME = 'Modal';
 
 export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const focusTrapZone = React.useRef<IFocusTrapZone>(null);
-  // const [id, setId] = React.useState(getId('Modal'));
+  const [id, setId] = React.useState(getId('Modal'));
   const [isModalMenuOpen, setIsModalMenuOpen] = React.useState();
   const [isInKeyboardMoveMode, setisInKeyboardMoveMode] = React.useState();
   const [modalRectangleTop, setModalRectangleTop] = React.useState();
@@ -79,8 +95,6 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   });
 
   const {
-    className = '',
-    containerClassName = '',
     scrollableContentClassName,
     elementToFocusOnDismiss,
     firstFocusableSelector,
@@ -104,18 +118,14 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     dragOptions,
   } = props;
 
-  if (!isOpen) {
-    return null;
-  }
-
   const layerClassName = layerProps === undefined ? '' : layerProps.className;
 
   const classNames = getClassNames(styles, {
     theme: theme!,
-    className,
-    containerClassName,
+    className: '',
+    containerClassName: '',
     scrollableContentClassName,
-    isOpen,
+    isOpen: false,
     isVisible,
     hasBeenOpened,
     modalRectangleTop,
@@ -342,55 +352,64 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     </FocusTrapZone>
   );
 
-  clearTimeout(state.onModalCloseTimer);
-  // Opening the dialog
-  if (props.isOpen) {
-    if (!isOpen) {
-      // First Open
-      setIsOpen(true);
-      // Add a keyUp handler for all key up events when the dialog is open
-      if (props.dragOptions) {
-        registerForKeyUp();
-      }
-    } else {
-      // Modal has been opened
-      // Reopen during closing
-      setHasBeenOpened(true);
-      setIsVisible(true);
-      if (props.topOffsetFixed) {
-        const dialogMain = document.getElementsByClassName('ms-Dialog-main');
-        let modalRectangle;
-        if (dialogMain.length > 0) {
-          modalRectangle = dialogMain[0].getBoundingClientRect();
-          setModalRectangleTop(modalRectangle.top);
+  React.useEffect(() => {
+    clearTimeout(state.onModalCloseTimer);
+    // Opening the dialog
+    if (props.isOpen) {
+      if (!isOpen) {
+        // First Open
+        setIsOpen(true);
+        // Add a keyUp handler for all key up events when the dialog is open
+        if (props.dragOptions) {
+          registerForKeyUp();
+        }
+      } else {
+        // Modal has been opened
+        // Reopen during closing
+        setHasBeenOpened(true);
+        setIsVisible(true);
+
+        if (props.topOffsetFixed) {
+          const dialogMain = document.getElementsByClassName('ms-Dialog-main');
+          let modalRectangle;
+          if (dialogMain.length > 0) {
+            modalRectangle = dialogMain[0].getBoundingClientRect();
+            setModalRectangleTop(modalRectangle.top);
+          }
+        }
+
+        // Closing the dialog
+        if (!props.isOpen && isOpen) {
+          state.onModalCloseTimer = safeSetTimeout(() => {
+            onModalClose();
+          }, parseFloat(animationDuration) * 1000);
+          setIsVisible(false);
         }
       }
-
-      // Closing the dialog
-      if (!props.isOpen && isOpen) {
-        state.onModalCloseTimer = safeSetTimeout(() => {
-          onModalClose();
-        }, parseFloat(animationDuration) * 1000);
-        setIsVisible(false);
-      }
     }
+  }, [isOpen, isVisible, props.isOpen, props.dragOptions, props.topOffsetFixed]);
 
-    // Component did mount
-    React.useEffect(() => {
-      if (isOpen && isVisible) {
-        registerForKeyUp();
-      }
-    }, [isOpen, isVisible]);
+  // Component did mount
+  React.useEffect(() => {
+    if (isOpen && isVisible) {
+      registerForKeyUp();
+    }
+  }, [isOpen, isVisible]);
 
-    // Component did update
-    React.useEffect(() => {
-      if (!state.prevProps.isOpen && !isVisible) {
-        setIsVisible(true);
-        state.prevProps = props;
-      }
-    }, [state.prevProps, isOpen]);
+  // Component did update
+  React.useEffect(() => {
+    if (!state.prevProps.isOpen && !isVisible) {
+      setIsVisible(true);
+      state.prevProps = props;
+    }
+  }, [state.prevProps, isOpen]);
 
-    if (responsiveMode! >= ResponsiveMode.small) {
+  useComponentRef(props, focusTrapZone);
+
+  if (responsiveMode! >= ResponsiveMode.small) {
+    if (!isOpen) {
+      return null;
+    } else {
       return (
         <Layer {...mergedLayerProps}>
           <Popup
@@ -405,7 +424,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
               {!isModeless && (
                 <Overlay
                   isDarkThemed={isDarkOverlay}
-                  onClick={isBlocking ? undefined : (onDismiss as any)}
+                  onClick={isBlocking ? undefined : onDismiss}
                   allowTouchBodyScroll={allowTouchBodyScroll}
                   {...overlay}
                 />
@@ -429,5 +448,6 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
         </Layer>
       );
     }
+    return null;
   }
 };
