@@ -407,7 +407,7 @@ describe('TextField with error message', () => {
     });
   });
 
-  it('should not render error message when onGetErrorMessage return an empty string', () => {
+  it('should not render error message when onGetErrorMessage returns an empty string', () => {
     const validator = jest.fn(() => '');
     wrapper = mount(<TextField defaultValue="invalid value" onGetErrorMessage={validator} />);
     jest.runAllTimers();

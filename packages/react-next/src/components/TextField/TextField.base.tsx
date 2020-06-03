@@ -98,7 +98,10 @@ const useComponentRef = (
 
       getSnapshotBeforeUpdate(prevProps: ITextFieldProps, prevState: ITextFieldState): ITextFieldSnapshot | null {
         return {
-          selection: [this.selectionStart, this.selectionEnd],
+          selection: [
+            textElement.current ? textElement.current.selectionStart : -1,
+            textElement.current ? textElement.current.selectionEnd : -1,
+          ],
         };
       },
 
@@ -130,7 +133,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
     const labelId = useId(COMPONENT_NAME + 'Label');
     props.checked, props.defaultChecked, props.onChange;
     const [currentValue, setCurrentValue] = useControllableValue(props.value, props.defaultValue, props.onChange);
-    const [isFocused, { toggle: toggleIsFocused }] = useBoolean(false);
+    const [isFocused, { setTrue: setTrueIsFocused, setFalse: setFalseIsFocused }] = useBoolean(false);
     const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>('');
 
     const [state] = React.useState<ITextFieldState>({
@@ -154,7 +157,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
     }
 
     const getValue = (currentProps: ITextFieldProps): string | undefined => {
-      const { value = state.uncontrolledValue } = currentProps;
+      const { value = currentValue } = currentProps;
       if (typeof value === 'number') {
         // not allowed per typings, but happens anyway
         return String(value);
@@ -190,12 +193,12 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       return null;
     };
 
-    const renderPrefix = (): JSX.Element => {
-      return <span style={onRenderStyles}>{prefix}</span>;
+    const renderPrefix = (prefixProps: ITextFieldProps): JSX.Element => {
+      return <span style={onRenderStyles}>{prefixProps.prefix}</span>;
     };
 
-    const renderSuffix = (): JSX.Element => {
-      return <span style={onRenderStyles}>{suffix}</span>;
+    const renderSuffix = (suffixProps: ITextFieldProps): JSX.Element => {
+      return <span style={onRenderStyles}>{suffixProps.suffix}</span>;
     };
 
     const shouldValidateAllChanges = (): boolean => {
@@ -226,7 +229,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       onRenderLabel = renderLabel,
       onRenderDescription = renderDescription,
     } = props;
-    let { validateOnLoad = true } = props;
+
     const classNames = getClassNames(styles!, {
       theme: theme!,
       className,
@@ -280,7 +283,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       if (props.onFocus) {
         props.onFocus(ev);
       }
-      toggleIsFocused();
+      setTrueIsFocused();
       if (props.validateOnFocusIn) {
         validate(getValue(props));
       }
@@ -290,7 +293,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       if (props.onBlur) {
         props.onBlur(ev);
       }
-      toggleIsFocused();
+      setFalseIsFocused();
       if (props.validateOnFocusOut) {
         validate(getValue(props));
       }
@@ -468,16 +471,17 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       }
     }, [currentValue]);
 
-    adjustInputHeight();
-    if (validateOnLoad) {
-      validate(getValue(props));
-      validateOnLoad = false;
-    }
+    React.useEffect(() => {
+      adjustInputHeight();
+      if (props.validateOnLoad) {
+        validate(getValue(props));
+      }
+    }, [props, currentValue]);
 
     return (
       <div className={classNames.root} ref={ref}>
         <div className={classNames.wrapper}>
-          {onRenderLabel(props)}
+          {onRenderLabel(props, renderLabel)}
           <div className={classNames.fieldGroup}>
             {(prefix !== undefined || props.onRenderPrefix) && (
               <div className={classNames.prefix}>{onRenderPrefix(props, renderPrefix)}</div>
@@ -491,7 +495,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         </div>
         {isDescriptionAvailable && (
           <span id={descriptionId}>
-            {onRenderDescription(props)}
+            {onRenderDescription(props, renderDescription)}
             {errorMessage && (
               <div role="alert">
                 <DelayedRender>
@@ -508,3 +512,8 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
   },
 );
 TextFieldBase.displayName = COMPONENT_NAME;
+TextFieldBase.defaultProps = {
+  resizable: true,
+  deferredValidationTime: 200,
+  validateOnLoad: true,
+};
