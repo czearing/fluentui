@@ -4045,6 +4045,34 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
+"@uifabric/date-time@^7.8.93":
+  version "7.8.93"
+  resolved "https://registry.yarnpkg.com/@uifabric/date-time/-/date-time-7.8.93.tgz#e71a3c40c2bfa968e2bfd7114cb3cbc18a77dfaa"
+  integrity sha512-2DQKgEsxNhJwckGkELtTl4MEmWRl1D9b4s0kyg7TA9hfXb6nW1mT0dPpfcFRehSs5Mb70QekhDOyYoLFrIUjNA==
+  dependencies:
+    "@microsoft/load-themed-styles" "^1.10.26"
+    "@uifabric/set-version" "^7.0.13"
+    "@uifabric/styling" "^7.12.15"
+    "@uifabric/utilities" "^7.20.3"
+    office-ui-fabric-react "^7.117.1"
+    tslib "^1.10.0"
+
+"@uifabric/react-cards@^0.109.92":
+  version "0.109.92"
+  resolved "https://registry.yarnpkg.com/@uifabric/react-cards/-/react-cards-0.109.92.tgz#1ec482e2f2e4b85d35ffe23f504feb6c75c107ff"
+  integrity sha512-LQmdFazEV/It8h1rPUy0LX8NEbS3iKbQJhDjkQ+uxuSrb9eDLQFyb6Ag3smWYBB6prBOZcBjpCPcIqQrO+YPtw==
+  dependencies:
+    "@microsoft/load-themed-styles" "^1.10.26"
+    "@uifabric/azure-themes" "^7.1.20"
+    "@uifabric/file-type-icons" "^7.3.1"
+    "@uifabric/foundation" "^7.7.22"
+    "@uifabric/set-version" "^7.0.13"
+    "@uifabric/styling" "^7.12.15"
+    "@uifabric/theme-samples" "^7.0.86"
+    "@uifabric/utilities" "^7.20.3"
+    office-ui-fabric-react "^7.117.1"
+    tslib "^1.10.0"
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.9.0.tgz#bd850604b4042459a5a41cd7d338cbed695ed964"
@@ -8536,7 +8564,7 @@ enzyme-to-json@^3.3.4:
   dependencies:
     lodash "^4.17.4"
 
-enzyme@3.11.0, enzyme@^3.11.0, enzyme@~3.11.0:
+enzyme@^3.11.0, enzyme@~3.11.0:
   version "3.11.0"
   resolved "https://registry.yarnpkg.com/enzyme/-/enzyme-3.11.0.tgz#71d680c580fe9349f6f5ac6c775bc3e6b7a79c28"
   integrity sha512-Dw8/Gs4vRjxY6/6i9wU0V+utmQO9kvh9XLnz3LIudviOnVYDEe2ec+0k+NQoMamn1VrjKgCUOWj5jG/5M5M0Qw==

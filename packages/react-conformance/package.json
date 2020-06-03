@@ -40,7 +40,7 @@
   "peerDependencies": {
     "@types/react": ">=16.8.0 <17.0.0",
     "@types/react-dom": ">=16.8.0 <17.0.0",
-    "enzyme": "^3.0.0",
+    "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.0.0",
     "jest": "^24.0.0",
     "react": ">=16.8.0 <17.0.0",
