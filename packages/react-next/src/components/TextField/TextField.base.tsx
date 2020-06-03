@@ -221,13 +221,12 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       styles,
       autoAdjustHeight,
       deferredValidationTime = 200,
-      validateOnLoad = true,
       onRenderPrefix = renderPrefix,
       onRenderSuffix = renderSuffix,
       onRenderLabel = renderLabel,
       onRenderDescription = renderDescription,
     } = props;
-
+    let { validateOnLoad = true } = props;
     const classNames = getClassNames(styles!, {
       theme: theme!,
       className,
@@ -419,14 +418,15 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
     callWarnControlledUsage();
     useComponentRef(props, textElement, getValue(props));
 
-    const delayedValidate = (validateValue: string | undefined) =>
-      React.useEffect(() => {
+    React.useEffect(() => {
+      if (shouldValidateAllChanges()) {
         const timeoutId = setTimeout(() => {
-          validate(validateValue);
+          validate(getValue(state.prevProps));
         }, deferredValidationTime);
         state.lastValidation = 0;
         return () => clearTimeout(timeoutId);
-      }, [validate, validateValue]);
+      }
+    }, [state.prevProps, shouldValidateAllChanges]);
 
     React.useEffect(() => {
       const { selection = [null, null] } = snapshot || {};
@@ -465,18 +465,14 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         // TODO: #5875 added logic to trigger validation in componentWillReceiveProps and other places.
         // This seems a bit odd and hard to integrate with the new approach.
         // (Starting to think we should just put the validation logic in a separate wrapper component...?)
-        if (shouldValidateAllChanges()) {
-          delayedValidate(prevValue);
-        }
       }
     }, [currentValue]);
 
-    React.useEffect(() => {
-      adjustInputHeight();
-      if (validateOnLoad) {
-        validate(getValue(props));
-      }
-    }, []);
+    adjustInputHeight();
+    if (validateOnLoad) {
+      validate(getValue(props));
+      validateOnLoad = false;
+    }
 
     return (
       <div className={classNames.root} ref={ref}>
