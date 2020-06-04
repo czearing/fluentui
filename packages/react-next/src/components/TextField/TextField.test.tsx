@@ -328,13 +328,16 @@ describe('TextField with error message', () => {
     expect(validator).toHaveBeenCalledTimes(1);
   });
 
-  it('should render error message when onGetErrorMessage returns a string', () => {
+  //todo
+  fit('should render error message when onGetErrorMessage returns a string', () => {
     const validator = jest.fn((value: string) => (value.length > 3 ? errorMessage : ''));
 
-    wrapper = mount(<TextField onGetErrorMessage={validator} validateOnLoad={false} />);
+    ReactTestUtils.act(() => {
+      wrapper = mount(<TextField onGetErrorMessage={validator} validateOnLoad={false} />);
 
-    wrapper.find('input').simulate('input', mockEvent('also invalid'));
-    jest.runAllTimers();
+      wrapper!.find('input').simulate('input', mockEvent('also invalid'));
+      jest.runAllTimers();
+    });
 
     expect(validator).toHaveBeenCalledTimes(1);
     assertErrorMessage(wrapper.getDOMNode(), errorMessage);

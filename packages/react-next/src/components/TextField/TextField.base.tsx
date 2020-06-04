@@ -224,11 +224,16 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       styles,
       autoAdjustHeight,
       deferredValidationTime = 200,
-      onRenderPrefix = renderPrefix,
-      onRenderSuffix = renderSuffix,
-      onRenderLabel = renderLabel,
-      onRenderDescription = renderDescription,
+      onRenderPrefix = renderPrefix as ITextFieldProps['onRenderPrefix'],
+      onRenderSuffix = renderSuffix as ITextFieldProps['onRenderSuffix'],
+      onRenderLabel = renderLabel as ITextFieldProps['onRenderLabel'],
+      onRenderDescription = renderDescription as ITextFieldProps['onRenderDescription'],
     } = props;
+
+    const getErrorMessage = (): string | JSX.Element => {
+      const { errorMessage: tempErrorMessage = errorMessage } = props;
+      return tempErrorMessage || '';
+    };
 
     const classNames = getClassNames(styles!, {
       theme: theme!,
@@ -238,7 +243,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       required,
       multiline,
       hasLabel: !!label,
-      hasErrorMessage: !!errorMessage,
+      hasErrorMessage: !!getErrorMessage,
       borderless,
       resizable,
       hasIcon: !!iconProps,
@@ -265,7 +270,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
             if (currentValidation === state.lastValidation) {
               setErrorMessage(errorMessageValue);
             }
-            notifyAfterValidate(validatedValue, errorMessage);
+            notifyAfterValidate(validatedValue, errorMessageValue);
           });
         }
       } else {
@@ -323,7 +328,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
           className={classNames.field}
           aria-labelledby={ariaLabelledBy}
           aria-describedby={isDescriptionAvailable ? descriptionId : props['aria-describedby']}
-          aria-invalid={!!errorMessage}
+          aria-invalid={!!getErrorMessage}
           aria-label={props.ariaLabel}
           readOnly={props.readOnly}
           onFocus={onFocus}
@@ -383,7 +388,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
           className={classNames.field}
           aria-label={props.ariaLabel}
           aria-describedby={isDescriptionAvailable ? descriptionId : props['aria-describedby']}
-          aria-invalid={!!errorMessage}
+          aria-invalid={!!getErrorMessage}
           readOnly={props.readOnly}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -481,26 +486,26 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
     return (
       <div className={classNames.root} ref={ref}>
         <div className={classNames.wrapper}>
-          {onRenderLabel(props, renderLabel)}
+          {onRenderLabel!(props, renderLabel)}
           <div className={classNames.fieldGroup}>
             {(prefix !== undefined || props.onRenderPrefix) && (
-              <div className={classNames.prefix}>{onRenderPrefix(props, renderPrefix)}</div>
+              <div className={classNames.prefix}>{onRenderPrefix!(props, renderPrefix)}</div>
             )}
             {multiline ? renderTextArea() : renderInput()}
             {iconProps && <Icon className={classNames.icon} {...iconProps} />}
             {(suffix !== undefined || props.onRenderSuffix) && (
-              <div className={classNames.suffix}>{onRenderSuffix(props, renderSuffix)}</div>
+              <div className={classNames.suffix}>{onRenderSuffix!(props, renderSuffix)}</div>
             )}
           </div>
         </div>
         {isDescriptionAvailable && (
           <span id={descriptionId}>
-            {onRenderDescription(props, renderDescription)}
-            {errorMessage && (
+            {onRenderDescription!(props, renderDescription)}
+            {getErrorMessage && (
               <div role="alert">
                 <DelayedRender>
                   <p className={classNames.errorMessage}>
-                    <span data-automation-id="error-message">{errorMessage}</span>
+                    <span data-automation-id="error-message">{getErrorMessage}</span>
                   </p>
                 </DelayedRender>
               </div>
