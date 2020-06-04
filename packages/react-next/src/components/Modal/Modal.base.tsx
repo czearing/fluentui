@@ -71,7 +71,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const focusTrapZone = React.useRef<IFocusTrapZone>(null);
   const [id, setId] = React.useState(getId('Modal'));
   const [isModalMenuOpen, setIsModalMenuOpen] = React.useState();
-  const [isInKeyboardMoveMode, setisInKeyboardMoveMode] = React.useState();
+  const [isInKeyboardMoveMode, setIsInKeyboardMoveMode] = React.useState();
   const [modalRectangleTop, setModalRectangleTop] = React.useState();
   const [isOpen, setIsOpen] = React.useState(props.isOpen);
   const [isVisible, setIsVisible] = React.useState(props.isOpen);
@@ -164,11 +164,8 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const onModalClose = (): void => {
     state.lastSetX = 0;
     state.lastSetY = 0;
-    setIsOpen(false);
-    setX(0);
-    setY(0);
     setIsModalMenuOpen(false);
-    setisInKeyboardMoveMode(false);
+    setIsInKeyboardMoveMode(false);
     setIsOpen(false);
     setX(0);
     setY(0);
@@ -185,7 +182,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
 
   const onDragStart = (): void => {
     setIsModalMenuOpen(false);
-    setisInKeyboardMoveMode(false);
+    setIsInKeyboardMoveMode(false);
   };
 
   const onDrag = (_: React.MouseEvent<HTMLElement> & React.TouchEvent<HTMLElement>, ui: IDragData): void => {
@@ -194,7 +191,9 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   };
 
   const onDragStop = (): void => {
-    focus();
+    if (focusTrapZone.current) {
+      focusTrapZone.current.focus();
+    }
   };
 
   const onKeyUp = (event: React.KeyboardEvent<HTMLElement>): void => {
@@ -228,7 +227,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     }
 
     if (isInKeyboardMoveMode && (event.keyCode === KeyCodes.escape || event.keyCode === KeyCodes.enter)) {
-      setisInKeyboardMoveMode(false);
+      setIsInKeyboardMoveMode(false);
       event.preventDefault();
       event.stopPropagation();
     }
@@ -244,7 +243,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
         case KeyCodes.enter: {
           state.lastSetX = 0;
           state.lastSetY = 0;
-          setisInKeyboardMoveMode(false);
+          setIsInKeyboardMoveMode(false);
           break;
         }
         case KeyCodes.up: {
@@ -289,7 +288,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const onEnterKeyboardMoveMode = () => {
     state.lastSetX = x;
     state.lastSetY = y;
-    setisInKeyboardMoveMode(true);
+    setIsInKeyboardMoveMode(true);
     setIsModalMenuOpen(false);
     events.on(window, 'keydown', onKeyDown, true /* useCapture */);
   };
@@ -319,7 +318,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
       ignoreExternalFocusing={ignoreExternalFocusing}
       forceFocusInsideTrap={isModeless ? !isModeless : forceFocusInsideTrap}
       firstFocusableSelector={firstFocusableSelector}
-      focusPreviouslyFocusedInnerElement
+      focusPreviouslyFocusedInnerElement={true}
       onBlur={isInKeyboardMoveMode ? onExitKeyboardMoveMode : undefined}
     >
       {dragOptions && isInKeyboardMoveMode && (
@@ -331,7 +330,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
           )}
         </div>
       )}
-      <div ref={allowScrollOnModal} className={classNames.scrollableContent} data-is-scrollable>
+      <div ref={allowScrollOnModal} className={classNames.scrollableContent} data-is-scrollable={true}>
         {dragOptions && isModalMenuOpen && (
           <dragOptions.menu
             items={[
@@ -339,11 +338,11 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
               { key: 'close', text: dragOptions.closeMenuItemText, onClick: onModalClose },
             ]}
             onDismiss={onModalContextMenuClose}
-            alignTargetEdge
-            coverTarget
+            alignTargetEdge={true}
+            coverTarget={true}
             directionalHint={DirectionalHint.topLeftEdge}
-            directionalHintFixed
-            shouldFocusOnMount
+            directionalHintFixed={true}
+            shouldFocusOnMount={true}
             target={state.scrollableContent}
           />
         )}
@@ -406,48 +405,51 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
 
   useComponentRef(props, focusTrapZone);
 
+  // @temp tuatology - Will adjust this to be a panel at certain breakpoints
   if (responsiveMode! >= ResponsiveMode.small) {
-    if (!isOpen) {
-      return null;
-    } else {
-      return (
-        <Layer {...mergedLayerProps}>
-          <Popup
-            role={isModeless || !isBlocking ? 'dialog' : 'alertdialog'}
-            aria-modal={!isModeless}
-            ariaLabelledBy={titleAriaId}
-            ariaDescribedBy={subtitleAriaId}
-            onDismiss={onDismiss}
-            shouldRestoreFocus={!ignoreExternalFocusing}
-          >
-            <div className={classNames.root}>
-              {!isModeless && (
-                <Overlay
-                  isDarkThemed={isDarkOverlay}
-                  onClick={isBlocking ? undefined : onDismiss}
-                  allowTouchBodyScroll={allowTouchBodyScroll}
-                  {...overlay}
-                />
-              )}
-              {dragOptions ? (
-                <DraggableZone
-                  handleSelector={dragOptions.dragHandleSelector || `.${classNames.main.split(' ')[0]}`}
-                  preventDragSelector="button"
-                  onStart={onDragStart}
-                  onDragChange={onDrag}
-                  onStop={onDragStop}
-                  position={{ x: x, y: y }}
-                >
-                  {modalContent}
-                </DraggableZone>
-              ) : (
-                modalContent
-              )}
-            </div>
-          </Popup>
-        </Layer>
-      );
-    }
-    return null;
+    return (
+      <Layer {...mergedLayerProps}>
+        <Popup
+          role={isModeless || !isBlocking ? 'dialog' : 'alertdialog'}
+          aria-modal={!isModeless}
+          ariaLabelledBy={titleAriaId}
+          ariaDescribedBy={subtitleAriaId}
+          onDismiss={onDismiss}
+          shouldRestoreFocus={!ignoreExternalFocusing}
+        >
+          <div className={classNames.root}>
+            {!isModeless && (
+              <Overlay
+                isDarkThemed={isDarkOverlay}
+                // tslint:disable-next-line:no-any
+                onClick={isBlocking ? undefined : (onDismiss as any)}
+                allowTouchBodyScroll={allowTouchBodyScroll}
+                {...overlay}
+              />
+            )}
+            {dragOptions ? (
+              <DraggableZone
+                handleSelector={dragOptions.dragHandleSelector || `.${classNames.main.split(' ')[0]}`}
+                preventDragSelector="button"
+                onStart={onDragStart}
+                onDragChange={onDrag}
+                onStop={onDragStop}
+                position={{ x: x, y: y }}
+              >
+                {modalContent}
+              </DraggableZone>
+            ) : (
+              modalContent
+            )}
+          </div>
+        </Popup>
+      </Layer>
+    );
   }
+  return null;
+};
+
+ModalBase.displayName = COMPONENT_NAME;
+ModalBase.DefaultLayerProps = {
+  eventBubblingEnabled: false,
 };
