@@ -243,7 +243,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       required,
       multiline,
       hasLabel: !!label,
-      hasErrorMessage: !!getErrorMessage,
+      hasErrorMessage: !!getErrorMessage(),
       borderless,
       resizable,
       hasIcon: !!iconProps,
@@ -258,8 +258,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         return;
       }
       state.latestValidateValue = validatedValue;
-      const onGetErrorMessage = props.onGetErrorMessage;
-      const result = onGetErrorMessage && onGetErrorMessage(validatedValue || '');
+      const result = props.onGetErrorMessage && props.onGetErrorMessage(validatedValue || '');
       if (result !== undefined) {
         if (typeof result === 'string' || !('then' in result)) {
           setErrorMessage(result);
@@ -327,8 +326,8 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
           onChange={onInputChange}
           className={classNames.field}
           aria-labelledby={ariaLabelledBy}
-          aria-describedby={isDescriptionAvailable ? descriptionId : props['aria-describedby']}
-          aria-invalid={!!getErrorMessage}
+          aria-describedby={isDescriptionAvailable() ? descriptionId : props['aria-describedby']}
+          aria-invalid={!!getErrorMessage()}
           aria-label={props.ariaLabel}
           readOnly={props.readOnly}
           onFocus={onFocus}
@@ -387,8 +386,8 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
           onChange={onInputChange}
           className={classNames.field}
           aria-label={props.ariaLabel}
-          aria-describedby={isDescriptionAvailable ? descriptionId : props['aria-describedby']}
-          aria-invalid={!!getErrorMessage}
+          aria-describedby={isDescriptionAvailable() ? descriptionId : props['aria-describedby']}
+          aria-invalid={!!getErrorMessage()}
           readOnly={props.readOnly}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -501,11 +500,11 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         {isDescriptionAvailable && (
           <span id={descriptionId}>
             {onRenderDescription!(props, renderDescription)}
-            {getErrorMessage && (
+            {getErrorMessage() && (
               <div role="alert">
                 <DelayedRender>
                   <p className={classNames.errorMessage}>
-                    <span data-automation-id="error-message">{getErrorMessage}</span>
+                    <span data-automation-id="error-message">{getErrorMessage()}</span>
                   </p>
                 </DelayedRender>
               </div>
