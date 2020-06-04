@@ -497,7 +497,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
             )}
           </div>
         </div>
-        {isDescriptionAvailable && (
+        {isDescriptionAvailable() && (
           <span id={descriptionId}>
             {onRenderDescription!(props, renderDescription)}
             {getErrorMessage() && (

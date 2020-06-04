@@ -328,8 +328,7 @@ describe('TextField with error message', () => {
     expect(validator).toHaveBeenCalledTimes(1);
   });
 
-  // todo
-  fit('should render error message when onGetErrorMessage returns a string', () => {
+  it('should render error message when onGetErrorMessage returns a string', () => {
     const validator = jest.fn((value: string) => (value.length > 3 ? errorMessage : ''));
     ReactTestUtils.act(() => {
       wrapper = mount(<TextField onGetErrorMessage={validator} validateOnLoad={false} />);
