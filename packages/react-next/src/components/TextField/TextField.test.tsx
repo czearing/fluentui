@@ -330,12 +330,11 @@ describe('TextField with error message', () => {
 
   it('should render error message when onGetErrorMessage returns a string', () => {
     const validator = jest.fn((value: string) => (value.length > 3 ? errorMessage : ''));
-    ReactTestUtils.act(() => {
-      wrapper = mount(<TextField onGetErrorMessage={validator} validateOnLoad={false} />);
 
-      wrapper!.find('input').simulate('input', mockEvent('also invalid'));
-      jest.runAllTimers();
-    });
+    wrapper = mount(<TextField onGetErrorMessage={validator} validateOnLoad={false} />);
+
+    wrapper!.find('input').simulate('input', mockEvent('also invalid'));
+    jest.runAllTimers();
 
     expect(validator).toHaveBeenCalledTimes(1);
     assertErrorMessage(wrapper!.getDOMNode(), errorMessage);
@@ -821,7 +820,7 @@ describe('TextField', () => {
     expect(getTextarea()).toBeNull();
   });
 
-  it('maintains focus when switching single to multi line and back', () => {
+  fit('maintains focus when switching single to multi line and back', () => {
     wrapper = mountAttached(<TextField componentRef={textFieldRef} />);
     // focus input
     textField!.focus();
@@ -829,7 +828,10 @@ describe('TextField', () => {
     expect(document.activeElement).toBe(input);
 
     // switch to multiline
-    wrapper.setProps({ multiline: true });
+    ReactTestUtils.act(() => {
+      wrapper.setProps({ multiline: true });
+    });
+
     // verify still focused
     const textarea = wrapper.find('textarea').getDOMNode();
     expect(document.activeElement).toBe(textarea);

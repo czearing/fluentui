@@ -23,7 +23,7 @@ export interface ITextFieldState {
   lastChangeValue: string | undefined;
   hasWarnedNullValue: boolean | undefined;
   lastValidation: number;
-  prevProps: ITextFieldProps;
+  prevMultiline: boolean | undefined;
   prevIsFocused: boolean;
   uncontrolledValue: string | undefined;
 }
@@ -134,14 +134,14 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
     props.checked, props.defaultChecked, props.onChange;
     const [currentValue, setCurrentValue] = useControllableValue(props.value, props.defaultValue, props.onChange);
     const [isFocused, { setTrue: setTrueIsFocused, setFalse: setFalseIsFocused }] = useBoolean(false);
-    const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>('');
+    const [errorMessage, setErrorMessage] = React.useState<string | JSX.Element>(props.errorMessage!);
 
     const [state] = React.useState<ITextFieldState>({
       latestValidateValue: undefined,
       lastChangeValue: undefined,
       hasWarnedNullValue: undefined,
       lastValidation: 0,
-      prevProps: props,
+      prevMultiline: multiline,
       prevIsFocused: isFocused,
       uncontrolledValue: undefined,
     });
@@ -439,9 +439,8 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
       const { selection = [null, null] } = snapshot || {};
       const [start, end] = selection;
 
-      if (props.multiline && state.prevProps.multiline !== props.multiline && state.prevIsFocused) {
-        state.prevProps.multiline = props.multiline;
-        state.prevIsFocused = isFocused;
+      if (multiline && state.prevMultiline !== props.multiline && isFocused) {
+        state.prevMultiline = multiline;
         // The text field has just changed between single- and multi-line, so we need to reset focus
         // and selection/cursor.
         if (textElement.current) {
@@ -473,7 +472,7 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         // This seems a bit odd and hard to integrate with the new approach.
         // (Starting to think we should just put the validation logic in a separate wrapper component...?)
       }
-    }, [currentValue]);
+    }, [currentValue, multiline]);
 
     React.useEffect(() => {
       adjustInputHeight();
@@ -481,6 +480,9 @@ export const TextFieldBase: React.FunctionComponent = React.forwardRef(
         validate(getValue(props));
       }
     }, [props, currentValue]);
+
+    // Cache prevProps.
+    state.prevProps = props;
 
     return (
       <div className={classNames.root} ref={ref}>
