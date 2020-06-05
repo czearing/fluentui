@@ -20,7 +20,6 @@ import { DirectionalHint } from 'office-ui-fabric-react/src/components/Callout/i
 import { Icon } from 'office-ui-fabric-react/src/components/Icon/index';
 import { DraggableZone, IDragData } from 'office-ui-fabric-react/lib/utilities/DraggableZone/index';
 import { useSetTimeout } from '@uifabric/react-hooks';
-import { FocusTrapZoneBoxClickExample } from '../FocusTrapZone/examples/FocusTrapZone.Box.Click.Example';
 
 // @TODO - need to change this to a panel whenever the breakpoint is under medium (verify the spec)
 
@@ -196,47 +195,47 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     }
   };
 
-  const onKeyUp = (event: React.KeyboardEvent<HTMLElement>): void => {
+  const onKeyUp = (ev: React.KeyboardEvent<HTMLElement>): void => {
     // Need to handle the CTRL + ALT + SPACE key during keyup due to FireFox bug:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1220143
     // Otherwise it would continue to fire a click even if the event was cancelled
     // during mouseDown.
-    if (event.altKey && event.ctrlKey && event.keyCode === KeyCodes.space) {
+    if (ev.altKey && ev.ctrlKey && ev.keyCode === KeyCodes.space) {
       // Since this is a global handler, we should make sure the target is within the dialog
       // before opening the dropdown
-      if (elementContains(state.scrollableContent, event.target as HTMLElement)) {
+      if (elementContains(state.scrollableContent, ev.target as HTMLElement)) {
         setIsModalMenuOpen(!isModalMenuOpen);
-        event.preventDefault();
-        event.stopPropagation();
+        ev.preventDefault();
+        ev.stopPropagation();
       }
     }
   };
 
   // We need a global onKeyDown event when we are in the move mode so that we can
   // handle the key presses and the components inside the modal do not get the events
-  const onKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
-    if (event.altKey && event.ctrlKey && event.keyCode === KeyCodes.space) {
+  const onKeyDown = (ev: React.KeyboardEvent<HTMLElement>): void => {
+    if (ev.altKey && ev.ctrlKey && ev.keyCode === KeyCodes.space) {
       // CTRL + ALT + SPACE is handled during keyUp
-      event.preventDefault();
-      event.stopPropagation();
+      ev.preventDefault();
+      ev.stopPropagation();
       return;
     }
 
-    if (isModalMenuOpen && (event.altKey || event.keyCode === KeyCodes.escape)) {
+    if (isModalMenuOpen && (ev.altKey || ev.keyCode === KeyCodes.escape)) {
       setIsModalMenuOpen(false);
     }
 
-    if (isInKeyboardMoveMode && (event.keyCode === KeyCodes.escape || event.keyCode === KeyCodes.enter)) {
+    if (isInKeyboardMoveMode && (ev.keyCode === KeyCodes.escape || ev.keyCode === KeyCodes.enter)) {
       setIsInKeyboardMoveMode(false);
-      event.preventDefault();
-      event.stopPropagation();
+      ev.preventDefault();
+      ev.stopPropagation();
     }
 
     if (isInKeyboardMoveMode) {
       let handledEvent = true;
-      const delta = getMoveDelta(event);
+      const delta = getMoveDelta(ev);
 
-      switch (event.keyCode) {
+      switch (ev.keyCode) {
         case KeyCodes.escape:
           setX(state.lastSetX);
           setY(state.lastSetY);
@@ -267,8 +266,8 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
         }
       }
       if (handledEvent) {
-        event.preventDefault();
-        event.stopPropagation();
+        ev.preventDefault();
+        ev.stopPropagation();
       }
     }
   };
@@ -296,7 +295,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const onExitKeyboardMoveMode = () => {
     state.lastSetX = 0;
     state.lastSetY = 0;
-    setisInKeyboardMoveMode(false);
+    setIsInKeyboardMoveMode(false);
     events.off(window, 'keydown', onKeyDown, true /* useCapture */);
   };
 
