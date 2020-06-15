@@ -13,7 +13,7 @@ export interface IAutofillState {
 const COMPONENT_NAME = 'Autofill';
 const SELECTION_FORWARD = 'forward';
 const SELECTION_BACKWARD = 'backward';
-
+//
 /**
  * {@docCategory Autofill}
  */
