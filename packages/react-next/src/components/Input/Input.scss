@@ -1,0 +1,36 @@
+// .root {
+//   position: relative;
+//   display: inline-flex;
+//   align-items: center;
+//   vertical-align: center;
+//   box-sizing: border-box;
+//   text-align: left;
+//   border: 1px solid rgb(96, 94, 92);
+//   border-radius: 2px;
+//   background-color: white;
+//   color: rgb(37, 36, 35);
+//   height: 32px;
+//   font-size: 14px;
+//   font-weight: 400px;
+//   font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto,
+//     'Helvetica Neue', sans-serif;
+// }
+
+// .input {
+//   border: none;
+//   padding: 0.8px;
+//   outline: none;
+//   font-family: inherit;
+// }
+
+// .root:focus-within:after {
+//   content: '';
+//   position: absolute;
+//   left: -1;
+//   right: -1;
+//   top: -1;
+//   bottom: -1;
+//   border: 2px solid black;
+//   border-radius: 2px;
+//   box-shadow: 0 0 0 1px white inset;
+// }
