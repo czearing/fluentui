@@ -91,7 +91,7 @@ interface IFocusTrapZoneState {
 }
 
 const COMPONENT_NAME = 'FocusTrapZone';
-export const FocusTrapZone: React.FunctionComponent = (props: IFocusTrapZoneProps) => {
+export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> = (props: IFocusTrapZoneProps) => {
   const root = React.useRef<HTMLDivElement>(null);
   const firstBumper = React.useRef<HTMLDivElement>(null);
   const lastBumper = React.useRef<HTMLDivElement>(null);

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Autofill } from './Autofill';
 import { IRefObject, KeyCodes } from '../../Utilities';
 
 /**
@@ -46,7 +45,7 @@ export interface IAutofill {
 /**
  * {@docCategory Autofill}
  */
-export interface IAutofillProps extends React.InputHTMLAttributes<HTMLInputElement | Autofill> {
+export interface IAutofillProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /**
    * Gets the compoonent ref.
    */
