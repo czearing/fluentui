@@ -481,6 +481,22 @@ export interface IModalProps extends IWithResponsiveModeState, IAccessiblePopupP
 }
 
 // @public (undocumented)
+export interface IModalState {
+    // (undocumented)
+    hasRegisteredKeyUp: boolean;
+    // (undocumented)
+    lastSetX: number;
+    // (undocumented)
+    lastSetY: number;
+    // (undocumented)
+    onModalCloseTimer: number;
+    // (undocumented)
+    prevProps: IModalProps;
+    // (undocumented)
+    scrollableContent: HTMLDivElement | null;
+}
+
+// @public (undocumented)
 export type IModalStyleProps = Required<Pick<IModalProps, 'theme'>> & Pick<IModalProps, 'className' | 'containerClassName' | 'scrollableContentClassName' | 'topOffsetFixed' | 'isModeless'> & {
     isOpen?: boolean;
     isVisible?: boolean;
@@ -1102,7 +1118,13 @@ export const MeasuredContext: React.Context<{
 export const Modal: React.FunctionComponent<IModalProps>;
 
 // @public (undocumented)
-export const ModalBase: (props: React.PropsWithChildren<IModalProps>) => JSX.Element | null;
+export const ModalBase: {
+    (props: React.PropsWithChildren<IModalProps>): JSX.Element | null;
+    displayName: string;
+    DefaultLayerProps: {
+        eventBubblingEnabled: boolean;
+    };
+};
 
 // @public (undocumented)
 export const ONKEYDOWN_TIMEOUT_DURATION = 1000;

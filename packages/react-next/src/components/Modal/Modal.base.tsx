@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   classNamesFunction,
-  getId,
+  // getId,
   allowScrollOnElement,
   allowOverscrollOnElement,
   KeyCodes,
@@ -68,7 +68,7 @@ const COMPONENT_NAME = 'Modal';
 
 export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const focusTrapZone = React.useRef<IFocusTrapZone>(null);
-  const [id, setId] = React.useState(getId('Modal'));
+  // const [id, setId] = React.useState(getId('Modal'));
   const [isModalMenuOpen, setIsModalMenuOpen] = React.useState();
   const [isInKeyboardMoveMode, setIsInKeyboardMoveMode] = React.useState();
   const [modalRectangleTop, setModalRectangleTop] = React.useState();
