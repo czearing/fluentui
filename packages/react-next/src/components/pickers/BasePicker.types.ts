@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IPickerItemProps } from './PickerItem.types';
 import { IRefObject, IStyleFunctionOrObject } from '../../Utilities';
 import { ISuggestionModel, ISuggestionsProps } from './Suggestions/Suggestions.types';
-import { Autofill } from '../../Autofill';
+
 import { ICalloutProps } from '../../Callout';
 import { ITheme, IStyle } from '../../Styling';
 import { ISuggestionItemProps } from '../pickers/Suggestions/SuggestionsItem.types';
@@ -36,7 +36,8 @@ export interface IBasePicker<T> {
  * displaying persona's then type T could either be of Persona or IPersona props
  * {@docCategory Pickers}
  */
-// tslint:disable-next-line:deprecation
+
+// tslint:disable-next-line: no-any
 export interface IBasePickerProps<T> extends React.Props<any> {
   /**
    * Optional callback to access the IBasePicker interface. Use this instead of ref for accessing
@@ -97,12 +98,12 @@ export interface IBasePickerProps<T> extends React.Props<any> {
    * A callback for when the user put focus on the picker
    * @deprecated Use `inputProps.onFocus` instead
    */
-  onFocus?: React.FocusEventHandler<HTMLInputElement | Autofill>;
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
 
   /**
    * A callback for when the user moves the focus away from the picker
    */
-  onBlur?: React.FocusEventHandler<HTMLInputElement | Autofill>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
 
   /**
    * A callback to get text from an item. Used to autofill text in the pickers.
@@ -193,6 +194,7 @@ export interface IBasePickerProps<T> extends React.Props<any> {
   /**
    * A callback to override the default behavior of adding the selected suggestion on dismiss.
    */
+  // tslint:disable-next-line:no-any
   onDismiss?: (ev?: any, selectedItem?: T) => void;
 
   /**
@@ -219,6 +221,7 @@ export interface IBasePickerProps<T> extends React.Props<any> {
  * internal Suggestions component.
  * {@docCategory Pickers}
  */
+// tslint:disable-next-line:no-any
 export interface IBasePickerSuggestionsProps<T = any>
   extends Pick<
     ISuggestionsProps<T>,
@@ -279,6 +282,7 @@ export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement>
  * The props needed to construct styles.
  * {@docCategory Pickers}
  */
+// tslint:disable-next-line:no-any
 export type IBasePickerStyleProps = Pick<IBasePickerProps<any>, 'theme' | 'className' | 'disabled'> & {
   /** Whether text style area is focused */
   isFocused?: boolean;
