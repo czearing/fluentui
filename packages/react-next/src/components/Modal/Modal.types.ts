@@ -81,11 +81,13 @@ export interface IModalProps extends IWithResponsiveModeState, IAccessiblePopupP
   /**
    * A callback function for when the Modal is dismissed light dismiss, before the animation completes.
    */
+  // tslint:disable-next-line:no-any
   onDismiss?: (ev?: React.MouseEvent<HTMLButtonElement>) => any;
 
   /**
    * A callback function which is called after the Modal is dismissed and the animation is complete.
    */
+  // tslint:disable-next-line:no-any
   onDismissed?: () => any;
 
   /**
