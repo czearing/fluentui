@@ -187,6 +187,7 @@ describe('Autofill', () => {
         target: inputRef.current!,
         nativeEvent: {
           isComposing: true,
+          // tslint:disable-next-line:no-any
         } as any,
       });
 
@@ -197,18 +198,20 @@ describe('Autofill', () => {
         target: inputRef.current!,
         nativeEvent: {
           isComposing: true,
+          // tslint:disable-next-line:no-any
         } as any,
       });
-      // });
+    });
 
-      jest.runOnlyPendingTimers();
+    jest.runOnlyPendingTimers();
 
-      // ReactTestUtils.act(() => {
+    ReactTestUtils.act(() => {
       ReactTestUtils.Simulate.keyDown(inputRef.current!, {
         keyCode: KeyCodes.m,
         which: KeyCodes.m,
         nativeEvent: {
           isComposing: true,
+          // tslint:disable-next-line:no-any
         } as any,
       });
 
@@ -218,6 +221,7 @@ describe('Autofill', () => {
         target: inputRef.current!,
         nativeEvent: {
           isComposing: true,
+          // tslint:disable-next-line:no-any
         } as any,
       });
 
@@ -227,6 +231,7 @@ describe('Autofill', () => {
         target: inputRef.current!,
         nativeEvent: {
           isComposing: false,
+          // tslint:disable-next-line:no-any
         } as any,
       });
 

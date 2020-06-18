@@ -9,7 +9,7 @@ export interface IAutofillState {
   isComposing: boolean;
   displayValue?: string;
 }
-
+//
 const COMPONENT_NAME = 'Autofill';
 const SELECTION_FORWARD = 'forward';
 const SELECTION_BACKWARD = 'backward';
