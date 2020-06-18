@@ -2,9 +2,9 @@ import * as React from 'react';
 import { DetailsRowBase } from './DetailsRow.base';
 import { IStyle, ITheme } from '../../Styling';
 import { IColumn, CheckboxVisibility, IDetailsListProps } from './DetailsList.types';
-import { ISelection, SelectionMode } from '../../utilities/selection/interfaces';
-import { IDragDropHelper, IDragDropEvents } from '../../utilities/dragdrop/interfaces';
-import { IViewport } from '../../utilities/decorators/withViewport';
+import { ISelection, SelectionMode } from 'office-ui-fabric-react/lib/utilities/selection/interfaces';
+import { IDragDropHelper, IDragDropEvents } from 'office-ui-fabric-react/lib/utilities/dragdrop/interfaces';
+import { IViewport } from 'office-ui-fabric-react/lib/utilities/decorators/withViewport';
 import { CollapseAllVisibility } from '../GroupedList/GroupedList.types';
 import { IBaseProps, IRefObject, IStyleFunctionOrObject, IRenderFunction } from '../../Utilities';
 import { IDetailsRowCheckProps, IDetailsCheckboxProps } from './DetailsRowCheck.types';
@@ -94,6 +94,7 @@ export interface IDetailsRowBaseProps
   /**
    * Data source for this component
    */
+  // tslint:disable-next-line:no-any
   item: any;
 
   /**
@@ -109,6 +110,7 @@ export interface IDetailsRowBaseProps
   /**
    * A list of events to register
    */
+  // tslint:disable-next-line:no-any
   eventsToRegister?: { eventName: string; callback: (item?: any, index?: number, event?: any) => void }[];
 
   /**
@@ -149,11 +151,13 @@ export interface IDetailsRowBaseProps
   /**
    * Callback for getting the row aria label
    */
+  // tslint:disable-next-line:no-any
   getRowAriaLabel?: (item: any) => string;
 
   /**
    * Callback for getting the row aria-describedby
    */
+  // tslint:disable-next-line:no-any
   getRowAriaDescribedBy?: (item: any) => string;
 
   /**

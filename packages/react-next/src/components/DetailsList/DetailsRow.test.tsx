@@ -3,7 +3,7 @@ import * as renderer from 'react-test-renderer';
 import { DetailsList } from './DetailsList';
 import { IDetailsRowProps } from './DetailsRow.types';
 import { IDetailsListProps, IColumn, CheckboxVisibility } from './DetailsList.types';
-import { SelectionMode, Selection } from '../../utilities/selection/index';
+import { SelectionMode, Selection } from 'office-ui-fabric-react/lib/utilities/selection/index';
 import { DetailsRow } from './DetailsRow';
 import { getTheme } from '../../Styling';
 
@@ -26,6 +26,7 @@ const _columns: IColumn[] = [
 ];
 
 // Populate mock items for testing
+// tslint:disable-next-line:no-any
 function mockItems(count: number): any[] {
   const items = [];
 

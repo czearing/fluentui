@@ -25,8 +25,8 @@ import { GroupSpacer } from '../GroupedList/GroupSpacer';
 import { CollapseAllVisibility } from '../../GroupedList';
 import { DetailsRowCheck } from './DetailsRowCheck';
 import { ITooltipHostProps } from '../../Tooltip';
-import { ISelection, SelectionMode, SELECTION_CHANGE } from '../../utilities/selection/interfaces';
-import { IDragDropOptions, DragDropHelper } from '../../utilities/dragdrop/index';
+import { ISelection, SelectionMode, SELECTION_CHANGE } from 'office-ui-fabric-react/lib/utilities/selection/interfaces';
+import { IDragDropOptions, DragDropHelper } from 'office-ui-fabric-react/lib/utilities/dragdrop/index';
 import { DetailsColumn, IDetailsColumnProps } from '../../components/DetailsList/DetailsColumn';
 import {
   SelectAllVisibility,
@@ -388,6 +388,7 @@ export class DetailsHeaderBase extends React.Component<IDetailsHeaderBaseProps, 
     return this._currentDropHintIndex >= 0;
   }
 
+  // tslint:disable-next-line:no-any
   private _onDragOver = (item: any, event: DragEvent): void => {
     if (this._draggedColumnIndex >= 0) {
       event.stopPropagation();
@@ -395,6 +396,7 @@ export class DetailsHeaderBase extends React.Component<IDetailsHeaderBaseProps, 
     }
   };
 
+  // tslint:disable-next-line:no-any
   private _onDrop = (item?: any, event?: DragEvent): void => {
     // Safe to assume this is defined since we're handling a drop event
     const columnReorderProps = this._getColumnReorderProps()!;

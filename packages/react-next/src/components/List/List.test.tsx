@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
-
 import { List } from './List';
 import { IPage, IListProps } from './List.types';
 
@@ -95,6 +94,7 @@ describe('List', () => {
     it('renders rows for a sparse array containing items that are primitive values', done => {
       const wrapper = mount(<List />);
 
+      // tslint:disable-next-line:no-any
       const onRenderCell = (item: any, index: number, isScrolling: boolean) => (
         <div className="cell" key={index}>
           {item}
@@ -111,6 +111,7 @@ describe('List', () => {
     it('renders rows for a sparse array of items that are undefined', done => {
       const wrapper = mount(<List />);
 
+      // tslint:disable-next-line:no-any
       const onRenderCell = (item: any, index: number, isScrolling: boolean) => (
         <div className="cell" key={index}>
           {item}
@@ -172,6 +173,7 @@ describe('List', () => {
 
     it('renders the return value of optional onRenderCell prop per row', done => {
       const wrapper = mount(<List items={mockData(100)} />);
+      // tslint:disable-next-line:no-any
       const onRenderCell = (item: any, index: number, isScrolling: boolean) => <div className="foo">{item.name}</div>;
 
       wrapper.setProps({ items: mockData(100), onRenderCell, onPagesUpdated: (pages: IPage[]) => done() });
@@ -183,6 +185,7 @@ describe('List', () => {
 
     it('sets the return value of optional getKey prop as React key per row', done => {
       const wrapper = mount(<List items={mockData(100)} />);
+      // tslint:disable-next-line:no-any
       const getKey = (item: any, index: number) => `foo-${item.key}`;
 
       wrapper.setProps({ items: mockData(100), getKey, onPagesUpdated: (pages: IPage[]) => done() });

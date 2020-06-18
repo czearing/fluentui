@@ -10,8 +10,8 @@ import { IDetailsList, IColumn, DetailsListLayoutMode, CheckboxVisibility } from
 import { IDetailsColumnProps } from 'office-ui-fabric-react/lib/components/DetailsList/DetailsColumn';
 import { IDetailsHeaderProps, DetailsHeader } from './DetailsHeader';
 import { EventGroup, IRenderFunction } from '../../Utilities';
-import { IDragDropEvents } from './../../utilities/dragdrop/index';
-import { SelectionMode, Selection, SelectionZone } from '../../utilities/selection/index';
+import { IDragDropEvents } from 'office-ui-fabric-react/lib/utilities/dragdrop/index';
+import { SelectionMode, Selection, SelectionZone } from 'office-ui-fabric-react/lib/utilities/selection/index';
 import { getTheme } from '../../Styling';
 
 // Populate mock data for testing
@@ -43,6 +43,7 @@ function mockData(count: number, isColumn: boolean = false, customDivider: boole
 function columnDividerWrapper(
   iDetailsColumnProps: IDetailsColumnProps,
   defaultRenderer: (props?: IDetailsColumnProps) => JSX.Element | null,
+  // tslint:disable-next-line:no-any
 ): any {
   return defaultRenderer(iDetailsColumnProps);
 }
@@ -51,6 +52,7 @@ function columnDividerWrapper(
 function customColumnDivider(
   iDetailsColumnProps: IDetailsColumnProps,
   defaultRenderer: (props?: IDetailsColumnProps) => JSX.Element | null,
+  // tslint:disable-next-line:no-any
 ): any {
   return (
     <React.Fragment key={`divider_${iDetailsColumnProps.columnIndex}`}>
@@ -245,6 +247,7 @@ describe('DetailsList', () => {
       onDrop: jest.fn(),
     };
 
+    // tslint:disable-next-line:no-any
     const _RaiseEvent = (target: any, _eventName: string, _clientX: number) => {
       EventGroup.raise(
         target,
@@ -303,6 +306,7 @@ describe('DetailsList', () => {
   });
 
   it('focuses into row element', () => {
+    // tslint:disable-next-line:no-any
     const onRenderColumn = (item: any, index: number, column: IColumn) => {
       let value = item && column && column.fieldName ? item[column.fieldName] : '';
       if (value === null || value === undefined) {
@@ -315,6 +319,7 @@ describe('DetailsList', () => {
       );
     };
 
+    // tslint:disable-next-line:no-any
     const getCellValueKey = (item: any, index: number, column: IColumn) => {
       const valueKey = item && column && column.fieldName ? item[column.fieldName] : column.key + index;
       return valueKey;
@@ -322,6 +327,7 @@ describe('DetailsList', () => {
 
     jest.useFakeTimers();
 
+    // tslint:disable-next-line:no-any
     let component: any;
     mount(
       <DetailsList
@@ -360,6 +366,7 @@ describe('DetailsList', () => {
   it('reset focusedItemIndex when setKey updates', () => {
     jest.useFakeTimers();
 
+    // tslint:disable-next-line:no-any
     let component: any;
     const detailsList = mount(
       <DetailsList

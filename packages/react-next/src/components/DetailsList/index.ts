@@ -1,4 +1,4 @@
-export * from '../../utilities/selection/index';
+export * from 'office-ui-fabric-react/lib/utilities/selection/index';
 export * from '../GroupedList/GroupedList.types';
 export * from './DetailsHeader';
 export * from './DetailsHeader.base';

@@ -3,7 +3,7 @@ import { IColumn } from './DetailsList.types';
 import { DetailsColumnBase } from './DetailsColumn.base';
 import { IRenderFunction, IStyleFunctionOrObject } from '../../Utilities';
 import { ITooltipHostProps } from '../../Tooltip';
-import { IDragDropHelper } from '../../utilities/dragdrop/index';
+import { IDragDropHelper } from 'office-ui-fabric-react/lib/utilities/dragdrop/index';
 import { ICellStyleProps } from './DetailsRow.types';
 import { ITheme, IStyle } from '../../Styling';
 

@@ -4,20 +4,24 @@ import { IGroupHeaderProps } from './GroupHeader.types';
 import { IGroupFooterProps } from './GroupFooter.types';
 import { IGroupShowAllProps } from './GroupShowAll.types';
 
-import { IDragDropContext, IDragDropEvents, IDragDropHelper } from '../../utilities/dragdrop/index';
+import {
+  IDragDropContext,
+  IDragDropEvents,
+  IDragDropHelper,
+} from 'office-ui-fabric-react/lib/utilities/dragdrop/index';
 
 import { IProcessedStyleSet } from '../../Styling';
 import { initializeComponentRef, IRenderFunction, IDisposable, css, getId, EventGroup } from '../../Utilities';
 
-import { ISelection, SelectionMode, SELECTION_CHANGE } from '../../utilities/selection/index';
+import { ISelection, SelectionMode, SELECTION_CHANGE } from 'office-ui-fabric-react/lib/utilities/selection/index';
 
 import { GroupHeader } from './GroupHeader';
 import { GroupShowAll } from './GroupShowAll';
 import { GroupFooter } from './GroupFooter';
 
 import { List } from '../../List';
-import { IDragDropOptions } from './../../utilities/dragdrop/interfaces';
-import { IViewport } from '../../utilities/decorators/withViewport';
+import { IDragDropOptions } from 'office-ui-fabric-react/lib/utilities/dragdrop/interfaces';
+import { IViewport } from 'office-ui-fabric-react/lib/utilities/decorators/withViewport';
 import { IListProps } from '../List/index';
 
 export interface IGroupedListSectionProps extends React.ClassAttributes<GroupedListSection> {
@@ -39,6 +43,7 @@ export interface IGroupedListSectionProps extends React.ClassAttributes<GroupedL
   dragDropHelper?: IDragDropHelper;
 
   /** Event names and corresponding callbacks that will be registered to the group and the rendered elements */
+  // tslint:disable-next-line:no-any
   eventsToRegister?: { eventName: string; callback: (context: IDragDropContext, event?: any) => void }[];
 
   /** Information to pass in to the group footer. */
@@ -63,12 +68,14 @@ export interface IGroupedListSectionProps extends React.ClassAttributes<GroupedL
   headerProps?: IGroupHeaderProps;
 
   /** List of items to render. */
+  // tslint:disable-next-line:no-any
   items: any[];
 
   /** Optional list props to pass to list renderer.  */
   listProps?: IListProps;
 
   /** Rendering callback to render the group items. */
+  // tslint:disable-next-line:no-any
   onRenderCell: (nestingDepth?: number, item?: any, index?: number) => React.ReactNode;
 
   /** Optional selection model to track selection state.  */
@@ -327,9 +334,12 @@ export class GroupedListSection extends React.Component<IGroupedListSectionProps
   }
 
   private _onRenderGroupCell(
+    // tslint:disable-next-line:no-any
     onRenderCell: any,
     groupNestingDepth: number | undefined,
+    // tslint:disable-next-line:no-any
   ): (item: any, itemIndex: number | undefined) => React.ReactNode {
+    // tslint:disable-next-line:no-any
     return (item: any, itemIndex: number | undefined): React.ReactNode => {
       return onRenderCell(groupNestingDepth, item, itemIndex);
     };

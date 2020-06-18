@@ -3,6 +3,7 @@ import * as renderer from 'react-test-renderer';
 import { ShimmeredDetailsList } from './ShimmeredDetailsList';
 
 // Populate mock items for testing
+// tslint:disable-next-line:no-any
 function mockItems(count: number): any {
   const items = [];
 
