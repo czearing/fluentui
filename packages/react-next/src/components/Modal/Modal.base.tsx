@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   classNamesFunction,
-  // getId,
   allowScrollOnElement,
   allowOverscrollOnElement,
   KeyCodes,
@@ -19,7 +18,7 @@ import { ResponsiveMode } from 'office-ui-fabric-react/lib/utilities/decorators/
 import { DirectionalHint } from 'office-ui-fabric-react/src/components/Callout/index';
 import { Icon } from 'office-ui-fabric-react/src/components/Icon/index';
 import { DraggableZone, IDragData } from 'office-ui-fabric-react/lib/utilities/DraggableZone/index';
-import { useSetTimeout } from '@uifabric/react-hooks';
+import { useSetTimeout, useId } from '@uifabric/react-hooks';
 
 // @TODO - need to change this to a panel whenever the breakpoint is under medium (verify the spec)
 
@@ -44,6 +43,7 @@ export interface IModalState {
   scrollableContent: HTMLDivElement | null;
   lastSetX: number;
   lastSetY: number;
+  allowTouchBodyScroll: boolean;
   hasRegisteredKeyUp: boolean;
   onModalCloseTimer: number;
   prevProps: IModalProps;
@@ -68,40 +68,37 @@ const COMPONENT_NAME = 'Modal';
 
 export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const focusTrapZone = React.useRef<IFocusTrapZone>(null);
-  // const [id, setId] = React.useState(getId('Modal'));
+  const [id, setId] = React.useState(useId('Modal'));
   const [isModalMenuOpen, setIsModalMenuOpen] = React.useState();
-  const [isInKeyboardMoveMode, setIsInKeyboardMoveMode] = React.useState();
-  const [modalRectangleTop, setModalRectangleTop] = React.useState();
   const [isOpen, setIsOpen] = React.useState(props.isOpen);
   const [isVisible, setIsVisible] = React.useState(props.isOpen);
+  const [isInKeyboardMoveMode, setIsInKeyboardMoveMode] = React.useState();
+  const [modalRectangleTop, setModalRectangleTop] = React.useState();
   const [hasBeenOpened, setHasBeenOpened] = React.useState(props.isOpen);
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
   const events = new EventGroup(this);
-  const { allowTouchBodyScroll = false } = props;
-
+  const { allowTouchBodyScroll: initialBodyScroll = false } = props;
   const [state] = React.useState<IModalState>({
     scrollableContent: null,
     lastSetX: 0,
     lastSetY: 0,
+    allowTouchBodyScroll: initialBodyScroll,
     hasRegisteredKeyUp: false,
     onModalCloseTimer: 0,
     prevProps: props,
   });
-
-  warnDeprecations(COMPONENT_NAME, props, {
-    onLayerDidMount: 'layerProps.onLayerDidMount',
-  });
-
   const {
+    className,
+    containerClassName,
     scrollableContentClassName,
     elementToFocusOnDismiss,
     firstFocusableSelector,
     forceFocusInsideTrap,
     ignoreExternalFocusing,
-    isBlocking = false,
+    isBlocking,
     isClickableOutsideFocusTrap,
-    isDarkOverlay = true,
+    isDarkOverlay,
     onDismiss,
     layerProps,
     overlay,
@@ -116,15 +113,14 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     isModeless,
     dragOptions,
   } = props;
-
   const layerClassName = layerProps === undefined ? '' : layerProps.className;
 
   const classNames = getClassNames(styles, {
     theme: theme!,
-    className: '',
-    containerClassName: '',
+    className,
+    containerClassName,
     scrollableContentClassName,
-    isOpen: false,
+    isOpen,
     isVisible,
     hasBeenOpened,
     modalRectangleTop,
@@ -133,7 +129,6 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
     layerClassName,
     isDefaultDragHandle: dragOptions && !dragOptions.dragHandleSelector,
   });
-
   const mergedLayerProps = {
     ...DefaultLayerProps,
     ...props.layerProps,
@@ -145,7 +140,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   // Allow the user to scroll within the modal but not on the body
   const allowScrollOnModal = (elt: HTMLDivElement | null): void => {
     if (elt) {
-      if (allowTouchBodyScroll) {
+      if (state.allowTouchBodyScroll) {
         allowOverscrollOnElement(elt, events);
       } else {
         allowScrollOnElement(elt, events);
@@ -220,21 +215,17 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
       ev.stopPropagation();
       return;
     }
-
     if (isModalMenuOpen && (ev.altKey || ev.keyCode === KeyCodes.escape)) {
       setIsModalMenuOpen(false);
     }
-
     if (isInKeyboardMoveMode && (ev.keyCode === KeyCodes.escape || ev.keyCode === KeyCodes.enter)) {
       setIsInKeyboardMoveMode(false);
       ev.preventDefault();
       ev.stopPropagation();
     }
-
     if (isInKeyboardMoveMode) {
       let handledEvent = true;
       const delta = getMoveDelta(ev);
-
       switch (ev.keyCode) {
         case KeyCodes.escape:
           setX(state.lastSetX);
@@ -308,48 +299,6 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
 
   const safeSetTimeout = useSetTimeout();
 
-  const modalContent = (
-    <FocusTrapZone
-      componentRef={focusTrapZone}
-      className={classNames.main}
-      elementToFocusOnDismiss={elementToFocusOnDismiss}
-      isClickableOutsideFocusTrap={isModeless || isClickableOutsideFocusTrap || !isBlocking}
-      ignoreExternalFocusing={ignoreExternalFocusing}
-      forceFocusInsideTrap={isModeless ? !isModeless : forceFocusInsideTrap}
-      firstFocusableSelector={firstFocusableSelector}
-      focusPreviouslyFocusedInnerElement={true}
-      onBlur={isInKeyboardMoveMode ? onExitKeyboardMoveMode : undefined}
-    >
-      {dragOptions && isInKeyboardMoveMode && (
-        <div className={classNames.keyboardMoveIconContainer}>
-          {dragOptions.keyboardMoveIconProps ? (
-            <Icon {...dragOptions.keyboardMoveIconProps} />
-          ) : (
-            <Icon iconName="move" className={classNames.keyboardMoveIcon} />
-          )}
-        </div>
-      )}
-      <div ref={allowScrollOnModal} className={classNames.scrollableContent} data-is-scrollable={true}>
-        {dragOptions && isModalMenuOpen && (
-          <dragOptions.menu
-            items={[
-              { key: 'move', text: dragOptions.moveMenuItemText, onClick: onEnterKeyboardMoveMode },
-              { key: 'close', text: dragOptions.closeMenuItemText, onClick: onModalClose },
-            ]}
-            onDismiss={onModalContextMenuClose}
-            alignTargetEdge={true}
-            coverTarget={true}
-            directionalHint={DirectionalHint.topLeftEdge}
-            directionalHintFixed={true}
-            shouldFocusOnMount={true}
-            target={state.scrollableContent}
-          />
-        )}
-        {props.children}
-      </div>
-    </FocusTrapZone>
-  );
-
   React.useEffect(() => {
     clearTimeout(state.onModalCloseTimer);
     // Opening the dialog
@@ -404,7 +353,52 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
 
   useComponentRef(props, focusTrapZone);
 
-  // @temp tuatology - Will adjust this to be a panel at certain breakpoints
+  const modalContent = (
+    <FocusTrapZone
+      componentRef={focusTrapZone}
+      className={classNames.main}
+      elementToFocusOnDismiss={elementToFocusOnDismiss}
+      isClickableOutsideFocusTrap={isModeless || isClickableOutsideFocusTrap || !isBlocking}
+      ignoreExternalFocusing={ignoreExternalFocusing}
+      forceFocusInsideTrap={isModeless ? !isModeless : forceFocusInsideTrap}
+      firstFocusableSelector={firstFocusableSelector}
+      focusPreviouslyFocusedInnerElement={true}
+      onBlur={isInKeyboardMoveMode ? onExitKeyboardMoveMode : undefined}
+    >
+      {dragOptions && isInKeyboardMoveMode && (
+        <div className={classNames.keyboardMoveIconContainer}>
+          {dragOptions.keyboardMoveIconProps ? (
+            <Icon {...dragOptions.keyboardMoveIconProps} />
+          ) : (
+            <Icon iconName="move" className={classNames.keyboardMoveIcon} />
+          )}
+        </div>
+      )}
+      <div ref={allowScrollOnModal} className={classNames.scrollableContent} data-is-scrollable>
+        {dragOptions && isModalMenuOpen && (
+          <dragOptions.menu
+            items={[
+              { key: 'move', text: dragOptions.moveMenuItemText, onClick: onEnterKeyboardMoveMode },
+              { key: 'close', text: dragOptions.closeMenuItemText, onClick: onModalClose },
+            ]}
+            onDismiss={onModalContextMenuClose}
+            alignTargetEdge
+            coverTarget
+            directionalHint={DirectionalHint.topLeftEdge}
+            directionalHintFixed
+            shouldFocusOnMount
+            target={state.scrollableContent}
+          />
+        )}
+        props.children}
+      </div>
+    </FocusTrapZone>
+  );
+
+  if (!isOpen) {
+    return null;
+  }
+
   if (responsiveMode! >= ResponsiveMode.small) {
     return (
       <Layer {...mergedLayerProps}>
@@ -422,7 +416,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
                 isDarkThemed={isDarkOverlay}
                 // tslint:disable-next-line:no-any
                 onClick={isBlocking ? undefined : (onDismiss as any)}
-                allowTouchBodyScroll={allowTouchBodyScroll}
+                allowTouchBodyScroll={state.allowTouchBodyScroll}
                 {...overlay}
               />
             )}
