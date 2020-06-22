@@ -5,7 +5,6 @@ import {
   allowOverscrollOnElement,
   KeyCodes,
   elementContains,
-  warnDeprecations,
   EventGroup,
 } from '../../Utilities';
 import { FocusTrapZone, IFocusTrapZone } from 'office-ui-fabric-react/src/components/FocusTrapZone/index';
@@ -68,7 +67,7 @@ const COMPONENT_NAME = 'Modal';
 
 export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const focusTrapZone = React.useRef<IFocusTrapZone>(null);
-  const [id, setId] = React.useState(useId('Modal'));
+  // const [id, setId] = React.useState(useId('Modal'));
   const [isModalMenuOpen, setIsModalMenuOpen] = React.useState();
   const [isOpen, setIsOpen] = React.useState(props.isOpen);
   const [isVisible, setIsVisible] = React.useState(props.isOpen);
@@ -78,6 +77,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
   const events = new EventGroup(this);
+
   const { allowTouchBodyScroll: initialBodyScroll = false } = props;
   const [state] = React.useState<IModalState>({
     scrollableContent: null,
