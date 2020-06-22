@@ -9,7 +9,7 @@ import { DropdownItemProps } from 'src/components/Dropdown/DropdownItem';
 import { ShorthandValue } from 'src/types';
 import List from 'src/components/List/List';
 
-jest.dontMock('keyboard-key');
+jest.dontMock('@fluentui/keyboard-key');
 jest.useFakeTimers();
 
 describe('Dropdown', () => {
@@ -824,6 +824,22 @@ describe('Dropdown', () => {
           searchQuery: '',
         }),
       );
+    });
+
+    it('onChange is called after onSearchQueryChange', () => {
+      const onChange = jest.fn();
+      const onSearchQueryChange = jest.fn();
+
+      const { keyDownOnSearchInput } = renderDropdown({
+        defaultValue: items[2],
+        defaultSearchQuery: items[2],
+        onChange,
+        onSearchQueryChange,
+        search: true,
+      });
+
+      keyDownOnSearchInput('Escape');
+      expect(onChange.mock.invocationCallOrder[0]).toBeGreaterThan(onSearchQueryChange.mock.invocationCallOrder[0]);
     });
 
     it('is set by clicking on item', () => {
@@ -1707,6 +1723,24 @@ describe('Dropdown', () => {
       renderDropdown({ renderSelectedItem, multiple: true, value });
 
       expect(renderSelectedItem).toBeCalledTimes(value.length);
+    });
+  });
+
+  describe('searchInput', () => {
+    it("merges refs from user's input", () => {
+      const inputRef = React.createRef<HTMLInputElement>();
+
+      const { keyDownOnSearchInput } = renderDropdown({
+        defaultSearchQuery: 'Foo',
+        multiple: true,
+        search: true,
+        searchInput: { inputRef },
+      });
+
+      keyDownOnSearchInput('Backspace');
+
+      // This test asserts also on internals that a condition that uses internal `inputRef` will pass.
+      expect(inputRef.current).toBeInstanceOf(HTMLInputElement);
     });
   });
 
