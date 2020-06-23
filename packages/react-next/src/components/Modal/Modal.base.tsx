@@ -17,7 +17,7 @@ import { ResponsiveMode } from 'office-ui-fabric-react/lib/utilities/decorators/
 import { DirectionalHint } from 'office-ui-fabric-react/src/components/Callout/index';
 import { Icon } from 'office-ui-fabric-react/src/components/Icon/index';
 import { DraggableZone, IDragData } from 'office-ui-fabric-react/lib/utilities/DraggableZone/index';
-import { useSetTimeout, useId } from '@uifabric/react-hooks';
+import { useSetTimeout } from '@uifabric/react-hooks';
 
 // @TODO - need to change this to a panel whenever the breakpoint is under medium (verify the spec)
 
