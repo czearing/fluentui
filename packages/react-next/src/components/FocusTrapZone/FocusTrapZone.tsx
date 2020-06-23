@@ -357,6 +357,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
 
   bringFocusIntoZone();
   updateEventHandlers(props);
+
   useComponentRef(props, state.previouslyFocusedElementInTrapZone, focus);
 
   return (
