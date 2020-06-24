@@ -194,7 +194,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
   };
 
   const bringFocusIntoZone = (): void => {
-    const { disableFirstFocus = false, disabled: currentDisabledValue = false } = props;
+    const { elementToFocusOnDismiss, disableFirstFocus = false, disabled: currentDisabledValue = false } = props;
 
     if (currentDisabledValue) {
       return;
@@ -235,8 +235,8 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     }
   };
 
-  const updateEventHandlers = (newProps: IFocusTrapZoneProps): void => {
-    const { isClickableOutsideFocusTrap = false, forceFocusInsideTrap = true } = newProps;
+  const updateEventHandlers = (): void => {
+    const { isClickableOutsideFocusTrap = false, forceFocusInsideTrap = true } = props;
     const win = getWindow(root.current)!;
 
     if (forceFocusInsideTrap && !state.disposeFocusHandler) {
@@ -307,7 +307,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     if (elementToFocusOnDismiss && state.previouslyFocusedElementOutsideTrapZone !== elementToFocusOnDismiss) {
       state.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
     }
-    updateEventHandlers(props);
+    // updateEventHandlers();
   }, [elementToFocusOnDismiss, state.previouslyFocusedElementOutsideTrapZone, elementToFocusOnDismiss]);
 
   React.useEffect(() => {
@@ -326,6 +326,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       // Emulate what happens when a FocusTrapZone gets unmounted.
       returnFocusToInitiator();
     }
+    updateEventHandlers();
     state.prevProps = props;
   }, [state.prevProps.forceFocusInsideTrap, props.forceFocusInsideTrap, state.prevProps.disabled, props.disabled]);
 
@@ -356,7 +357,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
   });
 
   bringFocusIntoZone();
-  updateEventHandlers(props);
+  updateEventHandlers();
 
   useComponentRef(props, state.previouslyFocusedElementInTrapZone, focus);
 

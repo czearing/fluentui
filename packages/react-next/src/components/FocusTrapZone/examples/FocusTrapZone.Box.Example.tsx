@@ -31,6 +31,7 @@ export const FocusTrapZoneBoxExample: React.FunctionComponent = () => {
       <Stack.Item>
         <DefaultButton onClick={toggleUseTrapZone} text="Trap Focus" />
       </Stack.Item>
+      <button id="foo">hi</button>
       <FocusTrapZone disabled={!useTrapZone}>
         <Stack horizontalAlign="start" tokens={stackTokens} styles={getStackStyles(useTrapZone)}>
           <Toggle
@@ -41,6 +42,7 @@ export const FocusTrapZoneBoxExample: React.FunctionComponent = () => {
             onText="On (toggle to exit)"
             offText="Off"
           />
+          <button onClick={() => document.querySelector('#foo').focus()}>go to foo</button>
           <TextField label="Input inside trap zone" styles={textFieldStyles} />
           <Link href="https://bing.com" target="_blank">
             Hyperlink inside trap zone

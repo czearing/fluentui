@@ -324,7 +324,7 @@ export class FocusTrapZone extends React.Component<IFocusTrapZoneProps, {}> impl
     }
 
     if (FocusTrapZone._focusStack.length && this === FocusTrapZone._focusStack[FocusTrapZone._focusStack.length - 1]) {
-      const focusedElement = this._getDocument().activeElement as HTMLElement;
+      const focusedElement = ev.target; // this._getDocument().activeElement as HTMLElement;
 
       if (!elementContains(this._root.current, focusedElement)) {
         this.focus();

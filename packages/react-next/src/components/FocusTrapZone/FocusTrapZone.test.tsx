@@ -440,7 +440,7 @@ describe('FocusTrapZone', () => {
       // Components have to be marked visible before setupElement has a chance to apply the data-is-visible attribute.
       const topLevelDiv = (ReactTestUtils.renderIntoDocument(
         <div>
-          {/* <div onFocusCapture={_onFocus}>
+          <div onFocusCapture={_onFocus}>
             <button className={'z1'}>z1</button>
             <FocusTrapZone data-is-visible={true} {...props} className={ftzClassname}>
               <button className={'a'} data-is-visible={true}>
@@ -454,7 +454,7 @@ describe('FocusTrapZone', () => {
               </button>
             </FocusTrapZone>
             <button className={'z2'}>z2</button>
-          </div> */}
+          </div>
         </div>,
       ) as unknown) as HTMLElement;
 
@@ -534,20 +534,26 @@ describe('FocusTrapZone', () => {
       expect.assertions(2);
 
       const { buttonB, buttonZ2 } = setupTest({});
+      ReactTestUtils.act(() => {
+        ReactTestUtils.Simulate.focus(buttonB);
+      });
 
-      ReactTestUtils.Simulate.focus(buttonB);
       expect(lastFocusedElement).toBe(buttonB);
+      expect(document.activeElement).toBe(buttonB);
 
       // Focusing outside trap brings focus back to FTZ
-      componentEventListeners.focus({
-        target: buttonZ2,
-        preventDefault: () => {
-          /*noop*/
-        },
-        stopPropagation: () => {
-          /*noop*/
-        },
+      ReactTestUtils.act(() => {
+        componentEventListeners.focus({
+          target: buttonZ2,
+          preventDefault: () => {
+            /*noop*/
+          },
+          stopPropagation: () => {
+            /*noop*/
+          },
+        });
       });
+
       expect(lastFocusedElement).toBe(buttonB);
     });
 
