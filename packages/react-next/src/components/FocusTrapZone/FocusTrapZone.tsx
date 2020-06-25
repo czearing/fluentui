@@ -118,14 +118,18 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       }
       // Fall back to first element if query selector did not match any elements.
       if (!firstFocusableChild) {
-        firstFocusableChild = getNextElement(
-          root.current,
-          root.current.firstChild as HTMLElement,
-          false,
-          false,
-          false,
-          true,
-        );
+        if (state.previouslyFocusedElementInTrapZone) {
+          state.previouslyFocusedElementInTrapZone.focus();
+        } else {
+          firstFocusableChild = getNextElement(
+            root.current,
+            root.current.firstChild as HTMLElement,
+            false,
+            false,
+            false,
+            true,
+          );
+        }
       }
     }
     if (firstFocusableChild) {
