@@ -194,7 +194,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
   };
 
   const bringFocusIntoZone = (): void => {
-    const { elementToFocusOnDismiss, disableFirstFocus = false, disabled: currentDisabledValue = false } = props;
+    const { disableFirstFocus = false, disabled: currentDisabledValue = false } = props;
 
     if (currentDisabledValue) {
       return;
@@ -307,7 +307,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     if (elementToFocusOnDismiss && state.previouslyFocusedElementOutsideTrapZone !== elementToFocusOnDismiss) {
       state.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
     }
-    // updateEventHandlers();
+    updateEventHandlers();
   }, [elementToFocusOnDismiss, state.previouslyFocusedElementOutsideTrapZone, elementToFocusOnDismiss]);
 
   React.useEffect(() => {
