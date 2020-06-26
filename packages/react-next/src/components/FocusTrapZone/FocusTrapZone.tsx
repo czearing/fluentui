@@ -51,6 +51,7 @@ interface IFocusTrapZoneState {
   previouslyFocusedElementInTrapZone: HTMLElement | undefined;
   hasFocus: boolean;
   prevProps: IFocusTrapZoneProps;
+  hasPreviouslyRendered: boolean;
 }
 
 const COMPONENT_NAME = 'FocusTrapZone';
@@ -71,13 +72,14 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     disabled,
   } = props;
   const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);
-  const [state] = React.useState<IFocusTrapZoneState>({
+  const { current: state } = React.useRef<IFocusTrapZoneState>({
     previouslyFocusedElementOutsideTrapZone: undefined,
     previouslyFocusedElementInTrapZone: undefined,
     disposeFocusHandler: undefined,
     disposeClickHandler: undefined,
     hasFocus: false,
     prevProps: props,
+    hasPreviouslyRendered: false,
   });
 
   const bumperProps = {
@@ -118,18 +120,14 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       }
       // Fall back to first element if query selector did not match any elements.
       if (!firstFocusableChild) {
-        if (state.previouslyFocusedElementInTrapZone) {
-          state.previouslyFocusedElementInTrapZone.focus();
-        } else {
-          firstFocusableChild = getNextElement(
-            root.current,
-            root.current.firstChild as HTMLElement,
-            false,
-            false,
-            false,
-            true,
-          );
-        }
+        firstFocusableChild = getNextElement(
+          root.current,
+          root.current.firstChild as HTMLElement,
+          false,
+          false,
+          false,
+          true,
+        );
       }
     }
     if (firstFocusableChild) {
@@ -157,7 +155,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       // even when it's not. Using document.activeElement is another way
       // for us to be able to get what the relatedTarget without relying
       // on the event
-      relatedTarget = useGetDocument().activeElement as Element;
+      relatedTarget = getDocument(root.current)!.activeElement as Element;
     }
     if (!elementContains(root.current, relatedTarget as HTMLElement)) {
       state.hasFocus = false;
@@ -204,11 +202,9 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       return;
     }
 
-    FocusTrapZone.focusStack.push(id);
-
     state.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss
       ? elementToFocusOnDismiss
-      : (useGetDocument().activeElement as HTMLElement);
+      : (getDocument(root.current)!.activeElement as HTMLElement);
     if (!disableFirstFocus && !elementContains(root.current, state.previouslyFocusedElementOutsideTrapZone)) {
       focus();
     }
@@ -222,10 +218,8 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
 
   const returnFocusToInitiator = (): void => {
     const { ignoreExternalFocusing } = props;
-    const doc = getDocument();
-    FocusTrapZone.focusStack = FocusTrapZone.focusStack.filter((value: string) => {
-      return id !== value;
-    });
+    const doc = getDocument(root.current);
+
     if (doc) {
       const activeElement = doc.activeElement as HTMLElement;
       if (
@@ -278,7 +272,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       return;
     }
     if (FocusTrapZone.focusStack.length && id === FocusTrapZone.focusStack[FocusTrapZone.focusStack.length - 1]) {
-      const focusedElement = useGetDocument().activeElement as HTMLElement;
+      const focusedElement = ev.target as HTMLElement; // getDocument(root.current)!.activeElement as HTMLElement;
       if (!elementContains(root.current, focusedElement)) {
         focus();
         state.hasFocus = true; // set focus here since we stop event propagation
@@ -303,10 +297,6 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     }
   };
 
-  const useGetDocument = (): Document => {
-    return getDocument(root.current)!;
-  };
-
   React.useEffect(() => {
     if (elementToFocusOnDismiss && state.previouslyFocusedElementOutsideTrapZone !== elementToFocusOnDismiss) {
       state.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
@@ -324,6 +314,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     if ((!prevForceFocusInsideTrap && newForceFocusInsideTrap) || (prevDisabled && !newDisabled)) {
       // Transition from forceFocusInsideTrap / FTZ disabled to enabled.
       // Emulate what happens when a FocusTrapZone gets mounted.
+      state.hasPreviouslyRendered = true;
       bringFocusIntoZone();
     } else if ((prevForceFocusInsideTrap && !newForceFocusInsideTrap) || (!prevDisabled && newDisabled)) {
       // Transition from forceFocusInsideTrap / FTZ enabled to disabled.
@@ -360,8 +351,19 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     delete state.previouslyFocusedElementOutsideTrapZone;
   });
 
-  bringFocusIntoZone();
-  updateEventHandlers();
+  // Previously was componentDidMount.
+  React.useEffect(() => {
+    FocusTrapZone.focusStack.push(id);
+
+    bringFocusIntoZone();
+    updateEventHandlers();
+
+    return () => {
+      FocusTrapZone.focusStack = FocusTrapZone.focusStack.filter((value: string) => {
+        return id !== value;
+      });
+    };
+  }, []);
 
   useComponentRef(props, state.previouslyFocusedElementInTrapZone, focus);
 
