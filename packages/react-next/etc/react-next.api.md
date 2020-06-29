@@ -4,6 +4,7 @@
 
 ```ts
 
+import { BaseSlots } from '@fluentui/react-compose';
 import { ComposePreparedOptions } from '@fluentui/react-compose';
 import { IBaseFloatingPickerProps } from 'office-ui-fabric-react/lib/FloatingPicker';
 import { IBaseProps } from 'office-ui-fabric-react/lib/Utilities';
@@ -27,6 +28,7 @@ import { IStyle } from 'office-ui-fabric-react/lib/Styling';
 import { IStyleFunctionOrObject } from 'office-ui-fabric-react/lib/Utilities';
 import { IStyleSet } from 'office-ui-fabric-react/lib/Styling';
 import { ISuggestionModel } from 'office-ui-fabric-react/lib/Pickers';
+import { ISvgIconProps } from '@fluentui/react-icons';
 import { ITeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble';
 import { ITheme } from 'office-ui-fabric-react/lib/Styling';
 import { Point } from 'office-ui-fabric-react/lib/Utilities';
@@ -34,6 +36,8 @@ import { Position } from 'office-ui-fabric-react/lib/utilities/positioning';
 import * as React from 'react';
 import { RectangleEdge } from 'office-ui-fabric-react/lib/utilities/positioning';
 import { Selection } from 'office-ui-fabric-react/lib/Selection';
+import { SlotProp } from '@fluentui/react-compose';
+import { SlotProps } from '@fluentui/react-compose';
 import { ThemeProviderProps } from '@fluentui/react-theme-provider';
 import { useTheme } from '@fluentui/react-theme-provider';
 import { ValidationState } from 'office-ui-fabric-react/lib/Pickers';
@@ -238,7 +242,7 @@ export interface ICheckboxProps extends React.ButtonHTMLAttributes<HTMLElement |
     as?: React.ElementType;
     boxSide?: 'start' | 'end';
     checked?: boolean;
-    checkmarkIconProps?: IIconProps;
+    checkmark?: SlotProp<ISvgIconProps>;
     className?: string;
     componentRef?: IRefObject<ICheckbox>;
     defaultChecked?: boolean;
@@ -247,8 +251,9 @@ export interface ICheckboxProps extends React.ButtonHTMLAttributes<HTMLElement |
     indeterminate?: boolean;
     inputProps?: React.ButtonHTMLAttributes<HTMLElement | HTMLButtonElement>;
     keytipProps?: IKeytipProps;
-    label?: string;
+    label?: SlotProp<React.HTMLAttributes<HTMLSpanElement>>;
     onChange?: (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean) => void;
+    // @deprecated
     onRenderLabel?: IRenderFunction<ICheckboxProps>;
     // @deprecated
     styles?: IStyleFunctionOrObject<ICheckboxStyleProps, ICheckboxStyles>;
@@ -256,12 +261,10 @@ export interface ICheckboxProps extends React.ButtonHTMLAttributes<HTMLElement |
 }
 
 // @public (undocumented)
-export type ICheckboxSlotProps = {
-    [key in keyof ICheckboxSlots]: any;
-};
+export type ICheckboxSlotProps = SlotProps<ICheckboxSlots, ICheckboxProps, React.HTMLAttributes<HTMLDivElement>>;
 
 // @public (undocumented)
-export interface ICheckboxSlots {
+export interface ICheckboxSlots extends BaseSlots {
     // (undocumented)
     checkbox: React.ElementType;
     // (undocumented)
@@ -272,12 +275,10 @@ export interface ICheckboxSlots {
     input: React.ElementType;
     // (undocumented)
     label: React.ElementType;
-    // (undocumented)
-    root: React.ElementType;
 }
 
 // @public (undocumented)
-export interface ICheckboxState extends Omit<ICheckboxProps, 'label'>, Partial<ICheckboxSlotProps> {
+export interface ICheckboxState extends Omit<ICheckboxProps, keyof ICheckboxSlotProps>, Partial<ICheckboxSlotProps> {
     // (undocumented)
     ref: React.Ref<HTMLElement>;
 }
@@ -1105,8 +1106,7 @@ export interface ISearchBoxProps extends React.InputHTMLAttributes<HTMLInputElem
     ariaLabel?: string;
     className?: string;
     clearButtonProps?: IButtonProps;
-    componentRef?: IRefObject<ISearchBox>;
-    // @deprecated
+    componentRef?: React.Ref<ISearchBox>;
     defaultValue?: string;
     disableAnimation?: boolean;
     iconProps?: Pick<IIconProps, Exclude<keyof IIconProps, 'className'>>;
@@ -1122,14 +1122,6 @@ export interface ISearchBoxProps extends React.InputHTMLAttributes<HTMLInputElem
     styles?: IStyleFunctionOrObject<ISearchBoxStyleProps, ISearchBoxStyles>;
     theme?: ITheme;
     underlined?: boolean;
-    value?: string;
-}
-
-// @public (undocumented)
-export interface ISearchBoxState {
-    // (undocumented)
-    hasFocus?: boolean;
-    // (undocumented)
     value?: string;
 }
 
@@ -1891,17 +1883,7 @@ export enum ResizeGroupDirection {
 export const SearchBox: React.FunctionComponent<ISearchBoxProps>;
 
 // @public (undocumented)
-export class SearchBoxBase extends React.Component<ISearchBoxProps, ISearchBoxState> {
-    constructor(props: ISearchBoxProps);
-    // (undocumented)
-    static defaultProps: Pick<ISearchBoxProps, 'disableAnimation' | 'clearButtonProps'>;
-    focus(): void;
-    hasFocus(): boolean;
-    // (undocumented)
-    render(): JSX.Element;
-    // (undocumented)
-    UNSAFE_componentWillReceiveProps(newProps: ISearchBoxProps): void;
-}
+export const SearchBoxBase: React.ForwardRefExoticComponent<ISearchBoxProps & React.RefAttributes<HTMLDivElement>>;
 
 // @public
 export class SelectedPeopleList extends BasePeopleSelectedItemsList {
