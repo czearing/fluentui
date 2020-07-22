@@ -165,7 +165,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
         state.hasFocus = false;
       }
     },
-    [props.onBlur, elementContains],
+    [props.onBlur, elementContains, root.current],
   );
 
   const onFirstBumperFocus = useConstCallback(() => {
@@ -281,7 +281,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       return;
     }
     if (FocusTrapZone.focusStack.length && id === FocusTrapZone.focusStack[FocusTrapZone.focusStack.length - 1]) {
-      const focusedElement = ev.target as HTMLElement; // getDocument(root.current)!.activeElement as HTMLElement;
+      const focusedElement = ev.target as HTMLElement;
       if (!elementContains(root.current, focusedElement)) {
         focus();
         state.hasFocus = true; // set focus here since we stop event propagation

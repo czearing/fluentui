@@ -583,7 +583,7 @@ describe('FocusTrapZone', () => {
 
       const { buttonA } = setupTest({});
 
-      expect(lastFocusedElement).toBe(buttonA);
+      expect(document.activeElement).toBe(buttonA);
     });
 
     it('Does not focus first on mount with disableFirstFocus', async () => {
