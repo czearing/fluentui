@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { DefaultButton } from '@fluentui/react-next/lib/compat/Button';
-import { FocusTrapZone } from '@fluentui/react-next/lib/FocusTrapZone';
-import { Link } from '@fluentui/react-next/lib/Link';
-import { Stack, IStackStyles } from '@fluentui/react-next/lib/Stack';
-import { Text } from '@fluentui/react-next/lib/Text';
-import { TextField, ITextFieldStyles } from '@fluentui/react-next/lib/TextField';
-import { Toggle, IToggle } from '@fluentui/react-next/lib/Toggle';
-import { memoizeFunction } from '@fluentui/react-next/lib/Utilities';
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { FocusTrapZone } from 'office-ui-fabric-react/lib/FocusTrapZone';
+import { Link } from 'office-ui-fabric-react/lib/Link';
+import { Stack, IStackStyles } from 'office-ui-fabric-react/lib/Stack';
+import { Text } from 'office-ui-fabric-react/lib/Text';
+import { TextField, ITextFieldStyles } from 'office-ui-fabric-react/lib/TextField';
+import { Toggle, IToggle } from 'office-ui-fabric-react/lib/Toggle';
+import { memoizeFunction } from 'office-ui-fabric-react/lib/Utilities';
 import { useBoolean } from '@uifabric/react-hooks';
 
 const getStackStyles = memoizeFunction(
@@ -31,7 +31,6 @@ export const FocusTrapZoneBoxExample: React.FunctionComponent = () => {
       <Stack.Item>
         <DefaultButton onClick={toggleUseTrapZone} text="Trap Focus" />
       </Stack.Item>
-      <button id="foo">hi</button>
       <FocusTrapZone disabled={!useTrapZone}>
         <Stack horizontalAlign="start" tokens={stackTokens} styles={getStackStyles(useTrapZone)}>
           <Toggle
@@ -42,7 +41,6 @@ export const FocusTrapZoneBoxExample: React.FunctionComponent = () => {
             onText="On (toggle to exit)"
             offText="Off"
           />
-          <button onClick={() => document.querySelector('#foo').focus()}>go to foo</button>
           <TextField label="Input inside trap zone" styles={textFieldStyles} />
           <Link href="https://bing.com" target="_blank">
             Hyperlink inside trap zone

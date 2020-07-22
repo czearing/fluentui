@@ -11,7 +11,7 @@ import {
   on,
 } from '../../Utilities';
 import { IFocusTrapZoneProps } from './FocusTrapZone.types';
-import { useId } from '@uifabric/react-hooks';
+import { useId, useConstCallback } from '@uifabric/react-hooks';
 import { getWindow } from '../../Utilities';
 
 const useUnmount = (unmountFunction: () => void) => {
@@ -137,38 +137,44 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     }
   };
 
-  const onRootFocus = (ev: React.FocusEvent<HTMLDivElement>) => {
-    if (props.onFocus) {
-      props.onFocus(ev);
-    }
-    state.hasFocus = true;
-  };
+  const onRootFocus = React.useCallback(
+    (ev: React.FocusEvent<HTMLDivElement>) => {
+      if (props.onFocus) {
+        props.onFocus(ev);
+      }
+      state.hasFocus = true;
+    },
+    [props.onFocus],
+  );
 
-  const onRootBlur = (ev: React.FocusEvent<HTMLDivElement>) => {
-    if (props.onBlur) {
-      props.onBlur(ev);
-    }
-    let relatedTarget = ev.relatedTarget;
-    if (ev.relatedTarget === null) {
-      // In IE11, due to lack of support, event.relatedTarget is always
-      // null making every onBlur call to be "outside" of the ComboBox
-      // even when it's not. Using document.activeElement is another way
-      // for us to be able to get what the relatedTarget without relying
-      // on the event
-      relatedTarget = getDocument(root.current)!.activeElement as Element;
-    }
-    if (!elementContains(root.current, relatedTarget as HTMLElement)) {
-      state.hasFocus = false;
-    }
-  };
+  const onRootBlur = React.useCallback(
+    (ev: React.FocusEvent<HTMLDivElement>) => {
+      if (props.onBlur) {
+        props.onBlur(ev);
+      }
+      let relatedTarget = ev.relatedTarget;
+      if (ev.relatedTarget === null) {
+        // In IE11, due to lack of support, event.relatedTarget is always
+        // null making every onBlur call to be "outside" of the ComboBox
+        // even when it's not. Using document.activeElement is another way
+        // for us to be able to get what the relatedTarget without relying
+        // on the event
+        relatedTarget = getDocument(root.current)!.activeElement as Element;
+      }
+      if (!elementContains(root.current, relatedTarget as HTMLElement)) {
+        state.hasFocus = false;
+      }
+    },
+    [props.onBlur, elementContains],
+  );
 
-  const onFirstBumperFocus = () => {
+  const onFirstBumperFocus = useConstCallback(() => {
     onBumperFocus(true);
-  };
+  });
 
-  const onLastBumperFocus = () => {
+  const onLastBumperFocus = useConstCallback(() => {
     onBumperFocus(false);
-  };
+  });
 
   const onBumperFocus = (isFirstBumper: boolean) => {
     if (props.disabled) {
@@ -252,20 +258,23 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     }
   };
 
-  const onFocusCapture = (ev: React.FocusEvent<HTMLDivElement>) => {
-    if (props.onFocusCapture) {
-      props.onFocusCapture(ev);
-    }
-    if (ev.target !== ev.currentTarget && !isBumper(ev.target)) {
-      // every time focus changes within the trap zone, remember the focused element so that
-      // it can be restored if focus leaves the pane and returns via keystroke (i.e. via a call to this.focus(true))
-      state.previouslyFocusedElementInTrapZone = ev.target as HTMLElement;
-    }
-  };
-
-  const isBumper = (element: HTMLElement): boolean => {
+  const isBumper = useConstCallback((element: HTMLElement): boolean => {
     return element === firstBumper.current || element === lastBumper.current;
-  };
+  });
+
+  const onFocusCapture = React.useCallback(
+    (ev: React.FocusEvent<HTMLDivElement>) => {
+      if (props.onFocusCapture) {
+        props.onFocusCapture(ev);
+      }
+      if (ev.target !== ev.currentTarget && !isBumper(ev.target)) {
+        // every time focus changes within the trap zone, remember the focused element so that
+        // it can be restored if focus leaves the pane and returns via keystroke (i.e. via a call to this.focus(true))
+        state.previouslyFocusedElementInTrapZone = ev.target as HTMLElement;
+      }
+    },
+    [props.onFocusCapture, isBumper],
+  );
 
   const forceFocusInTrap = (ev: FocusEvent): void => {
     if (props.disabled) {
