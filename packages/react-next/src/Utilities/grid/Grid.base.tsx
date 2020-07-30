@@ -6,7 +6,8 @@ import { useId } from '@uifabric/react-hooks';
 const getClassNames = classNamesFunction<IGridStyleProps, IGridStyles>();
 
 export const GridBase = React.forwardRef((props: IGridProps, ref: React.Ref<HTMLTableElement>) => {
-  const id = props.id || useId();
+  const defaultId = useId();
+  const id = props.id || defaultId;
 
   const {
     items,

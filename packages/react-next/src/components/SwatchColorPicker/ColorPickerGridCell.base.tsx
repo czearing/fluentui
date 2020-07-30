@@ -58,7 +58,7 @@ const getColorPickerGridCellButtonClassNames = memoizeFunction(
   },
 );
 
-// Validate if the cell's color is white or not to apply whiteCell style
+/** Validate if the cell's color is white or not to apply whiteCell style */
 const isWhiteCell = (inputColor: string | undefined): boolean => {
   const currentColor = getColorFromString(inputColor!);
   return currentColor!.hex === 'ffffff';
