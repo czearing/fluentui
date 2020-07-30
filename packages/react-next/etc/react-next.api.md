@@ -144,12 +144,7 @@ export class CoachmarkBase extends React.Component<ICoachmarkProps, ICoachmarkSt
 export const ColorPickerGridCell: React.FunctionComponent<IColorPickerGridCellProps>;
 
 // @public (undocumented)
-export class ColorPickerGridCellBase extends React.PureComponent<IColorPickerGridCellProps, {}> {
-    // (undocumented)
-    static defaultProps: Partial<IColorPickerGridCellProps>;
-    // (undocumented)
-    render(): JSX.Element;
-}
+export const ColorPickerGridCellBase: React.FunctionComponent<IColorPickerGridCellProps>;
 
 // @public
 export const Customizer: React.FunctionComponent<ICustomizerProps>;
@@ -2048,17 +2043,7 @@ export const SpinButton: React.FunctionComponent<ISpinButtonProps>;
 export const SwatchColorPicker: React.FunctionComponent<ISwatchColorPickerProps>;
 
 // @public (undocumented)
-export class SwatchColorPickerBase extends React.Component<ISwatchColorPickerProps, ISwatchColorPickerState> {
-    constructor(props: ISwatchColorPickerProps);
-    // (undocumented)
-    componentWillUnmount(): void;
-    // (undocumented)
-    static defaultProps: ISwatchColorPickerProps;
-    // (undocumented)
-    render(): JSX.Element | null;
-    // (undocumented)
-    UNSAFE_componentWillReceiveProps(newProps: ISwatchColorPickerProps): void;
-}
+export const SwatchColorPickerBase: React.ForwardRefExoticComponent<ISwatchColorPickerProps & React.RefAttributes<HTMLElement>>;
 
 // @public (undocumented)
 export type Target = Element | string | MouseEvent | Point | null | React.RefObject<Element>;

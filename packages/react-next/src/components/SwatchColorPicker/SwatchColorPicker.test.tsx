@@ -3,8 +3,8 @@ import { create } from '@uifabric/utilities/lib/test';
 import { mount } from 'enzyme';
 import { SwatchColorPicker } from './SwatchColorPicker';
 import { IColorCellProps } from './ColorPickerGridCell.types';
-import { expectNodes, findNodes } from '../../common/testUtilities';
 import { resetIds } from '@uifabric/utilities';
+import { expectNodes, findNodes } from '../../common/testUtilities';
 
 const DEFAULT_OPTIONS: IColorCellProps[] = [
   { id: 'a', label: 'green', color: '#00ff00' },
