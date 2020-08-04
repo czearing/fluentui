@@ -195,8 +195,8 @@ export const SwatchColorPickerBase = React.forwardRef<HTMLElement, ISwatchColorP
         props.onCellFocused();
       }
 
-      if (props.onColorChanged) {
-        props.onColorChanged(item.id, item.color);
+      if (props.onChange) {
+        props.onChange(item.id, item.color);
       }
 
       // Update internal state only if the component is uncontrolled

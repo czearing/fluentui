@@ -56,9 +56,6 @@ export interface ISwatchColorPickerProps {
    */
   isControlled?: boolean;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onChanged?: (ev: any, id?: string, value) => void;
-
   /**
    * Callback for when the user changes the color.
    * If `id` and `color` are unspecified, there is no selected cell.
@@ -68,6 +65,8 @@ export interface ISwatchColorPickerProps {
    * @deprecated Use `onChange`
    */
   onColorChanged?: (id?: string, color?: string) => void;
+
+  onChange?: (id?: string, color?: string) => void;
 
   /**
    * Callback for when the user hovers over a color cell.
