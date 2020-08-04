@@ -3,7 +3,7 @@ import { create } from '@uifabric/utilities/lib/test';
 import { mount } from 'enzyme';
 import { KeyCodes } from '../../../Utilities';
 import { mockEvent } from '../../../common/testUtilities';
-
+import * as ReactTestUtils from 'react-dom/test-utils';
 import { MaskedTextField } from './MaskedTextField';
 
 describe('MaskedTextField', () => {
@@ -278,6 +278,7 @@ describe('MaskedTextField', () => {
     expect(inputDOM.value).toEqual('mask: (___) ___ - ____');
 
     component.setProps({ value: '1234567890' });
+
     expect(inputDOM.value).toEqual('mask: (123) 456 - 7890');
   });
 });
