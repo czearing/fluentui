@@ -278,7 +278,8 @@ describe('MaskedTextField', () => {
     expect(inputDOM.value).toEqual('mask: (___) ___ - ____');
 
     component.setProps({ value: '1234567890' });
+    component.update();
 
-    expect(inputDOM.value).toEqual('mask: (123) 456 - 7890');
+    expect(component.find('input').prop('value')).toBe('mask: (123) 456 - 7890');
   });
 });
