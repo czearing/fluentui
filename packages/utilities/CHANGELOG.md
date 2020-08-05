@@ -1,8 +1,107 @@
 # Change Log - @uifabric/utilities
 
-This log was last generated on Mon, 15 Jun 2020 12:45:48 GMT and should not be manually modified.
+This log was last generated on Tue, 04 Aug 2020 12:42:32 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## [7.25.1](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.25.1)
+
+Tue, 04 Aug 2020 12:42:32 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.25.0..@uifabric/utilities_v7.25.1)
+
+### Patches
+
+- omit: changed to for in for more perf improvement. ([PR #14313](https://github.com/microsoft/fluentui/pull/14313) by dzearing@microsoft.com)
+
+## [7.25.0](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.25.0)
+
+Mon, 03 Aug 2020 12:45:42 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.24.6..@uifabric/utilities_v7.25.0)
+
+### Minor changes
+
+- Adding omit utility as a tiny helper for cloning an object but omitting a few values. This is significantly faster than object spreading or using reduce. ([PR #14281](https://github.com/microsoft/fluentui/pull/14281) by dzearing@microsoft.com)
+
+## [7.24.6](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.24.6)
+
+Fri, 31 Jul 2020 12:47:45 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.24.5..@uifabric/utilities_v7.24.6)
+
+### Patches
+
+- useCustomizationSettings: get settings from CustomizerContext if exists. ([PR #14145](https://github.com/microsoft/fluentui/pull/14145) by xgao@microsoft.com)
+
+## [7.24.5](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.24.5)
+
+Wed, 22 Jul 2020 12:40:51 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.24.4..@uifabric/utilities_v7.24.5)
+
+### Patches
+
+- Fix "rules of hooks" lint rule violations ([PR #14099](https://github.com/microsoft/fluentui/pull/14099) by elcraig@microsoft.com)
+
+## [7.24.3](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.24.3)
+
+Fri, 17 Jul 2020 12:38:41 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.24.2..@uifabric/utilities_v7.24.3)
+
+### Patches
+
+- fix: useFocusRects should resolve window inside useEffect ([PR #14063](https://github.com/microsoft/fluentui/pull/14063) by olfedias@microsoft.com)
+
+## [7.24.1](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.24.1)
+
+Mon, 13 Jul 2020 23:14:39 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.24.0..@uifabric/utilities_v7.24.1)
+
+### Patches
+
+- Replace tslint with eslint and fix some violations ([PR #13944](https://github.com/microsoft/fluentui/pull/13944) by elcraig@microsoft.com)
+
+## [7.24.0](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.24.0)
+
+Thu, 09 Jul 2020 21:59:04 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.23.0..@uifabric/utilities_v7.24.0)
+
+### Minor changes
+
+- findScrollableParent: Adding missing `Window` and `undefined` return types. ([PR #13953](https://github.com/microsoft/fluentui/pull/13953) by KevinTCoughlin@users.noreply.github.com)
+
+## [7.23.0](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.23.0)
+
+Fri, 03 Jul 2020 12:36:49 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.22.0..@uifabric/utilities_v7.23.0)
+
+### Minor changes
+
+- Refactor styled to return a functional component (with optional ref attribute) ([PR #13891](https://github.com/microsoft/fluentui/pull/13891) by miclo@microsoft.com)
+
+## [7.22.0](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.22.0)
+
+Tue, 30 Jun 2020 12:33:36 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.21.4..@uifabric/utilities_v7.22.0)
+
+### Minor changes
+
+- getNativeProps: changed to object lookups rather than array searching to determine native props. ([PR #13842](https://github.com/microsoft/fluentui/pull/13842) by dzearing@microsoft.com)
+
+## [7.21.4](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.21.4)
+
+Mon, 29 Jun 2020 12:36:08 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.21.3..@uifabric/utilities_v7.21.4)
+
+### Patches
+
+- Fix scroll position math for overscrolling (#13555) ([PR #13622](https://github.com/microsoft/fluentui/pull/13622) by kai@substantial.com)
+
+## [7.21.1](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.21.1)
+
+Mon, 22 Jun 2020 12:42:16 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/utilities_v7.21.0..@uifabric/utilities_v7.21.1)
+
+### Patches
+
+- add test util for react-test-renderer create with act wrapped ([PR #13713](https://github.com/microsoft/fluentui/pull/13713) by xgao@microsoft.com)
 
 ## [7.21.0](https://github.com/microsoft/fluentui/tree/@uifabric/utilities_v7.21.0)
 

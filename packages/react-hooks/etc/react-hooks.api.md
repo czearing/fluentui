@@ -5,7 +5,10 @@
 ```ts
 
 import { Async } from '@uifabric/utilities';
+import { ISettingsMap } from '@uifabric/utilities/lib/warn';
+import { IWarnControlledUsageParams } from '@uifabric/utilities/lib/warn';
 import * as React from 'react';
+import { Ref } from 'react';
 
 // @public (undocumented)
 export type ChangeCallback<TElement extends HTMLElement, TValue> = (ev: React.FormEvent<TElement> | undefined, newValue: TValue | undefined) => void;
@@ -16,6 +19,24 @@ export interface IUseBooleanCallbacks {
     setTrue: () => void;
     toggle: () => void;
 }
+
+// @public (undocumented)
+export interface IWarningOptions<P> {
+    conditionallyRequired?: {
+        requiredProps: string[];
+        conditionalPropName: string;
+        condition: boolean;
+    }[];
+    controlledUsage?: Pick<IWarnControlledUsageParams<P>, 'valueProp' | 'defaultValueProp' | 'onChangeProp' | 'readOnlyProp'>;
+    deprecations?: ISettingsMap<P>;
+    mutuallyExclusive?: ISettingsMap<P>;
+    name: string;
+    other?: string[];
+    props: P;
+}
+
+// @public
+export type RefCallback<T> = ((value: T | null) => void) & React.RefObject<T>;
 
 // @public
 export function useAsync(): Async;
@@ -30,10 +51,10 @@ export function useConst<T>(initialValue: T | (() => T)): T;
 export function useConstCallback<T extends (...args: any[]) => any>(callback: T): T;
 
 // @public
-export function useControllableValue<TValue, TElement extends HTMLElement>(controlledValue: TValue | undefined, defaultUncontrolledValue: TValue | undefined): Readonly<[TValue | undefined, (newValue: TValue | undefined) => void]>;
+export function useControllableValue<TValue, TElement extends HTMLElement>(controlledValue: TValue | undefined, defaultUncontrolledValue: TValue | undefined): Readonly<[TValue | undefined, (update: React.SetStateAction<TValue | undefined>) => void]>;
 
 // @public (undocumented)
-export function useControllableValue<TValue, TElement extends HTMLElement, TCallback extends ChangeCallback<TElement, TValue> | undefined>(controlledValue: TValue | undefined, defaultUncontrolledValue: TValue | undefined, onChange: TCallback): Readonly<[TValue | undefined, (newValue: TValue | undefined, ev?: React.FormEvent<TElement>) => void]>;
+export function useControllableValue<TValue, TElement extends HTMLElement, TCallback extends ChangeCallback<TElement, TValue> | undefined>(controlledValue: TValue | undefined, defaultUncontrolledValue: TValue | undefined, onChange: TCallback): Readonly<[TValue | undefined, (update: React.SetStateAction<TValue | undefined>, ev?: React.FormEvent<TElement>) => void]>;
 
 // @public
 export function useForceUpdate(): () => void;
@@ -42,13 +63,37 @@ export function useForceUpdate(): () => void;
 export function useId(prefix?: string, providedId?: string): string;
 
 // @public
-export function useMergedRefs<T>(...refs: React.Ref<T>[]): (instance: T) => void;
+export function useMergedRefs<T>(...refs: Ref<T>[]): (instance: T) => void;
 
 // @public
 export function useOnEvent<TElement extends Element, TEvent extends Event>(element: React.RefObject<TElement | undefined | null> | TElement | Window | undefined | null, eventName: string, callback: (ev: TEvent) => void, useCapture?: boolean): void;
 
 // @public
-export const useSetTimeout: () => (func: () => void, duration: number) => number;
+export function usePrevious<T>(value: T): T | undefined;
+
+// @public
+export function useRefEffect<T>(callback: (value: T) => (() => void) | void, initial?: T | null): RefCallback<T>;
+
+// @public
+export const useSetInterval: () => UseSetIntervalReturnType;
+
+// @public (undocumented)
+export type UseSetIntervalReturnType = {
+    setInterval: (callback: () => void, duration: number) => number;
+    clearInterval: (id: number) => void;
+};
+
+// @public
+export const useSetTimeout: () => UseSetTimeoutReturnType;
+
+// @public (undocumented)
+export type UseSetTimeoutReturnType = {
+    setTimeout: (callback: () => void, duration: number) => number;
+    clearTimeout: (id: number) => void;
+};
+
+// @public
+export function useWarnings<P>(options: IWarningOptions<P>): void;
 
 
 // (No @packageDocumentation comment for this package)
