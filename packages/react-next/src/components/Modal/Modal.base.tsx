@@ -17,7 +17,7 @@ import { ResponsiveMode } from 'office-ui-fabric-react/lib/utilities/decorators/
 import { DirectionalHint } from 'office-ui-fabric-react/src/components/Callout/index';
 import { Icon } from 'office-ui-fabric-react/src/components/Icon/index';
 import { DraggableZone, IDragData } from 'office-ui-fabric-react/lib/utilities/DraggableZone/index';
-import { useSetTimeout, useId, useBoolean, useConstCallback, useConst } from '@uifabric/react-hooks';
+import { useSetTimeout, useResponsiveMode, useBoolean, useConstCallback, useConst } from '@uifabric/react-hooks';
 
 // @TODO - need to change this to a panel whenever the breakpoint is under medium (verify the spec)
 
@@ -26,6 +26,7 @@ const DefaultLayerProps: ILayerProps = {
 };
 
 export interface IModalInternalState {
+  responsiveModes: ResponsiveMode | undefined;
   onModalCloseTimer: number;
   scrollableContent: HTMLDivElement | null;
   lastSetX: number;
@@ -54,6 +55,7 @@ const COMPONENT_NAME = 'Modal';
 
 export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   const focusTrapZone = React.useRef<IFocusTrapZone>(null);
+
   // const id = useId('Modal')
   const [modalRectangleTop, setModalRectangleTop] = React.useState<number>();
   const [x, setX] = React.useState<number>(0);
@@ -96,6 +98,7 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   );
 
   const internalState = useConst<IModalInternalState>(() => ({
+    responsiveModes: undefined,
     onModalCloseTimer: 0,
     scrollableContent: null,
     lastSetX: 0,
@@ -223,13 +226,13 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
       switch (event.keyCode) {
         /* eslint-disable no-fallthrough */
         case KeyCodes.escape:
-          setX(lastSetX);
-          setY(lastSetY);
+          setX(internalState.lastSetX);
+          setY(internalState.lastSetY);
         case KeyCodes.enter: {
           // TODO: determine if fallthrough was intentional
           /* eslint-enable no-fallthrough */
-          lastSetX = 0;
-          lastSetY = 0;
+          internalState.lastSetX = 0;
+          internalState.lastSetY = 0;
           setKeyboardMoveModeFalse();
           break;
         }
@@ -381,7 +384,6 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
         }
       }
     }
-
     // Closing the dialog
     if (!props.isOpen && isOpen) {
       internalState.onModalCloseTimer = setTimeout(onModalClose, parseFloat(animationDuration) * 1000);
@@ -392,46 +394,46 @@ export const ModalBase = (props: React.PropsWithChildren<IModalProps>) => {
   useComponentRef(props, focusTrapZone);
 
   // @temp tuatology - Will adjust this to be a panel at certain breakpoints
-
-  // if (responsiveMode! >= ResponsiveMode.small) {
-  return (
-    <Layer {...mergedLayerProps}>
-      <Popup
-        role={isModeless || !isBlocking ? 'dialog' : 'alertdialog'}
-        aria-modal={!isModeless}
-        ariaLabelledBy={titleAriaId}
-        ariaDescribedBy={subtitleAriaId}
-        onDismiss={onDismiss}
-        shouldRestoreFocus={!ignoreExternalFocusing}
-      >
-        <div className={classNames.root}>
-          {!isModeless && (
-            <Overlay
-              isDarkThemed={isDarkOverlay}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              onClick={isBlocking ? undefined : (onDismiss as any)}
-              allowTouchBodyScroll={internalState.allowTouchBodyScrollValue}
-              {...overlay}
-            />
-          )}
-          {dragOptions ? (
-            <DraggableZone
-              handleSelector={dragOptions.dragHandleSelector || `.${classNames.main.split(' ')[0]}`}
-              preventDragSelector="button"
-              onStart={onDragStart}
-              onDragChange={onDrag}
-              onStop={onDragStop}
-              position={{ x: x, y: y }}
-            >
-              {modalContent}
-            </DraggableZone>
-          ) : (
-            modalContent
-          )}
-        </div>
-      </Popup>
-    </Layer>
-  );
+  if (useResponsiveMode! >= ResponsiveMode.small) {
+    return (
+      <Layer {...mergedLayerProps}>
+        <Popup
+          role={isModeless || !isBlocking ? 'dialog' : 'alertdialog'}
+          aria-modal={!isModeless}
+          ariaLabelledBy={titleAriaId}
+          ariaDescribedBy={subtitleAriaId}
+          onDismiss={onDismiss}
+          shouldRestoreFocus={!ignoreExternalFocusing}
+        >
+          <div className={classNames.root}>
+            {!isModeless && (
+              <Overlay
+                isDarkThemed={isDarkOverlay}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onClick={isBlocking ? undefined : (onDismiss as any)}
+                allowTouchBodyScroll={internalState.allowTouchBodyScrollValue}
+                {...overlay}
+              />
+            )}
+            {dragOptions ? (
+              <DraggableZone
+                handleSelector={dragOptions.dragHandleSelector || `.${classNames.main.split(' ')[0]}`}
+                preventDragSelector="button"
+                onStart={onDragStart}
+                onDragChange={onDrag}
+                onStop={onDragStop}
+                position={{ x: x, y: y }}
+              >
+                {modalContent}
+              </DraggableZone>
+            ) : (
+              modalContent
+            )}
+          </div>
+        </Popup>
+      </Layer>
+    );
+  }
 };
 ModalBase.displayName = COMPONENT_NAME;
 ModalBase.DefaultLayerProps = {
