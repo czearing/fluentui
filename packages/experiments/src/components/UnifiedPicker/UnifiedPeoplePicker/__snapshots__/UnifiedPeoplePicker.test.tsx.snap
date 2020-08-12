@@ -205,9 +205,11 @@ exports[`UnifiedPeoplePicker renders correctly with selected and suggested items
                     background: Highlight;
                     border-color: Highlight;
                   }
+              data-is-draggable={false}
               data-is-focusable={true}
               data-is-sub-focuszone={true}
               data-selection-index={0}
+              draggable={false}
               role="listitem"
             >
               <div
@@ -260,7 +262,6 @@ exports[`UnifiedPeoplePicker renders correctly with selected and suggested items
                         z-index: 1;
                       }
                       @media screen and (-ms-high-contrast: active){.ms-Fabric--isFocusVisible &:focus:after {
-                        border: none;
                         bottom: -2px;
                         left: -2px;
                         outline-color: ButtonText;
@@ -690,7 +691,6 @@ exports[`UnifiedPeoplePicker renders correctly with selected and suggested items
                         z-index: 1;
                       }
                       @media screen and (-ms-high-contrast: active){.ms-Fabric--isFocusVisible &:focus:after {
-                        border: none;
                         bottom: -2px;
                         left: -2px;
                         outline-color: ButtonText;

@@ -34,6 +34,9 @@ sizeauditor.json @aftab-hassan
 #### Fluent UI
 packages/fluentui/ @davezuko @layershifter @levithomason @miroslavstastny @mnajdova @dzearing @pompomon @silviuavram @jurokapsiar
 
+#### Web Components
+packages/web-components @chrisdholt @EisenbergEffect @nicholasrice
+
 #### Deprecated API Files
 *.api.ts @natalieethell
 
@@ -68,7 +71,7 @@ packages/styling/src/styles/ @phkuo
 packages/tsx-editor/ @ecraig12345
 # packages/utilities/
 packages/utilities/positioning/ @joschect
-packages/azure-themes/ @hyoshis @Jacqueline-ms
+packages/azure-themes/ @hyoshis @Jacqueline-ms @wsmd
 
 ### Fabric
 # common/
