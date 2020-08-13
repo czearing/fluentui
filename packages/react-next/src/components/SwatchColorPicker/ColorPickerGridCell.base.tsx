@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { ITheme, mergeStyleSets } from '../../Styling';
-import { classNamesFunction, memoizeFunction } from '../../Utilities';
-import { getColorFromString } from 'office-ui-fabric-react/lib/utilities/color/getColorFromString';
+import { ITheme, mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
+import { classNamesFunction } from '../../Utilities';
+import { getColorFromString } from 'office-ui-fabric-react/lib/Color';
 import { GridCell } from '../../Utilities/grid/GridCell';
-import { IGridCellProps } from '../../Utilities/grid/GridCell.types';
 import { getStyles as getActionButtonStyles } from 'office-ui-fabric-react/lib/components/Button/ActionButton/ActionButton.styles';
 import { IButtonClassNames } from 'office-ui-fabric-react/lib/components/Button/BaseButton.classNames';
 import { IProcessedStyleSet } from 'office-ui-fabric-react/lib/Styling';
@@ -15,48 +14,7 @@ import {
 } from './ColorPickerGridCell.types';
 import { useConstCallback } from '@uifabric/react-hooks';
 
-const getColorPickerGridCellButtonClassNames = memoizeFunction(
-  (
-    theme: ITheme,
-    className: string,
-    variantClassName: string,
-    iconClassName: string | undefined,
-    menuIconClassName: string | undefined,
-    disabled: boolean,
-    checked: boolean,
-    expanded: boolean,
-    isSplit: boolean | undefined,
-  ): IButtonClassNames => {
-    const styles = getActionButtonStyles(theme);
-    return mergeStyleSets({
-      root: [
-        'ms-Button',
-        styles.root,
-        variantClassName,
-        className,
-        checked && ['is-checked', styles.rootChecked],
-        disabled && ['is-disabled', styles.rootDisabled],
-        !disabled &&
-          !checked && {
-            selectors: {
-              ':hover': styles.rootHovered,
-              ':focus': styles.rootFocused,
-              ':active': styles.rootPressed,
-            },
-          },
-        disabled && checked && [styles.rootCheckedDisabled],
-        !disabled &&
-          checked && {
-            selectors: {
-              ':hover': styles.rootCheckedHovered,
-              ':active': styles.rootCheckedPressed,
-            },
-          },
-      ],
-      flexContainer: ['ms-Button-flexContainer', styles.flexContainer],
-    });
-  },
-);
+const getClassNames = classNamesFunction<IColorPickerGridCellStyleProps, IColorPickerGridCellStyles>();
 
 /** Validate if the cell's color is white or not to apply whiteCell style */
 const isWhiteCell = (inputColor: string | undefined): boolean => {
@@ -64,20 +22,14 @@ const isWhiteCell = (inputColor: string | undefined): boolean => {
   return currentColor!.hex === 'ffffff';
 };
 
-const getClassNames = classNamesFunction<IColorPickerGridCellStyleProps, IColorPickerGridCellStyles>();
-
-class ColorCell extends GridCell<IColorCellProps, IGridCellProps<IColorCellProps>> {}
-
 export const ColorPickerGridCellBase: React.FunctionComponent<IColorPickerGridCellProps> = props => {
   const {
     item,
-
     // eslint-disable-next-line deprecation/deprecation
     idPrefix = props.id,
     selected = false,
     disabled = false,
     styles,
-    theme,
     circle = true,
     color,
     onClick,
@@ -94,7 +46,7 @@ export const ColorPickerGridCellBase: React.FunctionComponent<IColorPickerGridCe
   } = props;
 
   const classNames: IProcessedStyleSet<IColorPickerGridCellStyles> = getClassNames(styles!, {
-    theme: theme!,
+    theme: props.theme!,
     disabled,
     selected,
     circle,
@@ -104,6 +56,45 @@ export const ColorPickerGridCellBase: React.FunctionComponent<IColorPickerGridCe
     borderWidth,
   });
 
+  const getColorPickerGridCellButtonClassNames = useConstCallback(
+    (
+      theme: ITheme,
+      className: string,
+      variantClassName: string,
+      iconClassName: string | undefined,
+      menuIconClassName: string | undefined,
+      checked: boolean,
+    ): IButtonClassNames => {
+      const actionButtonStyles = getActionButtonStyles(theme);
+      return mergeStyleSets({
+        root: [
+          'ms-Button',
+          actionButtonStyles.root,
+          variantClassName,
+          className,
+          checked && ['is-checked', actionButtonStyles.rootChecked],
+          disabled && ['is-disabled', actionButtonStyles.rootDisabled],
+          !disabled &&
+            !checked && {
+              selectors: {
+                ':hover': actionButtonStyles.rootHovered,
+                ':focus': actionButtonStyles.rootFocused,
+                ':active': actionButtonStyles.rootPressed,
+              },
+            },
+          disabled && checked && [actionButtonStyles.rootCheckedDisabled],
+          !disabled &&
+            checked && {
+              selectors: {
+                ':hover': actionButtonStyles.rootCheckedHovered,
+                ':active': actionButtonStyles.rootCheckedPressed,
+              },
+            },
+        ],
+        flexContainer: ['ms-Button-flexContainer', actionButtonStyles.flexContainer],
+      });
+    },
+  );
   // Render the core of a color cell
   const onRenderColorOption = useConstCallback(
     (colorOption: IColorCellProps): JSX.Element => {
@@ -117,7 +108,7 @@ export const ColorPickerGridCellBase: React.FunctionComponent<IColorPickerGridCe
   );
 
   return (
-    <ColorCell
+    <GridCell
       item={item}
       id={`${idPrefix}-${item.id}-${item.index}`}
       key={item.id}

@@ -6,6 +6,7 @@
 
 import { BaseSlots } from '@fluentui/react-compose';
 import { ComposePreparedOptions } from '@fluentui/react-compose';
+import * as CSS from 'csstype';
 import { IBaseFloatingPickerProps } from 'office-ui-fabric-react/lib/FloatingPicker';
 import { IBaseProps } from 'office-ui-fabric-react/lib/Utilities';
 import { IButtonProps } from '@fluentui/react-next/lib/compat/Button';
@@ -35,6 +36,7 @@ import { ITheme } from 'office-ui-fabric-react/lib/Styling';
 import { IWithResponsiveModeState } from 'office-ui-fabric-react/lib/utilities/decorators/withResponsiveMode';
 import { Point } from 'office-ui-fabric-react/lib/Utilities';
 import { Position } from 'office-ui-fabric-react/lib/utilities/positioning';
+import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { ReactNode } from 'react';
 import { Selection } from 'office-ui-fabric-react/lib/Selection';
@@ -1406,15 +1408,20 @@ export interface ISwatchColorPickerProps {
     className?: string;
     colorCells: IColorCellProps[];
     columnCount: number;
+    defaultSelectedId?: string | undefined;
     disabled?: boolean;
     doNotContainWithinFocusZone?: boolean;
     focusOnHover?: boolean;
     getColorGridCellStyles?: IStyleFunctionOrObject<IColorPickerGridCellStyleProps, IColorPickerGridCellStyles>;
     id?: string;
+    // @deprecated (undocumented)
     isControlled?: boolean;
     mouseLeaveParentSelector?: string | undefined;
     onCellFocused?: (id?: string, color?: string) => void;
     onCellHovered?: (id?: string, color?: string) => void;
+    // Warning: (ae-forgotten-export) The symbol "React" needs to be exported by the entry point index.d.ts
+    onChange?: (event: React_2.MouseEvent<HTMLElement>, color?: string) => void;
+    // @deprecated (undocumented)
     onColorChanged?: (id?: string, color?: string) => void;
     // @deprecated (undocumented)
     positionInSet?: number;
@@ -1429,7 +1436,13 @@ export interface ISwatchColorPickerProps {
 // @public (undocumented)
 export interface ISwatchColorPickerState {
     // (undocumented)
-    selectedIndex?: number;
+    cellFocused: boolean;
+    // (undocumented)
+    isNavigationIdle: boolean;
+    // (undocumented)
+    navigationIdleDelay: number;
+    // (undocumented)
+    navigationIdleTimeoutId: number | undefined;
 }
 
 // @public
