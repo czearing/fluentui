@@ -1,8 +1,54 @@
 # Change Log - @uifabric/experiments
 
-This log was last generated on Tue, 21 Jul 2020 12:43:08 GMT and should not be manually modified.
+This log was last generated on Fri, 14 Aug 2020 12:43:53 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## [7.28.2](https://github.com/microsoft/fluentui/tree/@uifabric/experiments_v7.28.2)
+
+Fri, 14 Aug 2020 12:43:53 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/experiments_v7.28.0..@uifabric/experiments_v7.28.2)
+
+### Patches
+
+- Add two well example and fix Remove ctx menu example ([PR #14490](https://github.com/microsoft/fluentui/pull/14490) by sadelson@microsoft.com)
+
+## [7.28.0](https://github.com/microsoft/fluentui/tree/@uifabric/experiments_v7.28.0)
+
+Wed, 12 Aug 2020 18:34:18 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/experiments_v7.27.20..@uifabric/experiments_v7.28.0)
+
+### Minor changes
+
+- Add drag drop to the experiments SelectedItemsList (and therefor also UnifiedPicker) ([PR #14360](https://github.com/microsoft/fluentui/pull/14360) by elvonspa@microsoft.com)
+
+## [7.27.15](https://github.com/microsoft/fluentui/tree/@uifabric/experiments_v7.27.15)
+
+Tue, 04 Aug 2020 12:42:32 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/experiments_v7.27.14..@uifabric/experiments_v7.27.15)
+
+### Patches
+
+- update snapshots ([PR #14273](https://github.com/microsoft/fluentui/pull/14273) by ololubek@microsoft.com)
+
+## [7.27.14](https://github.com/microsoft/fluentui/tree/@uifabric/experiments_v7.27.14)
+
+Mon, 03 Aug 2020 12:45:42 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/experiments_v7.27.9..@uifabric/experiments_v7.27.14)
+
+### Patches
+
+- Updating snapshots. ([PR #14215](https://github.com/microsoft/fluentui/pull/14215) by humbertomakotomorimoto@gmail.com)
+
+## [7.27.9](https://github.com/microsoft/fluentui/tree/@uifabric/experiments_v7.27.9)
+
+Thu, 23 Jul 2020 12:43:51 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/experiments_v7.27.7..@uifabric/experiments_v7.27.9)
+
+### Patches
+
+- UnifiedPicker and SelectedItemsList: minor accessibility fixes ([PR #14090](https://github.com/microsoft/fluentui/pull/14090) by elvonspa@microsoft.com)
+- Fix "rules of hooks" lint rule violations ([PR #14100](https://github.com/microsoft/fluentui/pull/14100) by elcraig@microsoft.com)
 
 ## [7.27.7](https://github.com/microsoft/fluentui/tree/@uifabric/experiments_v7.27.7)
 

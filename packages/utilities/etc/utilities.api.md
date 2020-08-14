@@ -134,6 +134,9 @@ export function createArray<T>(size: number, getItem: (index: number) => T): T[]
 // @public
 export function createMemoizer<F extends (input: any) => any>(getValue: F): F;
 
+// @public
+export const createMergedRef: <TType, TValue = null>(value?: TValue | undefined) => (...newRefs: (((instance: TType | TValue | null) => void) | React.RefObject<TType | TValue | null> | null | undefined)[]) => (newValue: TType | TValue | null) => void;
+
 // Warning: (ae-incompatible-release-tags) The symbol "css" is marked as @public, but its signature references "ICssInput" which is marked as @internal
 //
 // @public
@@ -330,7 +333,7 @@ export function getLastFocusable(rootElement: HTMLElement, currentElement: HTMLE
 export function getLastTabbable(rootElement: HTMLElement, currentElement: HTMLElement, includeElementsInFocusZones?: boolean, checkNode?: boolean): HTMLElement | null;
 
 // @public
-export function getNativeElementProps<TAttributes extends React.HTMLAttributes<any>>(tagName: keyof React.ReactHTML, props: {}, excludedPropNames?: string[]): TAttributes;
+export function getNativeElementProps<TAttributes extends React.HTMLAttributes<any>>(tagName: string, props: {}, excludedPropNames?: string[]): TAttributes;
 
 // @public
 export function getNativeProps<T extends Record<string, any>>(props: Record<string, any>, allowedPropNames: string[] | Record<string, number>, excludedPropNames?: string[]): T;
@@ -976,6 +979,9 @@ export const olProperties: Record<string, number>;
 
 export { Omit }
 
+// @public
+export function omit<TObj extends Record<string, any>>(obj: TObj, exclusions: (keyof TObj)[]): TObj;
+
 // @public (undocumented)
 export function on(element: Element | Window, eventName: string, callback: (ev: Event) => void, options?: boolean): () => void;
 
@@ -1198,7 +1204,7 @@ export const trProperties: Record<string, number>;
 export function unhoistMethods(source: any, methodNames: string[]): void;
 
 // @public
-export function useCustomizationSettings(properties: string[], scopeName?: string, localSettings?: ICustomizations): ISettings;
+export function useCustomizationSettings(properties: string[], scopeName?: string): ISettings;
 
 // @public
 export function useFocusRects(rootRef?: React.RefObject<HTMLElement>): void;

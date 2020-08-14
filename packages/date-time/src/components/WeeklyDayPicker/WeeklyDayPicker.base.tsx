@@ -53,6 +53,7 @@ const DEFAULT_STRINGS = {
   weekNumberFormatString: 'Week number {0}',
   prevWeekAriaLabel: 'Go to previous week',
   nextWeekAriaLabel: 'Go to next week',
+  dayMarkedAriaLabel: 'marked',
 };
 
 export const defaultIconStrings: ICalendarIconStrings = {
@@ -165,6 +166,7 @@ export class WeeklyDayPickerBase extends React.Component<IWeeklyDayPickerProps, 
       className,
       showFullMonth,
       weeksToShow,
+      ...calendarDayGridProps
     } = this.props;
 
     const classNames = getClassNames(styles, {
@@ -200,6 +202,7 @@ export class WeeklyDayPickerBase extends React.Component<IWeeklyDayPickerProps, 
           today={today}
           lightenDaysOutsideNavigatedMonth={showFullMonth}
           animationDirection={this.state.animationDirection}
+          {...calendarDayGridProps}
         />
         {this._renderNextWeekNavigationButton(classNames)}
       </div>

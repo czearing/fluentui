@@ -18,9 +18,42 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ## BREAKING CHANGES
+- Delete `HierarchicalTree`, `HierarchicalTreeItem` and `HierarchicalTreeTitle` component @assuncaocharles ([#14515](https://github.com/microsoft/fluentui/pull/14515))
+
+### Fixes
+- Fix a warning when the `inverted` prop was used in `TextArea` @layershifter ([#14357](https://github.com/microsoft/fluentui/pull/14357))
+- Fix `Tree` component to correctly keep track of the `activeItemIds` @assuncaocharles ([#14507](https://github.com/microsoft/fluentui/pull/14507))
+- Fix `Menu` underlined focus style @assuncaocharles ([#14525](https://github.com/microsoft/fluentui/pull/14525))
+
+### Features
+- Add basic keyboard navigation for `Datepicker` @pompompon ([#14138](https://github.com/microsoft/fluentui/pull/14138))
+- Add `onDateChange` handler to `Datepicker.Input` field @karymes ([#14167](https://github.com/microsoft/fluentui/pull/14167))
+- Add base `Skeleton` component @assuncaocharles ([#14354](https://github.com/microsoft/fluentui/pull/14354))
+- Add base `SkeletonButton` component @assuncaocharles ([#14405](https://github.com/microsoft/fluentui/pull/14405))
+- Add base `SkeletonAvatar` component @assuncaocharles ([#14471](https://github.com/microsoft/fluentui/pull/14471))
+- Add base `SkeletonInput` component @assuncaocharles ([#14439](https://github.com/microsoft/fluentui/pull/14439))
+- Add base `SkeletonText` component @assuncaocharles ([#14460](https://github.com/microsoft/fluentui/pull/14460))
+
+### Documentation
+- Edited left side menu in UI builder @vyhnalekl ([#14436](https://github.com/microsoft/fluentui/pull/14436))
+- Fixed issue with a drop near the edge of iframe in UI builder @vyhnalekl ([#14440](https://github.com/microsoft/fluentui/pull/14440))
+- Add undo and redo feature to UI builder @vyhnalekl ([#14336](https://github.com/microsoft/fluentui/pull/14336))
+- Added keyboard shortcuts to UI builder @vyhnalekl ([#14483](https://github.com/microsoft/fluentui/pull/14483))
+- Add `formatDayMonthYear` and `parseDate` examples for `Datepicker` @pompomon ([#14484](https://github.com/microsoft/fluentui/pull/14484))
+- Move component in iframe by drag and drop @vyhnalekl ([#14432](https://github.com/microsoft/fluentui/pull/14432))
+- Removed props JSON from right side menu @vyhnalekl ([#14503](https://github.com/microsoft/fluentui/pull/14503))
+- Fixed top's component debug frame above iframe @vyhnalekl ([#14329](https://github.com/microsoft/fluentui/pull/14329))
+- Hide drop selector on scroll in iframe (UI builder) @vyhnalekl ([#14443](https://github.com/microsoft/fluentui/pull/14443))
+
+<!--------------------------------[ v0.51.0 ]------------------------------- -->
+## [v0.51.0](https://github.com/OfficeDev/office-ui-fabric-react/tree/fluentui_v0.51.0) (2020-07-27)
+[Compare changes](https://github.com/OfficeDev/office-ui-fabric-react/compare/@fluentui/react-northstar_v0.50.0..@fluentui/react-northstar_v0.51.0)
+
+## BREAKING CHANGES
 - Restricted prop sets in the `Grid` component which are passed to styles functions @layershifter ([#13863](https://github.com/microsoft/fluentui/pull/13863))
 - Restricted prop sets in the `Dropdown` component which are passed to styles functions @layershifter ([#13962](https://github.com/microsoft/fluentui/pull/13962))
 - `UIComponent` and `AutoControlledComponent` are removed @layershifter ([#13962](https://github.com/microsoft/fluentui/pull/13962))
+- Set `Dropdown` to only stop `ESC` keydown propagation if `Dropdown` is open @assuncaocharles ([#14184](https://github.com/microsoft/fluentui/pull/14184))
 
 ### Fixes
 - Fix `Tooltip` layouting when it is closed @fealkhou ([#13237](https://github.com/microsoft/fluentui/pull/13237))
@@ -41,6 +74,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Fix an issue with throwing errors when a component is rendered outside of `Provider` @layershifter ([#14010](https://github.com/microsoft/fluentui/pull/14010))
 - Fix for `TeamsIcon`. Renamed current `TeamsIcon` to `ContactGroupIcon`. `TeamsIcon` is now the colored app icon as per current naming standards for other icons in project. @TanelVari ([#13966](https://github.com/microsoft/fluentui/pull/13966))
 - Fix memory leak in `FocusZone` @miroslavstastny ([#14031](https://github.com/microsoft/fluentui/pull/14031))
+- Fix `Popup` with `on="hover"` and controled close inside the content @assuncaocharles ([#14179](https://github.com/microsoft/fluentui/pull/14179))
+- Fix Timestamp in `Text` to match Teams redlines @notandrew ([#14153](https://github.com/microsoft/fluentui/pull/14153))
 
 ### Features
 - Add Emotion as an optional CSS-in-JS renderer @layershifter ([#13547](https://github.com/microsoft/fluentui/pull/13547))
