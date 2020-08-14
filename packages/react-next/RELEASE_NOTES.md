@@ -29,6 +29,11 @@ TODO: Diff of OUFR vs date-time DatePicker
 - Removed deprecated and redundant props from v7, including: `initialSelectedKey` and `defaultSelectedIndex`. Use `selectedKey` or `defaultSelectedKey` to define the selected tab, and provide `itemKey` on pivot item children.
   - TODO: enumerate all removed props
 
+### SwatchColorPicker
+
+- Added an onChange prop and deprecated onColorChanged.
+- Deprecated isControlled.
+
 ### Slider
 
 TODO: document any API or functionality changes
