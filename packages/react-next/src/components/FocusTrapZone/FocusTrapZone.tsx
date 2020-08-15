@@ -11,7 +11,7 @@ import {
   on,
 } from '../../Utilities';
 import { IFocusTrapZoneProps } from './FocusTrapZone.types';
-import { useId, useConstCallback } from '@uifabric/react-hooks';
+import { useId, useConstCallback, useMergedRefs } from '@uifabric/react-hooks';
 import { getWindow } from '../../Utilities';
 
 const useUnmount = (unmountFunction: () => void) => {
@@ -55,13 +55,13 @@ interface IFocusTrapZoneState {
 }
 
 const COMPONENT_NAME = 'FocusTrapZone';
+let focusStack: string[] = [];
 
-export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { focusStack: string[] } = (
-  props: IFocusTrapZoneProps,
-) => {
+export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>((props, ref) => {
   const root = React.useRef<HTMLDivElement>(null);
   const firstBumper = React.useRef<HTMLDivElement>(null);
   const lastBumper = React.useRef<HTMLDivElement>(null);
+  const mergedRootRef = useMergedRefs(root, ref) as React.Ref<HTMLDivElement>;
   const id = useId();
   const {
     className,
@@ -265,7 +265,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       if (props.disabled) {
         return;
       }
-      if (FocusTrapZone.focusStack.length && id === FocusTrapZone.focusStack[FocusTrapZone.focusStack.length - 1]) {
+      if (focusStack.length && id === focusStack[focusStack.length - 1]) {
         const focusedElement = ev.target as HTMLElement;
         if (!elementContains(root.current, focusedElement)) {
           focus();
@@ -283,7 +283,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       if (props.disabled) {
         return;
       }
-      if (FocusTrapZone.focusStack.length && id === FocusTrapZone.focusStack[FocusTrapZone.focusStack.length - 1]) {
+      if (focusStack.length && id === focusStack[focusStack.length - 1]) {
         const clickedElement = ev.target as HTMLElement;
         if (clickedElement && !elementContains(root.current, clickedElement)) {
           focus();
@@ -371,13 +371,13 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
 
   // Previously was componentDidMount.
   React.useEffect(() => {
-    FocusTrapZone.focusStack.push(id);
+    focusStack.push(id);
 
     bringFocusIntoZone();
     updateEventHandlers();
 
     return () => {
-      FocusTrapZone.focusStack = FocusTrapZone.focusStack.filter((value: string) => {
+      focusStack = focusStack.filter((value: string) => {
         return id !== value;
       });
     };
@@ -389,7 +389,7 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
     <div
       {...divProps}
       className={className}
-      ref={root}
+      ref={mergedRootRef}
       aria-labelledby={ariaLabelledBy}
       onFocusCapture={onFocusCapture}
       onFocus={onRootFocus}
@@ -400,6 +400,5 @@ export const FocusTrapZone: React.FunctionComponent<IFocusTrapZoneProps> & { foc
       <div {...bumperProps} ref={lastBumper} onFocus={onLastBumperFocus} />
     </div>
   );
-};
-FocusTrapZone.focusStack = [];
+});
 FocusTrapZone.displayName = COMPONENT_NAME;
