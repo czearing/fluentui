@@ -1,8 +1,11 @@
 import { IAzureSemanticColors } from './IAzureSemanticColors';
 
 export namespace BaseColors {
+  export const BLUE_F0F6FF = '#F0F6FF';
   export const BLUE_CCE1FF = '#cce1ff';
+  export const BLUE_DEECF9 = '#deecf9';
   export const BLUE_0000CD = '#0000cd';
+  export const BLUE_00245B = '#00245B';
   export const BLUE_00E8E8 = '#00e8e8';
   export const BLUE_00FFFF = '#00ffff';
   export const BLUE_004578 = '#004578';
@@ -14,8 +17,10 @@ export namespace BaseColors {
   export const BLUE_012B65 = '#012b65';
   export const BLUE_106EBE = '#106EBE';
   export const BLUE_02FEFF = '#02FEFF';
+  export const BLUE_043862 = '#043862';
   export const BLUE_6CA9FE = '#6ca9fe';
   export const BLUE_6CB8F6 = '#6cb8f6';
+  export const BLUE_82C7FF = '#82C7FF';
   export const BLUE_4894FE = '#4894fe';
   export const BLUE_257FFE = '#257FFE';
   export const BLUE_2899F5 = '#2899f5';
@@ -23,25 +28,39 @@ export namespace BaseColors {
   export const BLUE_55B3FF = '#55b3ff';
   export const GREEN_00FF00 = '#00FF00';
   export const GREEN_E6FFCC = '#e6ffcc';
+  export const GREEN_F8FFF0 = '#F8FFF0';
+  export const GREEN_92C353 = '#92C353';
   export const GREEN_5DB300 = '#5db300';
+  export const GREEN_57A300 = '#57A300';
   export const GREEN_428000 = '#428000';
+  export const GREEN_393D1B = '#393D1B';
   export const GREEN_1A3300 = '#1a3300';
   export const GREEN_0AFF00 = '#0AFF00';
+  export const RED_FEF0F1 = '#FEF0F1';
   export const RED_FDD8DB = '#fdd8db';
   export const RED_F63747 = '#f63747';
+  export const RED_F1707B = '#F1707B';
   export const RED_E00B1C = '#e00b1c';
+  export const RED_442726 = '#442726';
   export const RED_61050C = '#61050c';
   export const RED_800002 = '#800002';
+  export const ORANGE_DB7500 = '#DB7500';
   export const ORANGE_FFDFB8 = '#ffdfb8';
+  export const ORANGE_FFF8F0 = '#FFF8F0';
   export const ORANGE_FF8C00 = '#ff8c00';
   export const ORANGE_422400 = '#422400';
+  export const ORANGE_4F2A0F = '#4F2A0F';
   export const PURPLE_800080 = '#800080';
+  export const PURPLE_F9F3FC = '#F9F3FC';
   export const PURPLE_EFDBF5 = '#efdbf5';
   export const PURPLE_C87FDC = '#c87fdc';
+  export const PURPLE_917EDB = '#917EDB';
   export const PURPLE_8A2DA5 = '#8a2da5';
   export const PURPLE_660166 = '#660166';
   export const PURPLE_471754 = '#471754';
+  export const PURPLE_38134A = '#38134A';
   export const YELLOW_FEFF00 = '#FEFF00';
+  export const YELLOW_FCE100 = '#FCE100';
   export const GRAY_CCCCCC = '#CCCCCC';
   export const GRAY_111111 = '#111111';
   export const GRAY_161616 = '#161616';
@@ -126,25 +145,45 @@ export const DarkSemanticColors: IAzureSemanticColors = {
   text: {
     list: BaseColors.WHITE,
     heading: BaseColors.WHITE,
-    body: BaseColors.WHITE,
+    body: BaseColors.GRAY_F3F2F1,
     bodyHovered: BaseColors.WHITE,
     value: BaseColors.WHITE,
     icon: BaseColors.WHITE,
     label: BaseColors.WHITE,
     disabled: BaseColors.GRAY_A19F9D,
     hyperlink: BaseColors.BLUE_4894FE,
-    hyperlinkHovered: BaseColors.BLUE_4894FE,
+    hyperlinkHovered: BaseColors.BLUE_82C7FF,
     hyperlinkBackgroundHovered: BaseColors.TRANSPARENT,
     success: BaseColors.GREEN_5DB300,
     error: BaseColors.RED_F63747,
     placeholder: BaseColors.GRAY_AFAFAF,
   },
   statusBar: {
-    okay: BaseColors.GREEN_1A3300,
-    error: BaseColors.RED_61050C,
-    warning: BaseColors.ORANGE_422400,
-    information: BaseColors.BLUE_012B65,
-    upsell: BaseColors.PURPLE_8A2DA5,
+    link: BaseColors.BLUE_6CB8F6,
+    background: {
+      default: BaseColors.BLUE_00245B,
+      okay: BaseColors.GREEN_393D1B,
+      error: BaseColors.RED_442726,
+      warning: BaseColors.ORANGE_4F2A0F,
+      information: BaseColors.BLUE_00245B,
+      upsell: BaseColors.PURPLE_38134A,
+    },
+    border: {
+      default: BaseColors.BLUE_00245B,
+      okay: BaseColors.GREEN_393D1B,
+      error: BaseColors.RED_442726,
+      warning: BaseColors.ORANGE_4F2A0F,
+      information: BaseColors.BLUE_00245B,
+      upsell: BaseColors.PURPLE_38134A,
+    },
+    icon: {
+      default: BaseColors.BLUE_2899F5,
+      okay: BaseColors.GREEN_92C353,
+      error: BaseColors.RED_F1707B,
+      warning: BaseColors.YELLOW_FCE100,
+      information: BaseColors.BLUE_2899F5,
+      upsell: BaseColors.PURPLE_917EDB,
+    },
   },
   primaryButton: {
     rest: {
@@ -267,6 +306,16 @@ export const DarkSemanticColors: IAzureSemanticColors = {
   tabs: {
     hover: BaseColors.GRAY_252423,
   },
+  teachingBubble: {
+    rest: {
+      background: BaseColors.BLUE_2899F5,
+      text: BaseColors.BLACK,
+      secondaryBackround: BaseColors.BLACK,
+    },
+    hover: {
+      primaryButtonBackground: BaseColors.BLUE_043862,
+    },
+  },
 };
 
 export const HighContrastDarkSemanticColors: IAzureSemanticColors = {
@@ -288,11 +337,31 @@ export const HighContrastDarkSemanticColors: IAzureSemanticColors = {
     placeholder: BaseColors.GREEN_0AFF00,
   },
   statusBar: {
-    okay: BaseColors.GREEN_1A3300,
-    error: BaseColors.RED_61050C,
-    warning: BaseColors.ORANGE_422400,
-    information: BaseColors.BLUE_012B65,
-    upsell: BaseColors.PURPLE_8A2DA5,
+    link: BaseColors.YELLOW_FEFF00,
+    background: {
+      default: BaseColors.TRANSPARENT,
+      okay: BaseColors.TRANSPARENT,
+      error: BaseColors.TRANSPARENT,
+      warning: BaseColors.TRANSPARENT,
+      information: BaseColors.TRANSPARENT,
+      upsell: BaseColors.TRANSPARENT,
+    },
+    border: {
+      default: BaseColors.BLUE_00245B,
+      okay: BaseColors.GREEN_393D1B,
+      error: BaseColors.RED_442726,
+      warning: BaseColors.ORANGE_4F2A0F,
+      information: BaseColors.BLUE_00245B,
+      upsell: BaseColors.PURPLE_38134A,
+    },
+    icon: {
+      default: BaseColors.BLUE_2899F5,
+      okay: BaseColors.GREEN_92C353,
+      error: BaseColors.RED_F1707B,
+      warning: BaseColors.YELLOW_FCE100,
+      information: BaseColors.BLUE_2899F5,
+      upsell: BaseColors.PURPLE_917EDB,
+    },
   },
   primaryButton: {
     rest: {
@@ -415,6 +484,16 @@ export const HighContrastDarkSemanticColors: IAzureSemanticColors = {
   tabs: {
     hover: BaseColors.GRAY_252423,
   },
+  teachingBubble: {
+    rest: {
+      background: BaseColors.BLUE_00FFFF,
+      text: BaseColors.BLACK,
+      secondaryBackround: BaseColors.BLACK,
+    },
+    hover: {
+      primaryButtonBackground: BaseColors.BLUE_043862,
+    },
+  },
 };
 
 export const LightSemanticColors: IAzureSemanticColors = {
@@ -436,11 +515,31 @@ export const LightSemanticColors: IAzureSemanticColors = {
     placeholder: BaseColors.GRAY_8A8886,
   },
   statusBar: {
-    okay: BaseColors.GREEN_E6FFCC,
-    error: BaseColors.RED_FDD8DB,
-    warning: BaseColors.ORANGE_FFDFB8,
-    information: BaseColors.BLUE_CCE1FF,
-    upsell: BaseColors.PURPLE_EFDBF5,
+    link: BaseColors.BLUE_106EBE,
+    background: {
+      default: BaseColors.BLUE_F0F6FF,
+      okay: BaseColors.GREEN_F8FFF0,
+      error: BaseColors.RED_FEF0F1,
+      warning: BaseColors.ORANGE_FFF8F0,
+      information: BaseColors.BLUE_F0F6FF,
+      upsell: BaseColors.PURPLE_F9F3FC,
+    },
+    border: {
+      default: BaseColors.BLUE_F0F6FF,
+      okay: BaseColors.GREEN_F8FFF0,
+      error: BaseColors.RED_FEF0F1,
+      warning: BaseColors.ORANGE_FFF8F0,
+      information: BaseColors.BLUE_F0F6FF,
+      upsell: BaseColors.PURPLE_F9F3FC,
+    },
+    icon: {
+      default: BaseColors.BLUE_015CDA,
+      okay: BaseColors.GREEN_57A300,
+      error: BaseColors.RED_E00B1C,
+      warning: BaseColors.ORANGE_DB7500,
+      information: BaseColors.BLUE_015CDA,
+      upsell: BaseColors.PURPLE_8A2DA5,
+    },
   },
   primaryButton: {
     rest: {
@@ -563,6 +662,16 @@ export const LightSemanticColors: IAzureSemanticColors = {
   tabs: {
     hover: BaseColors.GRAY_F3F2F1,
   },
+  teachingBubble: {
+    rest: {
+      background: BaseColors.BLUE_0078D4,
+      text: BaseColors.WHITE,
+      secondaryBackround: BaseColors.WHITE,
+    },
+    hover: {
+      primaryButtonBackground: BaseColors.BLUE_DEECF9,
+    },
+  },
 };
 
 export const HighContrastLightSemanticColors: IAzureSemanticColors = {
@@ -584,11 +693,31 @@ export const HighContrastLightSemanticColors: IAzureSemanticColors = {
     placeholder: BaseColors.RED_800002,
   },
   statusBar: {
-    okay: BaseColors.GREEN_E6FFCC,
-    error: BaseColors.RED_FDD8DB,
-    warning: BaseColors.ORANGE_FFDFB8,
-    information: BaseColors.BLUE_CCE1FF,
-    upsell: BaseColors.PURPLE_EFDBF5,
+    link: BaseColors.BLUE_0000CD,
+    background: {
+      default: BaseColors.TRANSPARENT,
+      okay: BaseColors.TRANSPARENT,
+      error: BaseColors.TRANSPARENT,
+      warning: BaseColors.TRANSPARENT,
+      information: BaseColors.TRANSPARENT,
+      upsell: BaseColors.TRANSPARENT,
+    },
+    border: {
+      default: BaseColors.BLUE_F0F6FF,
+      okay: BaseColors.GREEN_F8FFF0,
+      error: BaseColors.RED_FEF0F1,
+      warning: BaseColors.ORANGE_FFF8F0,
+      information: BaseColors.BLUE_F0F6FF,
+      upsell: BaseColors.PURPLE_F9F3FC,
+    },
+    icon: {
+      default: BaseColors.BLUE_015CDA,
+      okay: BaseColors.GREEN_57A300,
+      error: BaseColors.RED_E00B1C,
+      warning: BaseColors.ORANGE_DB7500,
+      information: BaseColors.BLUE_015CDA,
+      upsell: BaseColors.PURPLE_8A2DA5,
+    },
   },
   primaryButton: {
     rest: {
@@ -710,5 +839,15 @@ export const HighContrastLightSemanticColors: IAzureSemanticColors = {
   },
   tabs: {
     hover: BaseColors.GRAY_F3F2F1,
+  },
+  teachingBubble: {
+    rest: {
+      background: BaseColors.PURPLE_800080,
+      text: BaseColors.WHITE,
+      secondaryBackround: BaseColors.WHITE,
+    },
+    hover: {
+      primaryButtonBackground: BaseColors.BLUE_DEECF9,
+    },
   },
 };

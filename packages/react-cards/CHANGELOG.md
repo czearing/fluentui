@@ -1,8 +1,26 @@
 # Change Log - @uifabric/react-cards
 
-This log was last generated on Tue, 14 Jul 2020 12:41:43 GMT and should not be manually modified.
+This log was last generated on Tue, 18 Aug 2020 07:58:00 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## [0.110.24](https://github.com/microsoft/fluentui/tree/@uifabric/react-cards_v0.110.24)
+
+Tue, 18 Aug 2020 07:58:00 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/react-cards_v0.110.17..@uifabric/react-cards_v0.110.24)
+
+### Patches
+
+- fixing publish ([PR #14566](https://github.com/microsoft/fluentui/pull/14566) by kchau@microsoft.com)
+
+## [0.110.17](https://github.com/microsoft/fluentui/tree/@uifabric/react-cards_v0.110.17)
+
+Thu, 06 Aug 2020 22:49:13 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@uifabric/react-cards_v0.110.0..@uifabric/react-cards_v0.110.17)
+
+### Patches
+
+- react-cards: Importing Stack from lib specific path. ([PR #14378](https://github.com/microsoft/fluentui/pull/14378) by humbertomakotomorimoto@gmail.com)
 
 ## [0.110.0](https://github.com/microsoft/fluentui/tree/@uifabric/react-cards_v0.110.0)
 
