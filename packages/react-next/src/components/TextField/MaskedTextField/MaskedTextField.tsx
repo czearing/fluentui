@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextField } from '../TextField';
 import { ITextField, ITextFieldProps } from '../TextField.types';
-import { initializeComponentRef, KeyCodes } from '../../../Utilities';
+import { KeyCodes } from '../../../Utilities';
 
 import {
   clearNext,
@@ -15,7 +15,7 @@ import {
   insertString,
   parseMask,
 } from './inputMask';
-import { useConst, useConstCallback } from '@uifabric/react-hooks';
+import { useConst } from '@uifabric/react-hooks';
 
 export interface IMaskedTextFieldState {
   // Translate mask into charData
@@ -33,6 +33,8 @@ export interface IMaskedTextFieldState {
 
   newProps: ITextFieldProps;
 }
+
+type InputChangeType = 'default' | 'backspace' | 'delete' | 'textPasted';
 
 /**
  *  An array of data containing information regarding the format characters,
@@ -129,8 +131,6 @@ const useComponentRef = (
 
 export const DEFAULT_MASK_CHAR = '_';
 
-type InputChangeType = 'default' | 'backspace' | 'delete' | 'textPasted';
-
 export const MaskedTextField = (props: ITextFieldProps) => {
   const textField = React.useRef<ITextField>(null);
   const internalState = useConst<IMaskedTextFieldState>(() => ({
@@ -141,12 +141,7 @@ export const MaskedTextField = (props: ITextFieldProps) => {
     newProps: props,
   }));
 
-  const { value, maskChar, mask } = props;
-
-  // If an initial value is provided, use it to populate the format chars
-  React.useEffect(() => {
-    value !== undefined && setValue(value, internalState.maskCharData);
-  }, [value, internalState.maskCharData]);
+  const { value, mask, onChange, maskChar = DEFAULT_MASK_CHAR, maskFormat = DEFAULT_MASK_FORMAT_CHARS } = props;
 
   /**
    * The mask string formatted with the input value.
@@ -157,6 +152,7 @@ export const MaskedTextField = (props: ITextFieldProps) => {
   const [displayValue, setDisplayValue] = React.useState<string>(
     getMaskDisplay(mask, internalState.maskCharData, maskChar),
   );
+
   /** The index into the rendered value of the first unfilled format character */
   const [maskCursorPosition, setMaskCursorPosition] = React.useState<number>();
 
@@ -177,7 +173,7 @@ export const MaskedTextField = (props: ITextFieldProps) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [internalState],
+    [internalState.isFocused],
   );
 
   const onBlur = React.useCallback(
@@ -190,7 +186,7 @@ export const MaskedTextField = (props: ITextFieldProps) => {
       internalState.moveCursorOnMouseUp = true;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [internalState.changeSelectionData],
+    [],
   );
 
   const onMouseDown = React.useCallback(
@@ -204,7 +200,7 @@ export const MaskedTextField = (props: ITextFieldProps) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [internalState.isFocused, internalState.changeSelectionData],
+    [internalState.isFocused],
   );
 
   const onMouseUp = React.useCallback(
@@ -225,7 +221,6 @@ export const MaskedTextField = (props: ITextFieldProps) => {
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [internalState.moveCursorOnMouseUp, internalState.maskCharData],
   );
 
@@ -235,7 +230,7 @@ export const MaskedTextField = (props: ITextFieldProps) => {
         internalState.changeSelectionData = {
           changeType: 'default',
           selectionStart: textField.current.selectionStart !== null ? textField.current.selectionStart : -1,
-          selectionEnd: textField.current.selectionEnd !== null ? textField.current.selectionEnd : -1,
+          selectionEnd: textField.current.selectionEnd !== null ? textField.selectionEnd : -1,
         };
       }
       if (!internalState.changeSelectionData) {
@@ -301,7 +296,7 @@ export const MaskedTextField = (props: ITextFieldProps) => {
 
       internalState.changeSelectionData = null;
 
-      const newValue = getMaskDisplay(props.mask, internalState.maskCharData, props.maskChar);
+      const newValue = getMaskDisplay(mask, internalState.maskCharData, maskChar);
 
       setDisplayValue(newValue);
       setMaskCursorPosition(cursorPos);
@@ -311,9 +306,95 @@ export const MaskedTextField = (props: ITextFieldProps) => {
         props.onChange(ev, newValue);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [props, internalState.maskCharData, displayValue, internalState.changeSelectionData],
+    [],
   );
+
+  // const onInputChange = React.useCallback(
+  //   (ev: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, inputValue: string) => {
+  //     if (internalState.changeSelectionData === null && textField.current) {
+  //       internalState.changeSelectionData = {
+  //         changeType: 'default',
+  //         selectionStart: textField.current.selectionStart !== null ? textField.current.selectionStart : -1,
+  //         selectionEnd: textField.current.selectionEnd !== null ? textField.current.selectionEnd : -1,
+  //       };
+  //     }
+  //     if (!internalState.changeSelectionData) {
+  //       return;
+  //     }
+
+  //     // The initial value of cursorPos does not matter
+  //     let cursorPos = 0;
+  //     const { changeType, selectionStart, selectionEnd } = internalState.changeSelectionData;
+
+  //     if (changeType === 'textPasted') {
+  //       const charsSelected = selectionEnd - selectionStart;
+  //       const charCount = inputValue.length + charsSelected - displayValue.length;
+  //       const startPos = selectionStart;
+  //       const pastedString = inputValue.substr(startPos, charCount);
+
+  //       // Clear any selected characters
+  //       if (charsSelected) {
+  //         internalState.maskCharData = clearRange(internalState.maskCharData, selectionStart, charsSelected);
+  //       }
+  //       cursorPos = insertString(internalState.maskCharData, startPos, pastedString);
+  //     } else if (changeType === 'delete' || changeType === 'backspace') {
+  //       // isDel is true If the characters are removed LTR, otherwise RTL
+  //       const isDel = changeType === 'delete';
+  //       const charCount = selectionEnd - selectionStart;
+
+  //       if (charCount) {
+  //         // charCount is > 0 if range was deleted
+  //         internalState.maskCharData = clearRange(internalState.maskCharData, selectionStart, charCount);
+  //         cursorPos = getRightFormatIndex(internalState.maskCharData, selectionStart);
+  //       } else {
+  //         // If charCount === 0, there was no selection and a single character was deleted
+  //         if (isDel) {
+  //           internalState.maskCharData = clearNext(internalState.maskCharData, selectionStart);
+  //           cursorPos = getRightFormatIndex(internalState.maskCharData, selectionStart);
+  //         } else {
+  //           internalState.maskCharData = clearPrev(internalState.maskCharData, selectionStart);
+  //           cursorPos = getLeftFormatIndex(internalState.maskCharData, selectionStart);
+  //         }
+  //       }
+  //     } else if (inputValue.length > displayValue.length) {
+  //       // This case is if the user added characters
+  //       const charCount = inputValue.length - displayValue.length;
+  //       const startPos = selectionEnd - charCount;
+  //       const enteredString = inputValue.substr(startPos, charCount);
+
+  //       cursorPos = insertString(internalState.maskCharData, startPos, enteredString);
+  //     } else if (inputValue.length <= displayValue.length) {
+  //       /**
+  //        * This case is reached only if the user has selected a block of 1 or more
+  //        * characters and input a character replacing the characters they've selected.
+  //        */
+  //       const charCount = 1;
+  //       const selectCount = displayValue.length + charCount - inputValue.length;
+  //       const startPos = selectionEnd - charCount;
+  //       const enteredString = inputValue.substr(startPos, charCount);
+
+  //       // Clear the selected range
+  //       internalState.maskCharData = clearRange(internalState.maskCharData, startPos, selectCount);
+  //       // Insert the printed character
+  //       cursorPos = insertString(internalState.maskCharData, startPos, enteredString);
+  //     }
+
+  //     internalState.changeSelectionData = null;
+
+  //     const newValue = getMaskDisplay(mask, internalState.maskCharData, maskChar);
+
+  //     setDisplayValue(newValue);
+  //     setMaskCursorPosition(cursorPos);
+
+  //     // Perform onChange after input has been processed. Return value is expected to be the displayed text
+  //     if (onChange) {
+  //       onChange(ev, newValue);
+  //     }
+  //   },
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [internalState.maskCharData, displayValue, internalState.changeSelectionData, mask, maskChar],
+  // );
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -354,7 +435,7 @@ export const MaskedTextField = (props: ITextFieldProps) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [KeyCodes, props, internalState.changeSelectionData],
+    [KeyCodes, internalState.changeSelectionData],
   );
 
   const onPaste = React.useCallback(
@@ -373,11 +454,11 @@ export const MaskedTextField = (props: ITextFieldProps) => {
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [props, internalState.changeSelectionData, displayValue],
+    [internalState.changeSelectionData, displayValue],
   );
 
   React.useEffect(() => {
-    if (internalState.newProps.mask !== props.mask || internalState.newProps.value !== props.value) {
+    if (internalState.newProps.mask !== mask || internalState.newProps.value !== value) {
       internalState.maskCharData = parseMask(internalState.newProps.mask, internalState.newProps.maskFormat);
       internalState.newProps.value !== undefined && setValue(internalState.newProps.value, internalState.maskCharData);
 
@@ -387,15 +468,19 @@ export const MaskedTextField = (props: ITextFieldProps) => {
     }
 
     internalState.newProps = props;
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props, internalState.maskCharData]);
+  }, [mask, value, internalState.maskCharData]);
 
   React.useEffect(() => {
     // Move the cursor to the start of the mask format on update
     if (internalState.isFocused && maskCursorPosition !== undefined && textField.current) {
       textField.current.setSelectionRange(maskCursorPosition, maskCursorPosition);
     }
-  }, [props, internalState.isFocused, maskCursorPosition, internalState.changeSelectionData]);
+  }, [maskCursorPosition, internalState.isFocused]);
+
+  // If an initial value is provided, use it to populate the format chars
+  value !== undefined && setValue(value, internalState.maskCharData);
 
   useComponentRef(props, internalState.maskCharData, textField);
 
@@ -413,9 +498,4 @@ export const MaskedTextField = (props: ITextFieldProps) => {
       componentRef={textField}
     />
   );
-};
-
-MaskedTextField.defaultProps = {
-  maskChar: DEFAULT_MASK_CHAR,
-  maskFormat: DEFAULT_MASK_FORMAT_CHARS,
 };

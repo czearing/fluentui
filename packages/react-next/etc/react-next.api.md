@@ -1254,10 +1254,21 @@ export enum ImageLoadState {
     notLoaded = 0
 }
 
-// @public
+// @public (undocumented)
 export interface IMaskedTextFieldState {
-    displayValue: string;
-    maskCursorPosition?: number;
+    changeSelectionData: {
+        changeType: InputChangeType;
+        selectionStart: number;
+        selectionEnd: number;
+    } | null;
+    isFocused: boolean;
+    // Warning: (ae-forgotten-export) The symbol "IMaskValue" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    maskCharData: IMaskValue[];
+    moveCursorOnMouseUp: boolean;
+    // (undocumented)
+    newProps: ITextFieldProps;
 }
 
 // @public (undocumented)
@@ -2078,37 +2089,15 @@ export type LinkSlotProps = {
 };
 
 // @public (undocumented)
-export class MaskedTextField extends React.Component<ITextFieldProps, IMaskedTextFieldState> implements ITextField {
-    constructor(props: ITextFieldProps);
-    // (undocumented)
-    blur(): void;
-    // (undocumented)
-    componentDidUpdate(): void;
-    // (undocumented)
-    static defaultProps: ITextFieldProps;
-    // (undocumented)
-    focus(): void;
-    // (undocumented)
-    render(): JSX.Element;
-    // (undocumented)
-    select(): void;
-    // (undocumented)
-    readonly selectionEnd: number | null;
-    // (undocumented)
-    readonly selectionStart: number | null;
-    // (undocumented)
-    setSelectionEnd(value: number): void;
-    // (undocumented)
-    setSelectionRange(start: number, end: number): void;
-    // (undocumented)
-    setSelectionStart(value: number): void;
-    // (undocumented)
-    setValue(newValue: string): void;
-    // (undocumented)
-    UNSAFE_componentWillReceiveProps(newProps: ITextFieldProps): void;
-    // (undocumented)
-    readonly value: string | undefined;
-}
+export const MaskedTextField: {
+    (props: ITextFieldProps): JSX.Element;
+    defaultProps: {
+        maskChar: string;
+        maskFormat: {
+            [key: string]: RegExp;
+        };
+    };
+};
 
 // @public (undocumented)
 export const MeasuredContext: React.Context<{
@@ -2540,6 +2529,10 @@ export * from "office-ui-fabric-react/lib/Text";
 export * from "office-ui-fabric-react/lib/ThemeGenerator";
 export * from "office-ui-fabric-react/lib/Tooltip";
 export * from "office-ui-fabric-react/lib/Utilities";
+
+// Warnings were encountered during analysis:
+//
+// lib/components/TextField/MaskedTextField/MaskedTextField.d.ts:11:9 - (ae-forgotten-export) The symbol "InputChangeType" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
