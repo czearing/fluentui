@@ -11,7 +11,7 @@ import {
 } from '../../Utilities';
 import { IFocusTrapZoneProps } from './FocusTrapZone.types';
 import { useId, useConst, usePrevious, useConstCallback, useMergedRefs } from '@uifabric/react-hooks';
-import { useWindow, useDocument } from '@fluentui/react-window-provider';
+import { useDocument } from '@fluentui/react-window-provider';
 
 const useUnmount = (unmountFunction: () => void) => {
   const unmountRef = React.useRef(unmountFunction);
@@ -61,7 +61,6 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
   const lastBumper = React.useRef<HTMLDivElement>(null);
   const mergedRootRef = useMergedRefs(root, ref) as React.Ref<HTMLDivElement>;
   const id = useId();
-  const win = useWindow();
   const doc = useDocument();
   const {
     ariaLabelledBy,
@@ -122,6 +121,7 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
       typeof firstFocusableSelector === 'string'
         ? firstFocusableSelector
         : firstFocusableSelector && firstFocusableSelector();
+
     let firstFocusableChild: HTMLElement | null = null;
 
     if (root.current) {
@@ -332,7 +332,6 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
     isClickableOutsideFocusTrap,
     internalState.disposeFocusHandler,
     internalState.disposeClickHandler,
-    win,
   ]);
 
   React.useEffect(() => {
