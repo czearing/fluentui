@@ -6,13 +6,12 @@ import {
   getFirstTabbable,
   getLastTabbable,
   getNextElement,
-  getDocument,
   focusAsync,
   on,
 } from '../../Utilities';
 import { IFocusTrapZoneProps } from './FocusTrapZone.types';
-import { useId, useConstCallback, useMergedRefs } from '@uifabric/react-hooks';
-import { getWindow } from '../../Utilities';
+import { useId, useConst, usePrevious, useConstCallback, useMergedRefs } from '@uifabric/react-hooks';
+import { useWindow, useDocument } from '@fluentui/react-window-provider';
 
 const useUnmount = (unmountFunction: () => void) => {
   const unmountRef = React.useRef(unmountFunction);
@@ -50,7 +49,6 @@ interface IFocusTrapZoneState {
   previouslyFocusedElementOutsideTrapZone: HTMLElement | undefined;
   previouslyFocusedElementInTrapZone: HTMLElement | undefined;
   hasFocus: boolean;
-  prevProps: IFocusTrapZoneProps;
   hasPreviouslyRendered: boolean;
 }
 
@@ -63,9 +61,12 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
   const lastBumper = React.useRef<HTMLDivElement>(null);
   const mergedRootRef = useMergedRefs(root, ref) as React.Ref<HTMLDivElement>;
   const id = useId();
+  const win = useWindow();
+  const doc = useDocument();
   const {
-    className,
     ariaLabelledBy,
+    className,
+    children,
     elementToFocusOnDismiss,
     focusPreviouslyFocusedInnerElement,
     firstFocusableSelector,
@@ -79,16 +80,17 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
     isClickableOutsideFocusTrap = false,
     forceFocusInsideTrap = true,
   } = props;
+  const previousProps = usePrevious(props);
   const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);
-  const { current: state } = React.useRef<IFocusTrapZoneState>({
+
+  const internalState = useConst<IFocusTrapZoneState>(() => ({
     previouslyFocusedElementOutsideTrapZone: undefined,
     previouslyFocusedElementInTrapZone: undefined,
     disposeFocusHandler: undefined,
     disposeClickHandler: undefined,
     hasFocus: false,
-    prevProps: props,
     hasPreviouslyRendered: false,
-  });
+  }));
 
   const bumperProps = {
     style: {
@@ -102,17 +104,17 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
   const focus = React.useCallback(() => {
     if (
       focusPreviouslyFocusedInnerElement &&
-      state.previouslyFocusedElementInTrapZone &&
-      elementContains(root.current, state.previouslyFocusedElementInTrapZone)
+      internalState.previouslyFocusedElementInTrapZone &&
+      elementContains(root.current, internalState.previouslyFocusedElementInTrapZone)
     ) {
       // focus on the last item that had focus in the zone before we left the zone
       if (
         !(
-          state.previouslyFocusedElementInTrapZone === firstBumper.current ||
-          state.previouslyFocusedElementInTrapZone === lastBumper.current
+          internalState.previouslyFocusedElementInTrapZone === firstBumper.current ||
+          internalState.previouslyFocusedElementInTrapZone === lastBumper.current
         )
       ) {
-        focusAsync(state.previouslyFocusedElementInTrapZone);
+        focusAsync(internalState.previouslyFocusedElementInTrapZone);
       }
       return;
     }
@@ -143,17 +145,16 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
         focusAsync(firstFocusableChild);
       }
     }
-  }, [firstFocusableSelector, focusPreviouslyFocusedInnerElement, state.previouslyFocusedElementInTrapZone]);
+  }, [firstFocusableSelector, focusPreviouslyFocusedInnerElement, internalState.previouslyFocusedElementInTrapZone]);
 
   const onRootFocus = React.useCallback(
     (ev: React.FocusEvent<HTMLDivElement>) => {
       if (onFocus) {
         onFocus(ev);
       }
-      state.hasFocus = true;
+      internalState.hasFocus = true;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Should only update if hasFocus changes
-    [state.hasFocus],
+    [onFocus, internalState.hasFocus],
   );
 
   const onRootBlur = React.useCallback(
@@ -168,13 +169,13 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
         // even when it's not. Using document.activeElement is another way
         // for us to be able to get what the relatedTarget without relying
         // on the event
-        relatedTarget = getDocument(root.current)!.activeElement as Element;
+        relatedTarget = doc!.activeElement as Element;
       }
       if (!elementContains(root.current, relatedTarget as HTMLElement)) {
-        state.hasFocus = false;
+        internalState.hasFocus = false;
       }
     },
-    [state.hasFocus],
+    [onBlur, internalState.hasFocus, doc],
   );
 
   const onFirstBumperFocus = useConstCallback(() => {
@@ -186,15 +187,17 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
   });
 
   const onBumperFocus = (isFirstBumper: boolean) => {
-    if (props.disabled) {
+    if (disabled) {
       return;
     }
 
-    const currentBumper = (isFirstBumper === state.hasFocus ? lastBumper.current : firstBumper.current) as HTMLElement;
+    const currentBumper = (isFirstBumper === internalState.hasFocus
+      ? lastBumper.current
+      : firstBumper.current) as HTMLElement;
 
     if (root.current) {
       const nextFocusable =
-        isFirstBumper === state.hasFocus
+        isFirstBumper === internalState.hasFocus
           ? getLastTabbable(root.current, currentBumper, true, false)
           : getFirstTabbable(root.current, currentBumper, true, false);
 
@@ -215,19 +218,19 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
       return;
     }
 
-    state.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss
+    internalState.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss
       ? elementToFocusOnDismiss
-      : (getDocument(root.current)!.activeElement as HTMLElement);
-    if (!disableFirstFocus && !elementContains(root.current, state.previouslyFocusedElementOutsideTrapZone)) {
+      : (doc!.activeElement as HTMLElement);
+    if (!disableFirstFocus && !elementContains(root.current, internalState.previouslyFocusedElementOutsideTrapZone)) {
       focus();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    doc,
     elementToFocusOnDismiss,
     focus,
     currentDisabledValue,
     disableFirstFocus,
-    state.previouslyFocusedElementOutsideTrapZone,
+    internalState.previouslyFocusedElementOutsideTrapZone,
   ]);
 
   const isBumper = useConstCallback((element: HTMLElement): boolean => {
@@ -251,28 +254,26 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
       if (ev.target !== ev.currentTarget && !isBumper(ev.target)) {
         // every time focus changes within the trap zone, remember the focused element so that
         // it can be restored if focus leaves the pane and returns via keystroke (i.e. via a call to this.focus(true))
-        state.previouslyFocusedElementInTrapZone = ev.target as HTMLElement;
+        internalState.previouslyFocusedElementInTrapZone = ev.target as HTMLElement;
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.previouslyFocusedElementInTrapZone, isBumper],
+
+    [internalState.previouslyFocusedElementInTrapZone, isBumper, onFocusCapture],
   );
 
   const returnFocusToInitiator = React.useCallback((): void => {
-    const doc = getDocument(root.current);
-
     if (doc) {
       const activeElement = doc.activeElement as HTMLElement;
       if (
         !ignoreExternalFocusing &&
-        state.previouslyFocusedElementOutsideTrapZone &&
-        typeof state.previouslyFocusedElementOutsideTrapZone.focus === 'function' &&
+        internalState.previouslyFocusedElementOutsideTrapZone &&
+        typeof internalState.previouslyFocusedElementOutsideTrapZone.focus === 'function' &&
         (elementContains(root.current, activeElement) || activeElement === doc.body)
       ) {
-        setAsyncFocus(state.previouslyFocusedElementOutsideTrapZone);
+        setAsyncFocus(internalState.previouslyFocusedElementOutsideTrapZone);
       }
     }
-  }, [ignoreExternalFocusing, setAsyncFocus, state.previouslyFocusedElementOutsideTrapZone]);
+  }, [doc, ignoreExternalFocusing, setAsyncFocus, internalState.previouslyFocusedElementOutsideTrapZone]);
 
   const forceFocusInTrap = React.useCallback(
     (ev: FocusEvent): void => {
@@ -283,14 +284,13 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
         const focusedElement = ev.target as HTMLElement;
         if (!elementContains(root.current, focusedElement)) {
           focus();
-          state.hasFocus = true; // set focus here since we stop event propagation
+          internalState.hasFocus = true; // set focus here since we stop event propagation
           ev.preventDefault();
           ev.stopPropagation();
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [focus, id, disabled, state.hasFocus],
+    [focus, id, disabled],
   );
 
   const forceClickInTrap = React.useCallback(
@@ -302,61 +302,57 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
         const clickedElement = ev.target as HTMLElement;
         if (clickedElement && !elementContains(root.current, clickedElement)) {
           focus();
-          state.hasFocus = true; // set focus here since we stop event propagation
+          internalState.hasFocus = true; // set focus here since we stop event propagation
           ev.preventDefault();
           ev.stopPropagation();
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [focus, id, disabled, state.hasFocus],
+    [focus, id, disabled, internalState.hasFocus],
   );
 
   const updateEventHandlers = React.useCallback((): void => {
-    const win = getWindow(root.current)!;
-
-    if (forceFocusInsideTrap && !state.disposeFocusHandler) {
-      state.disposeFocusHandler = on(win, 'focus', forceFocusInTrap, true);
-    } else if (!forceFocusInsideTrap && state.disposeFocusHandler) {
-      state.disposeFocusHandler();
-      state.disposeFocusHandler = undefined;
+    if (forceFocusInsideTrap && !internalState.disposeFocusHandler) {
+      internalState.disposeFocusHandler = on(window, 'focus', forceFocusInTrap, true);
+    } else if (!forceFocusInsideTrap && internalState.disposeFocusHandler) {
+      internalState.disposeFocusHandler();
+      internalState.disposeFocusHandler = undefined;
     }
 
-    if (!isClickableOutsideFocusTrap && !state.disposeClickHandler) {
-      state.disposeClickHandler = on(win, 'click', forceClickInTrap, true);
-    } else if (isClickableOutsideFocusTrap && state.disposeClickHandler) {
-      state.disposeClickHandler();
-      state.disposeClickHandler = undefined;
+    if (!isClickableOutsideFocusTrap && !internalState.disposeClickHandler) {
+      internalState.disposeClickHandler = on(window, 'click', forceClickInTrap, true);
+    } else if (isClickableOutsideFocusTrap && internalState.disposeClickHandler) {
+      internalState.disposeClickHandler();
+      internalState.disposeClickHandler = undefined;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     forceClickInTrap,
     forceFocusInTrap,
     forceFocusInsideTrap,
     isClickableOutsideFocusTrap,
-    state.disposeFocusHandler,
-    state.disposeClickHandler,
+    internalState.disposeFocusHandler,
+    internalState.disposeClickHandler,
+    win,
   ]);
 
   React.useEffect(() => {
-    if (elementToFocusOnDismiss && state.previouslyFocusedElementOutsideTrapZone !== elementToFocusOnDismiss) {
-      state.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
+    if (elementToFocusOnDismiss && internalState.previouslyFocusedElementOutsideTrapZone !== elementToFocusOnDismiss) {
+      internalState.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
     }
     updateEventHandlers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.previouslyFocusedElementOutsideTrapZone, updateEventHandlers, elementToFocusOnDismiss]);
+  }, [internalState.previouslyFocusedElementOutsideTrapZone, updateEventHandlers, elementToFocusOnDismiss]);
 
   React.useEffect(() => {
     const prevForceFocusInsideTrap =
-      state.prevProps.forceFocusInsideTrap !== undefined ? state.prevProps.forceFocusInsideTrap : true;
-    const newForceFocusInsideTrap = props.forceFocusInsideTrap !== undefined ? props.forceFocusInsideTrap : true;
-    const prevDisabled = state.prevProps.disabled !== undefined ? state.prevProps.disabled : false;
-    const newDisabled = props.disabled !== undefined ? props.disabled : false;
+      previousProps?.forceFocusInsideTrap !== undefined ? previousProps.forceFocusInsideTrap : true;
+    const newForceFocusInsideTrap = forceFocusInsideTrap !== undefined ? forceFocusInsideTrap : true;
+    const prevDisabled = previousProps?.disabled !== undefined ? previousProps?.disabled : false;
+    const newDisabled = disabled !== undefined ? disabled : false;
 
     if ((!prevForceFocusInsideTrap && newForceFocusInsideTrap) || (prevDisabled && !newDisabled)) {
       // Transition from forceFocusInsideTrap / FTZ disabled to enabled.
       // Emulate what happens when a FocusTrapZone gets mounted.
-      state.hasPreviouslyRendered = true;
+      internalState.hasPreviouslyRendered = true;
       bringFocusIntoZone();
     } else if ((prevForceFocusInsideTrap && !newForceFocusInsideTrap) || (!prevDisabled && newDisabled)) {
       // Transition from forceFocusInsideTrap / FTZ enabled to disabled.
@@ -364,33 +360,27 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
       returnFocusToInitiator();
     }
     updateEventHandlers();
-    state.prevProps = props;
-  }, [bringFocusIntoZone, props, returnFocusToInitiator, state, updateEventHandlers]);
+  }, [bringFocusIntoZone, disabled, forceFocusInsideTrap, returnFocusToInitiator, updateEventHandlers]);
 
   useUnmount(() => {
-    const doc = getDocument(root.current);
     if (doc) {
       // don't handle return focus unless forceFocusInsideTrap is true or focus is still within FocusTrapZone
-      if (
-        !props.disabled ||
-        props.forceFocusInsideTrap ||
-        !elementContains(root.current, doc.activeElement as HTMLElement)
-      ) {
+      if (!disabled || forceFocusInsideTrap || !elementContains(root.current, doc.activeElement as HTMLElement)) {
         returnFocusToInitiator();
       }
     }
     // Dispose of event handlers so their closures can be garbage-collected
-    if (state.disposeClickHandler) {
-      state.disposeClickHandler();
-      state.disposeClickHandler = undefined;
+    if (internalState.disposeClickHandler) {
+      internalState.disposeClickHandler();
+      internalState.disposeClickHandler = undefined;
     }
-    if (state.disposeFocusHandler) {
-      state.disposeFocusHandler();
-      state.disposeFocusHandler = undefined;
+    if (internalState.disposeFocusHandler) {
+      internalState.disposeFocusHandler();
+      internalState.disposeFocusHandler = undefined;
     }
     // Dispose of element references so the DOM Nodes can be garbage-collected
-    delete state.previouslyFocusedElementInTrapZone;
-    delete state.previouslyFocusedElementOutsideTrapZone;
+    delete internalState.previouslyFocusedElementInTrapZone;
+    delete internalState.previouslyFocusedElementOutsideTrapZone;
   });
 
   // Previously was componentDidMount.
@@ -408,7 +398,7 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useComponentRef(props, state.previouslyFocusedElementInTrapZone, focus);
+  useComponentRef(props, internalState.previouslyFocusedElementInTrapZone, focus);
 
   return (
     <div
@@ -421,7 +411,7 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
       onBlur={onRootBlur}
     >
       <div {...bumperProps} ref={firstBumper} onFocus={onFirstBumperFocus} />
-      {props.children}
+      {children}
       <div {...bumperProps} ref={lastBumper} onFocus={onLastBumperFocus} />
     </div>
   );
