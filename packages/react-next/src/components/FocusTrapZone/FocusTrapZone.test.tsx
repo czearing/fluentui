@@ -586,7 +586,10 @@ describe('FocusTrapZone', () => {
 
       const { buttonB, buttonZ2 } = setupTest({});
 
-      ReactTestUtils.Simulate.focus(buttonB);
+      ReactTestUtils.act(() => {
+        ReactTestUtils.Simulate.focus(buttonB);
+      });
+
       expect(lastFocusedElement).toBe(buttonB);
 
       // Focusing outside trap brings focus back to FTZ
@@ -713,19 +716,28 @@ describe('FocusTrapZone', () => {
 
       // Manually focusing FTZ when FTZ has never
       // had focus within should go to 1st focusable inner element.
-      focusTrapZone.focus();
+      ReactTestUtils.act(() => {
+        focusTrapZone.focus();
+      });
       expect(lastFocusedElement).toBe(buttonF);
 
       // Focus inside the trap zone, not the first element.
-      ReactTestUtils.Simulate.focus(buttonB);
+      ReactTestUtils.act(() => {
+        ReactTestUtils.Simulate.focus(buttonB);
+      });
       expect(lastFocusedElement).toBe(buttonB);
 
       // Focus outside the trap zone
-      ReactTestUtils.Simulate.focus(buttonZ);
+      ReactTestUtils.act(() => {
+        ReactTestUtils.Simulate.focus(buttonZ);
+      });
       expect(lastFocusedElement).toBe(buttonZ);
 
       // Manually focusing FTZ should return to originally focused inner element.
-      focusTrapZone.focus();
+      ReactTestUtils.act(() => {
+        focusTrapZone.focus();
+      });
+
       expect(lastFocusedElement).toBe(buttonB);
     });
 
@@ -774,7 +786,7 @@ describe('FocusTrapZone', () => {
 
       const buttonB = topLevelDiv.querySelector('.b') as HTMLElement;
 
-      expect(focusTrapZoneFocusStack.length).toBe(2);
+      expect(focusTrapZoneFocusStack).toBe(2);
       const baseFocusTrapZone = focusTrapZoneFocusStack[0];
       expect(baseFocusTrapZone.props.forceFocusInsideTrap).toBe(true);
       expect(baseFocusTrapZone.props.isClickableOutsideFocusTrap).toBe(false);
