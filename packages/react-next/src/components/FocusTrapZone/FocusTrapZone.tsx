@@ -306,6 +306,8 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
   }, [forceClickInTrap, forceFocusInTrap, forceFocusInsideTrap, internalState, isClickableOutsideFocusTrap]);
 
   React.useEffect(() => {
+    const focusRoot = root.current;
+
     focusStack.push(id);
     bringFocusIntoZone();
     updateEventHandlers();
@@ -314,12 +316,31 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
       focusStack = focusStack.filter((value: string) => {
         return id !== value;
       });
+
+      if (doc) {
+        // don't handle return focus unless forceFocusInsideTrap is true or focus is still within FocusTrapZone
+        if (!disabled || forceFocusInsideTrap || !elementContains(focusRoot, doc.activeElement as HTMLElement)) {
+          returnFocusToInitiator();
+        }
+      }
+      // Dispose of event handlers so their closures can be garbage-collected
+      if (internalState.disposeClickHandler) {
+        internalState.disposeClickHandler();
+        internalState.disposeClickHandler = undefined;
+      }
+      if (internalState.disposeFocusHandler) {
+        internalState.disposeFocusHandler();
+        internalState.disposeFocusHandler = undefined;
+      }
+      // Dispose of element references so the DOM Nodes can be garbage-collected
+      internalState.previouslyFocusedElementInTrapZone = undefined;
+      internalState.previouslyFocusedElementOutsideTrapZone = undefined;
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only meant to run on mount
   }, []);
 
   React.useEffect(() => {
-    const focusRoot = root.current;
     const prevForceFocusInsideTrap =
       previousProps?.forceFocusInsideTrap !== undefined ? previousProps.forceFocusInsideTrap : true;
     const newForceFocusInsideTrap = forceFocusInsideTrap !== undefined ? forceFocusInsideTrap : true;
@@ -341,38 +362,16 @@ export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>(
     }
 
     updateEventHandlers();
-
-    return () => {
-      if (doc) {
-        // don't handle return focus unless forceFocusInsideTrap is true or focus is still within FocusTrapZone
-        if (!disabled || forceFocusInsideTrap || !elementContains(focusRoot, doc.activeElement as HTMLElement)) {
-          returnFocusToInitiator();
-        }
-      }
-      // Dispose of event handlers so their closures can be garbage-collected
-      if (internalState.disposeClickHandler) {
-        internalState.disposeClickHandler();
-        internalState.disposeClickHandler = undefined;
-      }
-      if (internalState.disposeFocusHandler) {
-        internalState.disposeFocusHandler();
-        internalState.disposeFocusHandler = undefined;
-      }
-      // Dispose of element references so the DOM Nodes can be garbage-collected
-      internalState.previouslyFocusedElementInTrapZone = undefined;
-      internalState.previouslyFocusedElementOutsideTrapZone = undefined;
-    };
   }, [
-    updateEventHandlers,
-    elementToFocusOnDismiss,
-    previousProps?.forceFocusInsideTrap,
-    previousProps?.disabled,
-    forceFocusInsideTrap,
-    disabled,
     bringFocusIntoZone,
-    returnFocusToInitiator,
-    doc,
+    disabled,
+    elementToFocusOnDismiss,
+    forceFocusInsideTrap,
     internalState,
+    previousProps?.disabled,
+    previousProps?.forceFocusInsideTrap,
+    returnFocusToInitiator,
+    updateEventHandlers,
   ]);
 
   useComponentRef(componentRef, internalState.previouslyFocusedElementInTrapZone, focus);
