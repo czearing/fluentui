@@ -23,8 +23,6 @@ interface IFocusTrapZoneState {
   hasPreviouslyRendered: boolean;
 }
 
-let focusStack: string[] = [];
-
 const COMPONENT_NAME = 'FocusTrapZone';
 
 const useComponentRef = (
@@ -43,6 +41,8 @@ const useComponentRef = (
     [previouslyFocusedElement, focus],
   );
 };
+
+export let focusStack: string[] = [];
 
 export const FocusTrapZone = React.forwardRef<HTMLElement, IFocusTrapZoneProps>((props, ref) => {
   const root = React.useRef<HTMLDivElement>(null);
