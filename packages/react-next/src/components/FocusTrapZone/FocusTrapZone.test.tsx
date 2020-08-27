@@ -4,6 +4,8 @@ import { KeyCodes } from '../../Utilities';
 import { FocusZone, FocusZoneDirection } from '../../FocusZone';
 import { FocusTrapZone } from './FocusTrapZone';
 import { IFocusTrapZoneProps } from './FocusTrapZone.types';
+import { safeMount } from '@uifabric/test-utilities';
+import { mount } from 'enzyme';
 
 // rAF does not exist in node - let's mock it
 window.requestAnimationFrame = (callback: FrameRequestCallback) => {
@@ -21,29 +23,29 @@ ReactTestUtils.act(() => {
 class FocusTrapZoneTestComponent extends React.Component<{}, { isShowingFirst: boolean; isShowingSecond: boolean }> {
   constructor(props: {}) {
     super(props);
-    this.state = { isShowingFirst: true, isShowingSecond: false };
+    this.state = { isShowingFirst: false, isShowingSecond: false };
   }
 
   public render() {
     return (
       <div>
-        <FocusTrapZone id="fz1" forceFocusInsideTrap={true} isClickableOutsideFocusTrap={false}>
-          <button className={'a'} onClick={this._toggleFirst}>
+        <FocusTrapZone id="fz1" forceFocusInsideTrap>
+          <button className="a" onClick={this._toggleFirst}>
             a
           </button>
-          <button className={'b'} onClick={this._toggleSecond}>
+          <button className="b" onClick={this._toggleSecond}>
             b
           </button>
         </FocusTrapZone>
 
         {this.state.isShowingFirst && (
-          <FocusTrapZone id="fz2" forceFocusInsideTrap={false} isClickableOutsideFocusTrap={false}>
+          <FocusTrapZone id="fz2" forceFocusInsideTrap>
             <FocusZone data-is-visible={true}>First</FocusZone>
           </FocusTrapZone>
         )}
         {this.state.isShowingSecond && (
-          <FocusTrapZone id="fz3" forceFocusInsideTrap={false} isClickableOutsideFocusTrap={true}>
-            <FocusZone data-is-visible={true}>First</FocusZone>
+          <FocusTrapZone id="fz3" forceFocusInsideTrap>
+            <FocusZone data-is-visible={true}>Second</FocusZone>
           </FocusTrapZone>
         )}
       </div>
@@ -684,7 +686,7 @@ describe('FocusTrapZone', () => {
       const topLevelDiv = (ReactTestUtils.renderIntoDocument(
         <div onFocusCapture={_onFocus}>
           <FocusTrapZone
-            forceFocusInsideTrap={false}
+            forceFocusInsideTrap={true}
             focusPreviouslyFocusedInnerElement={focusPreviouslyFocusedInnerElement}
             data-is-focusable={true}
             componentRef={focusTrapZoneRef}
@@ -783,63 +785,50 @@ describe('FocusTrapZone', () => {
   });
 
   describe('Nested FocusTrapZones Stack Behavior', () => {
-    function getFocusStack(): string[] {
-      return FocusTrapZone.focusStack;
-    }
-
     beforeAll(() => {
-      getFocusStack().length = 0;
+      FocusTrapZone.focusStack = [];
     });
 
     it('FocusTrapZone maintains a proper stack of FocusTrapZones as more are mounted/unmounted.', async () => {
-      let focusTrapZoneFocusStack = getFocusStack();
-      const topLevelDiv = (ReactTestUtils.renderIntoDocument(
-        <div>
-          <FocusTrapZoneTestComponent />
-        </div>,
-      ) as unknown) as HTMLElement;
+      safeMount(<FocusTrapZoneTestComponent />, wrapper => {
+        const buttonA = wrapper.find('.a');
+        const buttonB = wrapper.find('.b');
 
-      const buttonA = topLevelDiv.querySelector('.a') as HTMLElement;
+        // There should now be one focus trap zones (base)
+        expect(FocusTrapZone.focusStack.length).toBe(1);
 
-      const buttonB = topLevelDiv.querySelector('.b') as HTMLElement;
+        ReactTestUtils.act(() => {
+          buttonA.simulate('click');
+        });
 
-      // expect(focusTrapZoneFocusStack.length).toBe(2);
-      const baseFocusTrapZone = focusTrapZoneFocusStack[0];
-      // expect(baseFocusTrapZone.props.forceFocusInsideTrap).toBe(true);
-      // expect(baseFocusTrapZone.props.isClickableOutsideFocusTrap).toBe(false);
+        // There should now be two focus trap zones (base/first)
+        expect(FocusTrapZone.focusStack.length).toBe(2);
+        expect(FocusTrapZone.focusStack).toStrictEqual(['fz1', 'fz2']);
 
-      const firstFocusTrapZone = focusTrapZoneFocusStack[1];
-      // expect(firstFocusTrapZone.props.forceFocusInsideTrap).toBe(false);
-      // expect(firstFocusTrapZone.props.isClickableOutsideFocusTrap).toBe(false);
+        ReactTestUtils.act(() => {
+          buttonB.simulate('click');
+        });
 
-      // There should be now 3 focus trap zones (base/first/second)
-      ReactTestUtils.act(() => {
-        ReactTestUtils.Simulate.click(buttonB);
+        // There should now be three focus trap zones (base/first/second)
+        expect(FocusTrapZone.focusStack.length).toBe(3);
+        expect(FocusTrapZone.focusStack).toStrictEqual(['fz1', 'fz2', 'fz3']);
+
+        ReactTestUtils.act(() => {
+          buttonA.simulate('click');
+        });
+
+        // There should now be two focus trap zones (base/second) after removing first focusTrapZone
+        // expect(FocusTrapZone.focusStack.length).toBe(2);
+        expect(FocusTrapZone.focusStack).toStrictEqual(['fz1', 'fz2']);
+
+        ReactTestUtils.act(() => {
+          buttonA.simulate('click');
+        });
+
+        // There should now be one focus trap zones (base) after removing Second focusTrapZone
+        expect(FocusTrapZone.focusStack.length).toBe(1);
+        expect(FocusTrapZone.focusStack).toStrictEqual(['fz1']);
       });
-      // expect(focusTrapZoneFocusStack.length).toBe(3);
-      expect(focusTrapZoneFocusStack[0]).toBe('fz1');
-      console.log(focusTrapZoneFocusStack);
-      expect(focusTrapZoneFocusStack[1]).toBe('fz2');
-      const secondFocusTrapZone = focusTrapZoneFocusStack[2];
-      // expect(secondFocusTrapZone.props.forceFocusInsideTrap).toBe(false);
-      // expect(secondFocusTrapZone.props.isClickableOutsideFocusTrap).toBe(true);
-
-      // we remove the middle one
-      // unmounting a focus trap zone should remove it from the focus stack.
-      // but we also check that it removes the right focustrapzone (the middle one)
-      ReactTestUtils.Simulate.click(buttonA);
-      focusTrapZoneFocusStack = getFocusStack();
-
-      expect(focusTrapZoneFocusStack.length).toBe(2);
-      expect(focusTrapZoneFocusStack[0]).toBe(baseFocusTrapZone);
-      expect(focusTrapZoneFocusStack[1]).toBe(secondFocusTrapZone);
-
-      // finally remove the last focus trap zone.
-      ReactTestUtils.Simulate.click(buttonB);
-      focusTrapZoneFocusStack = getFocusStack();
-
-      expect(focusTrapZoneFocusStack.length).toBe(1);
-      expect(focusTrapZoneFocusStack[0]).toBe(baseFocusTrapZone);
     });
   });
 });
