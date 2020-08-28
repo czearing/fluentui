@@ -316,7 +316,6 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
 
   React.useEffect(() => {
     const parentRoot = root.current;
-    updateEventHandlers();
     return () => {
       // don't handle return focus unless forceFocusInsideTrap is true or focus is still within FocusTrapZone
       if (!disabled || forceFocusInsideTrap || !elementContains(parentRoot, doc?.activeElement as HTMLElement)) {
