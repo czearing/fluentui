@@ -11,7 +11,7 @@ import {
   on,
 } from '../../Utilities';
 import { IFocusTrapZoneProps, IFocusTrapZone } from './FocusTrapZone.types';
-import { useId, useConst, usePrevious, useMergedRefs } from '@uifabric/react-hooks';
+import { useId, useConst, useMergedRefs } from '@uifabric/react-hooks';
 import { useDocument } from '@fluentui/react-window-provider';
 
 interface IFocusTrapZoneState {
@@ -51,10 +51,8 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
   const firstBumper = React.useRef<HTMLDivElement>(null);
   const lastBumper = React.useRef<HTMLDivElement>(null);
   const mergedRootRef = useMergedRefs(root, ref) as React.Ref<HTMLDivElement>;
-
   const id = useId(undefined, props.id);
   const doc = useDocument();
-  const previousProps = usePrevious(props);
   const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);
 
   const {
@@ -318,7 +316,6 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
 
   React.useEffect(() => {
     const parentRoot = root.current;
-    bringFocusIntoZone();
     updateEventHandlers();
     return () => {
       // don't handle return focus unless forceFocusInsideTrap is true or focus is still within FocusTrapZone
@@ -326,6 +323,7 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
         returnFocusToInitiator();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Should only run on mount.
   }, []);
 
   useUnmount(() => {
@@ -344,19 +342,14 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
   });
 
   React.useEffect(() => {
-    const prevForceFocusInsideTrap =
-      previousProps?.forceFocusInsideTrap !== undefined ? previousProps.forceFocusInsideTrap : true;
     const newForceFocusInsideTrap = forceFocusInsideTrap !== undefined ? forceFocusInsideTrap : true;
-    const prevDisabled = previousProps?.disabled !== undefined ? previousProps?.disabled : false;
     const newDisabled = disabled !== undefined ? disabled : false;
 
-    if ((!prevForceFocusInsideTrap && newForceFocusInsideTrap) || (prevDisabled && !newDisabled)) {
+    if (!newDisabled || newForceFocusInsideTrap) {
       // Transition from forceFocusInsideTrap / FTZ disabled to enabled.
-      // Emulate what happens when a FocusTrapZone gets mounted.
       bringFocusIntoZone();
-    } else if ((prevForceFocusInsideTrap && !newForceFocusInsideTrap) || (!prevDisabled && newDisabled)) {
+    } else if (!newForceFocusInsideTrap || newDisabled) {
       // Transition from forceFocusInsideTrap / FTZ enabled to disabled.
-      // Emulate what happens when a FocusTrapZone gets unmounted.
       returnFocusToInitiator();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -367,7 +360,7 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
       internalState.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
     }
     updateEventHandlers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- internalState shouldn't change.
   }, [elementToFocusOnDismiss, updateEventHandlers]);
 
   useComponentRef(componentRef, internalState.previouslyFocusedElementInTrapZone, focus);

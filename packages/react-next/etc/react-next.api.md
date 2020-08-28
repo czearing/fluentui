@@ -231,14 +231,13 @@ export const Fabric: React.FunctionComponent<IFabricProps>;
 // @public (undocumented)
 export const FabricBase: React.ForwardRefExoticComponent<IFabricProps & React.RefAttributes<HTMLDivElement>>;
 
-// @public (undocumented)
-export let focusStack: string[];
-
 // @public
 export const FocusTrapCallout: React.FunctionComponent<IFocusTrapCalloutProps>;
 
 // @public (undocumented)
-export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps & React.RefAttributes<HTMLElement>>;
+export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps> & {
+    focusStack: string[];
+};
 
 // @public
 export const getMeasurementCache: () => {

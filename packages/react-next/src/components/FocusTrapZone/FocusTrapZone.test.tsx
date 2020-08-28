@@ -19,13 +19,10 @@ ReactTestUtils.act(() => {
   jest.useFakeTimers();
 });
 
-class FocusTrapZoneTestComponent extends React.Component<
-  {},
-  { isShowingFirst: boolean; isShowingSecond: boolean; isShowingThird: boolean }
-> {
+class FocusTrapZoneTestComponent extends React.Component<{}, { isShowingFirst: boolean; isShowingSecond: boolean }> {
   constructor(props: {}) {
     super(props);
-    this.state = { isShowingFirst: false, isShowingSecond: false, isShowingThird: false };
+    this.state = { isShowingFirst: false, isShowingSecond: false };
   }
 
   public render() {
@@ -37,9 +34,6 @@ class FocusTrapZoneTestComponent extends React.Component<
           </button>
           <button className="b" onClick={this._toggleSecond}>
             b
-          </button>
-          <button className="c" onClick={this._toggleThird}>
-            c
           </button>
         </FocusTrapZone>
 
@@ -53,11 +47,6 @@ class FocusTrapZoneTestComponent extends React.Component<
             <FocusZone data-is-visible={true}>Second</FocusZone>
           </FocusTrapZone>
         )}
-        {this.state.isShowingThird && (
-          <FocusTrapZone id="fz4" forceFocusInsideTrap={false} isClickableOutsideFocusTrap={false}>
-            <FocusZone data-is-visible={true}>Second</FocusZone>
-          </FocusTrapZone>
-        )}
       </div>
     );
   }
@@ -68,10 +57,6 @@ class FocusTrapZoneTestComponent extends React.Component<
 
   private _toggleSecond = () => {
     this.setState({ isShowingSecond: !this.state.isShowingSecond });
-  };
-
-  private _toggleThird = () => {
-    this.setState({ isShowingThird: !this.state.isShowingThird });
   };
 }
 
@@ -807,7 +792,6 @@ describe('FocusTrapZone', () => {
       safeMount(<FocusTrapZoneTestComponent />, wrapper => {
         const buttonA = wrapper.find('.a');
         const buttonB = wrapper.find('.b');
-        const buttonC = wrapper.find('.c');
 
         // There should now be one focus trap zones (base)
         expect(FocusTrapZone.focusStack.length).toBe(1);
@@ -830,22 +814,12 @@ describe('FocusTrapZone', () => {
           buttonA.simulate('click');
         });
 
-        // There should now be two focus trap zones (base/second) after removing first focusTrapZone
+        // There should now be two focus trap zones (base/second) after removing first focusTrapZone.
         expect(FocusTrapZone.focusStack).toStrictEqual(['fz1', 'fz3']);
 
         ReactTestUtils.act(() => {
           buttonB.simulate('click');
         });
-
-        // There should now be one focus trap zone (base) after removing Second focusTrapZone
-        expect(FocusTrapZone.focusStack).toStrictEqual(['fz1']);
-
-        ReactTestUtils.act(() => {
-          buttonC.simulate('click');
-        });
-
-        // There should now be one focus trap zone (base) since fz4's forceFocusInsideTrap prop is equal to false.
-        expect(FocusTrapZone.focusStack).toStrictEqual(['fz1']);
       });
     });
   });
