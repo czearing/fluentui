@@ -20,7 +20,6 @@ interface IFocusTrapZoneState {
   previouslyFocusedElementOutsideTrapZone: HTMLElement | undefined;
   previouslyFocusedElementInTrapZone: HTMLElement | undefined;
   hasFocus: boolean;
-  hasPreviouslyRendered: boolean;
 }
 
 const COMPONENT_NAME = 'FocusTrapZone';
@@ -36,9 +35,7 @@ const useComponentRef = (
       get previouslyFocusedElement() {
         return previouslyFocusedElement;
       },
-      focus() {
-        focus();
-      },
+      focus,
     }),
     [previouslyFocusedElement, focus],
   );
@@ -54,6 +51,14 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
   const id = useId(undefined, props.id);
   const doc = useDocument();
   const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);
+
+  const internalState = useConst<IFocusTrapZoneState>(() => ({
+    previouslyFocusedElementOutsideTrapZone: undefined,
+    previouslyFocusedElementInTrapZone: undefined,
+    disposeFocusHandler: undefined,
+    disposeClickHandler: undefined,
+    hasFocus: false,
+  }));
 
   const {
     ariaLabelledBy,
@@ -73,15 +78,6 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
     onBlur,
     onFocusCapture,
   } = props;
-
-  const internalState = useConst<IFocusTrapZoneState>(() => ({
-    previouslyFocusedElementOutsideTrapZone: undefined,
-    previouslyFocusedElementInTrapZone: undefined,
-    disposeFocusHandler: undefined,
-    disposeClickHandler: undefined,
-    hasFocus: false,
-    hasPreviouslyRendered: false,
-  }));
 
   const bumperProps = {
     style: {
@@ -133,22 +129,6 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
     // eslint-disable-next-line react-hooks/exhaustive-deps -- internal state will not change
   }, [firstFocusableSelector, focusPreviouslyFocusedInnerElement]);
 
-  const isBumper = React.useCallback(
-    (element: HTMLElement): boolean => {
-      return element === firstBumper.current || element === lastBumper.current;
-    },
-    [firstBumper, lastBumper],
-  );
-
-  const setElementFocus = React.useCallback(
-    (element: HTMLElement): void => {
-      if (!isBumper(element)) {
-        focusAsync(element);
-      }
-    },
-    [isBumper],
-  );
-
   const onBumperFocus = React.useCallback(
     (isFirstBumper: boolean) => {
       if (disabled) {
@@ -166,7 +146,7 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
             : getFirstTabbable(root.current, currentBumper, true, false);
 
         if (nextFocusable) {
-          if (isBumper(nextFocusable)) {
+          if (nextFocusable === firstBumper.current || nextFocusable === lastBumper.current) {
             // This can happen when FTZ contains no tabbable elements.
             // focus will take care of finding a focusable element in FTZ.
             focus();
@@ -177,7 +157,7 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- internal state will not change
-    [disabled, focus, isBumper],
+    [disabled, focus],
   );
 
   const onRootFocus = React.useCallback(
@@ -213,31 +193,15 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
     (ev: React.FocusEvent<HTMLDivElement>) => {
       onFocusCapture?.(ev);
 
-      if (ev.target !== ev.currentTarget && !isBumper(ev.target)) {
+      if (ev.target !== ev.currentTarget && !(ev.target === firstBumper.current || ev.target === lastBumper.current)) {
         // every time focus changes within the trap zone, remember the focused element so that
         // it can be restored if focus leaves the pane and returns via keystroke (i.e. via a call to this.focus(true))
         internalState.previouslyFocusedElementInTrapZone = ev.target as HTMLElement;
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- internal state will not change
-    [isBumper, onFocusCapture],
+    [onFocusCapture],
   );
-
-  const bringFocusIntoZone = React.useCallback((): void => {
-    if (currentDisabledValue) {
-      return;
-    }
-
-    FocusTrapZone.focusStack.push(id);
-
-    internalState.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss
-      ? elementToFocusOnDismiss
-      : (doc!.activeElement as HTMLElement);
-    if (!disableFirstFocus && !elementContains(root.current, internalState.previouslyFocusedElementOutsideTrapZone)) {
-      focus();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- internal state will not change
-  }, [currentDisabledValue, id, elementToFocusOnDismiss, doc, disableFirstFocus, focus]);
 
   const returnFocusToInitiator = React.useCallback((): void => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -253,11 +217,18 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
         typeof internalState.previouslyFocusedElementOutsideTrapZone.focus === 'function' &&
         (elementContains(root.current, activeElement) || activeElement === doc.body)
       ) {
-        setElementFocus(internalState.previouslyFocusedElementOutsideTrapZone);
+        if (
+          !(
+            internalState.previouslyFocusedElementOutsideTrapZone === firstBumper.current ||
+            internalState.previouslyFocusedElementOutsideTrapZone === lastBumper.current
+          )
+        ) {
+          focusAsync(internalState.previouslyFocusedElementOutsideTrapZone);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- internal state will not change
-  }, [doc, id, ignoreExternalFocusing, setElementFocus]);
+  }, [doc, id, ignoreExternalFocusing]);
 
   const forceFocusInTrap = React.useCallback(
     (ev: FocusEvent): void => {
@@ -314,8 +285,10 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
     // eslint-disable-next-line react-hooks/exhaustive-deps -- internal state will not change
   }, [forceClickInTrap, forceFocusInTrap, forceFocusInsideTrap, isClickableOutsideFocusTrap]);
 
+  // Updates eventHandlers and cleans up focusStack when the component unmounts.
   React.useEffect(() => {
     const parentRoot = root.current;
+    updateEventHandlers();
     return () => {
       // don't handle return focus unless forceFocusInsideTrap is true or focus is still within FocusTrapZone
       if (!disabled || forceFocusInsideTrap || !elementContains(parentRoot, doc?.activeElement as HTMLElement)) {
@@ -323,8 +296,38 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- Should only run on mount.
-  }, []);
+  }, [updateEventHandlers]);
 
+  // Updates focusStack and the previouslyFocusedElementOutsideTrapZone on prop change.
+  React.useEffect(() => {
+    const newForceFocusInsideTrap = forceFocusInsideTrap !== undefined ? forceFocusInsideTrap : true;
+    const newDisabled = disabled !== undefined ? disabled : false;
+
+    // Transition from forceFocusInsideTrap / FTZ disabled to enabled.
+    if (!newDisabled || newForceFocusInsideTrap) {
+      if (currentDisabledValue) {
+        return;
+      }
+
+      FocusTrapZone.focusStack.push(id);
+
+      internalState.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss
+        ? elementToFocusOnDismiss
+        : (doc!.activeElement as HTMLElement);
+      if (!disableFirstFocus && !elementContains(root.current, internalState.previouslyFocusedElementOutsideTrapZone)) {
+        focus();
+      }
+    } else if (!newForceFocusInsideTrap || newDisabled) {
+      // Transition from forceFocusInsideTrap / FTZ enabled to disabled.
+      returnFocusToInitiator();
+    }
+    if (elementToFocusOnDismiss && internalState.previouslyFocusedElementOutsideTrapZone !== elementToFocusOnDismiss) {
+      internalState.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elementToFocusOnDismiss, forceFocusInsideTrap, disabled]);
+
+  // Cleanup lifecyle method for internalState.
   useUnmount(() => {
     // Dispose of event handlers so their closures can be garbage-collected
     if (internalState.disposeClickHandler) {
@@ -339,28 +342,6 @@ export const FocusTrapZone: React.ForwardRefExoticComponent<IFocusTrapZoneProps>
     internalState.previouslyFocusedElementInTrapZone = undefined;
     internalState.previouslyFocusedElementOutsideTrapZone = undefined;
   });
-
-  React.useEffect(() => {
-    const newForceFocusInsideTrap = forceFocusInsideTrap !== undefined ? forceFocusInsideTrap : true;
-    const newDisabled = disabled !== undefined ? disabled : false;
-
-    if (!newDisabled || newForceFocusInsideTrap) {
-      // Transition from forceFocusInsideTrap / FTZ disabled to enabled.
-      bringFocusIntoZone();
-    } else if (!newForceFocusInsideTrap || newDisabled) {
-      // Transition from forceFocusInsideTrap / FTZ enabled to disabled.
-      returnFocusToInitiator();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceFocusInsideTrap, disabled]);
-
-  React.useEffect(() => {
-    if (elementToFocusOnDismiss && internalState.previouslyFocusedElementOutsideTrapZone !== elementToFocusOnDismiss) {
-      internalState.previouslyFocusedElementOutsideTrapZone = elementToFocusOnDismiss;
-    }
-    updateEventHandlers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- internalState shouldn't change.
-  }, [elementToFocusOnDismiss, updateEventHandlers]);
 
   useComponentRef(componentRef, internalState.previouslyFocusedElementInTrapZone, focus);
 
