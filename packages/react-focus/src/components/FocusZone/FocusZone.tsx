@@ -4,7 +4,6 @@ import {
   KeyCodes,
   css,
   elementContains,
-  getDocument,
   getElementIndexPath,
   getFocusableByIndexPath,
   getId,
@@ -23,11 +22,12 @@ import {
   warnDeprecations,
   portalContainsElement,
   Point,
-  getWindow,
   findScrollableParent,
+  IRefObject,
 } from '@uifabric/utilities';
 import { mergeStyles } from '@uifabric/merge-styles';
 import { useMergedRefs, useConst } from '@uifabric/react-hooks';
+import { useDocument, useWindow } from '@fluentui/react-window-provider';
 
 const IS_FOCUSABLE_ATTRIBUTE = 'data-is-focusable';
 const IS_ENTER_DISABLED_ATTRIBUTE = 'data-disable-click-on-enter';
@@ -68,18 +68,49 @@ function getRootClass(): string {
   return focusZoneStyles;
 }
 
-const allInstances: {
-  [key: string]: IFocusZone;
-} = {};
-// const _outerZones: Set<FocusZone> = new Set();
-
 const ALLOWED_INPUT_TYPES = ['text', 'number', 'password', 'email', 'tel', 'url', 'search'];
 
 const ALLOW_VIRTUAL_ELEMENTS = false;
 
-export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, ref) => {
+const COMPONENT_NAME = 'FocusTrapZone';
+
+const useComponentRef = (
+  componentRef: IRefObject<IFocusZone> | undefined,
+  root: React.RefObject<HTMLElement>,
+  focus: (forceIntoFirstElement?: boolean) => boolean,
+  focusElement: (element: HTMLElement) => boolean,
+  setFocusAlignment: (point: Point) => void,
+) => {
+  React.useImperativeHandle(
+    componentRef,
+    () => ({
+      focus,
+      focusElement,
+      focusLast() {
+        if (root.current) {
+          const lastChild = root.current && (root.current.lastChild as HTMLElement | null);
+          return focusElement(getPreviousElement(root.current, lastChild, true, true, true) as HTMLElement);
+        }
+        return false;
+      },
+      setFocusAlignment,
+    }),
+    [focus, focusElement, root, setFocusAlignment],
+  );
+};
+
+export const FocusZone: React.ForwardRefExoticComponent<IFocusZoneProps> & {
+  allInstances: {
+    [key: string]: string;
+  };
+  outerZones: Set<string>;
+  onKeyDownCapture: (ev: KeyboardEvent) => void;
+  getOuterZones: () => void;
+} = React.forwardRef<HTMLElement, IFocusZoneProps>((props, ref) => {
   const root: React.RefObject<HTMLElement> = React.useRef(null);
   const id: string = getId('FocusZone');
+  const windowElement = useWindow();
+  const doc = useDocument();
 
   const mergedRef = useMergedRefs(root, ref);
 
@@ -110,6 +141,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
   const {
     as: tag,
     allowFocusRoot,
+    componentRef,
     // eslint-disable-next-line deprecation/deprecation
     elementType,
     disabled,
@@ -130,6 +162,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     direction = FocusZoneDirection.bidirectional,
     shouldRaiseClicks = true,
     onActiveElementChanged,
+    preventFocusRestoration,
     // eslint-disable-next-line deprecation/deprecation
     doNotAllowFocusEventToPropagate,
     stopFocusPropagation,
@@ -143,6 +176,10 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     // eslint-disable-next-line deprecation/deprecation
     onBeforeFocus,
     shouldReceiveFocus,
+    // eslint-disable-next-line deprecation/deprecation
+    defaultActiveElement,
+    shouldFocusOnMount,
+    shouldInputLoseFocusOnArrowKey,
   } = props;
 
   const divProps = getNativeProps(props, htmlElementProperties);
@@ -214,27 +251,16 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
   };
 
   /**
-   * Sets focus to the last tabbable item in the zone.
-   * @returns True if focus could be set to an active element, false if no operation was taken.
-   */
-  const focusLast = (): boolean => {
-    if (root.current) {
-      const lastChild = root.current && (root.current.lastChild as HTMLElement | null);
-
-      return focusElement(getPreviousElement(root.current, lastChild, true, true, true) as HTMLElement);
-    }
-
-    return false;
-  };
-
-  /**
    * Forces horizontal alignment in the context of vertical arrowing to use specific point as the reference,
    * rather than a center based on the last horizontal motion.
    * @param point - the new reference point.
    */
-  const setFocusAlignment = (point: Point): void => {
-    internalState.focusAlignment = point;
-  };
+  const setFocusAlignment = React.useCallback(
+    (point: Point): void => {
+      internalState.focusAlignment = point;
+    },
+    [internalState],
+  );
 
   /**
    * When focus is in the zone at render time but then all focusable elements are removed,
@@ -242,29 +268,129 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
    * focus to the closest path from previous. If the user tabs away from the parked container,
    * we restore focusability to the pre-parked state.
    */
-  const setParkedFocus = (isParkedProp: boolean): void => {
-    if (root.current && internalState.isParked !== isParkedProp) {
-      internalState.isParked = isParkedProp;
+  const setParkedFocus = React.useCallback(
+    (isParkedProp: boolean): void => {
+      if (root.current && internalState.isParked !== isParkedProp) {
+        internalState.isParked = isParkedProp;
 
-      if (isParkedProp) {
-        if (!allowFocusRoot) {
-          internalState.parkedTabIndex = root.current.getAttribute('tabindex');
-          root.current.setAttribute('tabindex', '-1');
-        }
-        root.current.focus();
-      } else if (!allowFocusRoot) {
-        if (internalState.parkedTabIndex) {
-          root.current.setAttribute('tabindex', internalState.parkedTabIndex);
-          internalState.parkedTabIndex = undefined;
-        } else {
-          root.current.removeAttribute('tabindex');
+        if (isParkedProp) {
+          if (!allowFocusRoot) {
+            internalState.parkedTabIndex = root.current.getAttribute('tabindex');
+            root.current.setAttribute('tabindex', '-1');
+          }
+          root.current.focus();
+        } else if (!allowFocusRoot) {
+          if (internalState.parkedTabIndex) {
+            root.current.setAttribute('tabindex', internalState.parkedTabIndex);
+            internalState.parkedTabIndex = undefined;
+          } else {
+            root.current.removeAttribute('tabindex');
+          }
         }
       }
-    }
-  };
+    },
+    [allowFocusRoot, internalState],
+  );
+
+  const updateTabIndexes = React.useCallback(
+    (element?: HTMLElement): void => {
+      if (!internalState.activeElement && defaultTabbableElement && typeof defaultTabbableElement === 'function') {
+        internalState.activeElement = defaultTabbableElement(root.current as HTMLElement);
+      }
+
+      if (!element && root.current) {
+        internalState.defaultFocusElement = null;
+        element = root.current;
+        if (internalState.activeElement && !elementContains(element, internalState.activeElement)) {
+          internalState.activeElement = null;
+        }
+      }
+
+      // If active element changes state to disabled, set it to null.
+      // Otherwise, we lose keyboard accessibility to other elements in focus zone.
+      if (internalState.activeElement && !isElementTabbable(internalState.activeElement)) {
+        internalState.activeElement = null;
+      }
+
+      const childNodes = element && element.children;
+
+      for (let childIndex = 0; childNodes && childIndex < childNodes.length; childIndex++) {
+        const child = childNodes[childIndex] as HTMLElement;
+
+        if (!isElementFocusZone(child)) {
+          // If the item is explicitly set to not be focusable then TABINDEX needs to be set to -1.
+          if (child.getAttribute && child.getAttribute(IS_FOCUSABLE_ATTRIBUTE) === 'false') {
+            child.setAttribute(TABINDEX, '-1');
+          }
+
+          if (isElementTabbable(child)) {
+            if (disabled) {
+              child.setAttribute(TABINDEX, '-1');
+            } else if (
+              !internalState.isInnerZone &&
+              ((!internalState.activeElement && !internalState.defaultFocusElement) ||
+                internalState.activeElement === child)
+            ) {
+              internalState.defaultFocusElement = child;
+              if (child.getAttribute(TABINDEX) !== '0') {
+                child.setAttribute(TABINDEX, '0');
+              }
+            } else if (child.getAttribute(TABINDEX) !== '-1') {
+              child.setAttribute(TABINDEX, '-1');
+            }
+          } else if (child.tagName === 'svg' && child.getAttribute('focusable') !== 'false') {
+            // Disgusting IE hack. Sad face.
+            child.setAttribute('focusable', 'false');
+          }
+        } else if (child.getAttribute(IS_FOCUSABLE_ATTRIBUTE) === 'true') {
+          if (
+            !internalState.isInnerZone &&
+            ((!internalState.activeElement && !internalState.defaultFocusElement) ||
+              internalState.activeElement === child)
+          ) {
+            internalState.defaultFocusElement = child;
+            if (child.getAttribute(TABINDEX) !== '0') {
+              child.setAttribute(TABINDEX, '0');
+            }
+          } else if (child.getAttribute(TABINDEX) !== '-1') {
+            child.setAttribute(TABINDEX, '-1');
+          }
+        }
+
+        updateTabIndexes(child);
+      }
+    },
+    [defaultTabbableElement, disabled, internalState],
+  );
+
+  const focusAlignment = React.useCallback(
+    (element: HTMLElement, isHorizontal?: boolean, isVertical?: boolean): void => {
+      if (
+        direction === FocusZoneDirection.bidirectional &&
+        (!internalState.focusAlignment || isHorizontal || isVertical)
+      ) {
+        const rect = element.getBoundingClientRect();
+        const left = rect.left + rect.width / 2;
+        const top = rect.top + rect.height / 2;
+
+        if (!internalState.focusAlignment) {
+          internalState.focusAlignment = { left, top };
+        }
+
+        if (isHorizontal) {
+          internalState.focusAlignment.left = left;
+        }
+
+        if (isVertical) {
+          internalState.focusAlignment.top = top;
+        }
+      }
+    },
+    [direction, internalState],
+  );
 
   const onFocus = (ev: React.FocusEvent<HTMLElement>): void => {
-    if (portalContainsElement(ev.target as HTMLElement)) {
+    if (portalElement(ev.target as HTMLElement)) {
       // If the event target is inside a portal do not process the event.
       return;
     }
@@ -316,7 +442,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     // update alignment an immediate descendant
     if (newActiveElement && newActiveElement !== internalState.activeElement) {
       if (isImmediateDescendant || initialElementFocused) {
-        setFocusAlignment(newActiveElement, true, true);
+        focusAlignment(newActiveElement, true, true);
       }
 
       internalState.activeElement = newActiveElement;
@@ -339,59 +465,65 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     setParkedFocus(false);
   };
 
-  const onMouseDown = (ev: React.MouseEvent<HTMLElement>): void => {
-    if (portalContainsElement(ev.target as HTMLElement)) {
-      // If the event target is inside a portal do not process the event.
-      return;
-    }
+  const setActiveElement = React.useCallback(
+    (element: HTMLElement, forceAlignment?: boolean): void => {
+      const previousActiveElement = internalState.activeElement;
 
-    if (disabled) {
-      return;
-    }
+      internalState.activeElement = element;
 
-    let target = ev.target as HTMLElement;
-    const path = [];
+      if (previousActiveElement) {
+        if (isElementFocusZone(previousActiveElement)) {
+          updateTabIndexes(previousActiveElement);
+        }
 
-    while (target && target !== root.current) {
-      path.push(target);
-      target = getParent(target, ALLOW_VIRTUAL_ELEMENTS) as HTMLElement;
-    }
-
-    while (path.length) {
-      target = path.pop() as HTMLElement;
-
-      if (target && isElementTabbable(target)) {
-        setActiveElement(target, true);
+        previousActiveElement.tabIndex = -1;
       }
 
-      if (isElementFocusZone(target)) {
-        // Stop here since the focus zone will take care of its own children.
-        break;
+      if (internalState.activeElement) {
+        if (!internalState.focusAlignment || forceAlignment) {
+          focusAlignment(element, true, true);
+        }
+
+        internalState.activeElement.tabIndex = 0;
       }
-    }
-  };
+    },
+    [internalState, focusAlignment, updateTabIndexes],
+  );
 
-  const setActiveElement = (element: HTMLElement, forceAlignment?: boolean): void => {
-    const previousActiveElement = internalState.activeElement;
-
-    internalState.activeElement = element;
-
-    if (previousActiveElement) {
-      if (isElementFocusZone(previousActiveElement)) {
-        updateTabIndexes(previousActiveElement);
-      }
-
-      previousActiveElement.tabIndex = -1;
-    }
-
-    if (internalState.activeElement) {
-      if (!internalState.focusAlignment || forceAlignment) {
-        setFocusAlignment(element, true, true);
+  const onMouseDown = React.useCallback(
+    (ev: React.MouseEvent<HTMLElement>): void => {
+      if (portalElement(ev.target as HTMLElement)) {
+        // If the event target is inside a portal do not process the event.
+        return;
       }
 
-      internalState.activeElement.tabIndex = 0;
-    }
-  };
+      if (disabled) {
+        return;
+      }
+
+      let target = ev.target as HTMLElement;
+      const path = [];
+
+      while (target && target !== root.current) {
+        path.push(target);
+        target = getParent(target, ALLOW_VIRTUAL_ELEMENTS) as HTMLElement;
+      }
+
+      while (path.length) {
+        target = path.pop() as HTMLElement;
+
+        if (target && isElementTabbable(target)) {
+          setActiveElement(target, true);
+        }
+
+        if (isElementFocusZone(target)) {
+          // Stop here since the focus zone will take care of its own children.
+          break;
+        }
+      }
+    },
+    [disabled, setActiveElement],
+  );
 
   const preventDefaultWhenHandled = (ev: React.KeyboardEvent<HTMLElement>): void => {
     preventDefaultWhenHandled && ev.preventDefault();
@@ -401,7 +533,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
    * Handle the keystrokes.
    */
   const onKeyDown = (ev: React.KeyboardEvent<HTMLElement>): boolean | undefined => {
-    if (portalContainsElement(ev.target as HTMLElement)) {
+    if (portalElement(ev.target as HTMLElement)) {
       // If the event target is inside a portal do not process the event.
       return;
     }
@@ -417,7 +549,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
       return;
     }
 
-    if (getDocument().activeElement === root.current && internalState.isInnerZone) {
+    if (doc?.activeElement === root.current && internalState.isInnerZone) {
       // If this element has focus, it is being controlled by a parent.
       // Ignore the keystroke.
       return;
@@ -516,7 +648,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
             internalState.processingTabKey = true;
             if (
               direction === FocusZoneDirection.vertical ||
-              !shouldWrapFocus(internalState.activeElement as HTMLElement, NO_HORIZONTAL_WRAP)
+              !wrapFocus(internalState.activeElement as HTMLElement, NO_HORIZONTAL_WRAP)
             ) {
               focusChanged = ev.shiftKey ? moveFocusUp() : moveFocusDown();
             } else {
@@ -617,7 +749,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
   /**
    * Traverse to find first child zone.
    */
-  const getFirstInnerZone = (rootElement?: HTMLElement | null): FocusZone | null => {
+  const getFirstInnerZone = (rootElement?: HTMLElement | null): IFocusZone | null => {
     rootElement = rootElement || internalState.activeElement || root.current;
 
     if (!rootElement) {
@@ -625,14 +757,14 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     }
 
     if (isElementFocusZone(rootElement)) {
-      return allInstances[rootElement.getAttribute(FOCUSZONE_ID_ATTRIBUTE) as string];
+      return FocusZone.allInstances[rootElement.getAttribute(FOCUSZONE_ID_ATTRIBUTE) as string];
     }
 
     let child = rootElement.firstElementChild as HTMLElement | null;
 
     while (child) {
       if (isElementFocusZone(child)) {
-        return allInstances[child.getAttribute(FOCUSZONE_ID_ATTRIBUTE) as string];
+        return FocusZone.allInstances[child.getAttribute(FOCUSZONE_ID_ATTRIBUTE) as string];
       }
       const match = getFirstInnerZone(child);
 
@@ -740,7 +872,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
         const activeRectBottom = Math.floor(activeRect.bottom);
 
         if (targetRectTop < activeRectBottom) {
-          if (!shouldWrapFocus(internalState.activeElement as HTMLElement, NO_VERTICAL_WRAP)) {
+          if (!wrapFocus(internalState.activeElement as HTMLElement, NO_VERTICAL_WRAP)) {
             return LARGE_NEGATIVE_DISTANCE_FROM_CENTER;
           }
 
@@ -759,7 +891,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
         return distance;
       })
     ) {
-      setFocusAlignment(internalState.activeElement as HTMLElement, false, true);
+      focusAlignment(internalState.activeElement as HTMLElement, false, true);
       return true;
     }
 
@@ -783,7 +915,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
         const activeRectTop = Math.floor(activeRect.top);
 
         if (targetRectBottom > activeRectTop) {
-          if (!shouldWrapFocus(internalState.activeElement as HTMLElement, NO_VERTICAL_WRAP)) {
+          if (!wrapFocus(internalState.activeElement as HTMLElement, NO_VERTICAL_WRAP)) {
             return LARGE_NEGATIVE_DISTANCE_FROM_CENTER;
           }
           return LARGE_DISTANCE_FROM_CENTER;
@@ -801,7 +933,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
         return distance;
       })
     ) {
-      setFocusAlignment(internalState.activeElement as HTMLElement, false, true);
+      focusAlignment(internalState.activeElement as HTMLElement, false, true);
       return true;
     }
 
@@ -809,7 +941,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
   };
 
   const moveFocusLeft = (): boolean => {
-    const shouldWrap = shouldWrapFocus(internalState.activeElement as HTMLElement, NO_HORIZONTAL_WRAP);
+    const shouldWrap = wrapFocus(internalState.activeElement as HTMLElement, NO_HORIZONTAL_WRAP);
     if (
       moveFocus(
         getRTL(),
@@ -843,7 +975,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
         shouldWrap,
       )
     ) {
-      setFocusAlignment(internalState.activeElement as HTMLElement, true, false);
+      focusAlignment(internalState.activeElement as HTMLElement, true, false);
       return true;
     }
 
@@ -851,7 +983,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
   };
 
   const moveFocusRight = (): boolean => {
-    const shouldWrap = shouldWrapFocus(internalState.activeElement as HTMLElement, NO_HORIZONTAL_WRAP);
+    const shouldWrap = wrapFocus(internalState.activeElement as HTMLElement, NO_HORIZONTAL_WRAP);
     if (
       moveFocus(
         !getRTL(),
@@ -881,7 +1013,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
         shouldWrap,
       )
     ) {
-      setFocusAlignment(internalState.activeElement as HTMLElement, true, false);
+      focusAlignment(internalState.activeElement as HTMLElement, true, false);
       return true;
     }
 
@@ -893,6 +1025,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     activeRect: ClientRect,
     targetRect: ClientRect,
   ): number => {
+    // eslint-disable-next-line deprecation/deprecation
     const leftAlignment = internalState.focusAlignment.left || internalState.focusAlignment.x || 0;
     // ClientRect values can be floats that differ by very small fractions of a decimal.
     // If the difference between top and bottom are within a pixel then we should treat
@@ -912,7 +1045,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
       return Math.abs(targetRect.left + targetRect.width / 2 - leftAlignment);
     }
 
-    if (!shouldWrapFocus(activeElement as HTMLElement, NO_VERTICAL_WRAP)) {
+    if (!wrapFocus(internalState.activeElement as HTMLElement, NO_VERTICAL_WRAP)) {
       return LARGE_NEGATIVE_DISTANCE_FROM_CENTER;
     }
     return LARGE_DISTANCE_FROM_CENTER;
@@ -977,7 +1110,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     if (candidateElement && candidateElement !== internalState.activeElement) {
       changedFocus = true;
       focusElement(candidateElement);
-      setFocusAlignment(candidateElement as HTMLElement, false, true);
+      focusAlignment(candidateElement as HTMLElement, false, true);
     } else if (isCircularNavigation && useDefaultWrap) {
       if (isForward) {
         return focusElement(
@@ -1007,74 +1140,6 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     }
 
     return parentElement;
-  };
-
-  const updateTabIndexes = (element?: HTMLElement): void => {
-    if (!internalState.activeElement && defaultTabbableElement && typeof defaultTabbableElement === 'function') {
-      internalState.activeElement = defaultTabbableElement(root.current as HTMLElement);
-    }
-
-    if (!element && root.current) {
-      internalState.defaultFocusElement = null;
-      element = root.current;
-      if (internalState.activeElement && !elementContains(element, internalState.activeElement)) {
-        internalState.activeElement = null;
-      }
-    }
-
-    // If active element changes state to disabled, set it to null.
-    // Otherwise, we lose keyboard accessibility to other elements in focus zone.
-    if (internalState.activeElement && !isElementTabbable(internalState.activeElement)) {
-      internalState.activeElement = null;
-    }
-
-    const childNodes = element && element.children;
-
-    for (let childIndex = 0; childNodes && childIndex < childNodes.length; childIndex++) {
-      const child = childNodes[childIndex] as HTMLElement;
-
-      if (!isElementFocusZone(child)) {
-        // If the item is explicitly set to not be focusable then TABINDEX needs to be set to -1.
-        if (child.getAttribute && child.getAttribute(IS_FOCUSABLE_ATTRIBUTE) === 'false') {
-          child.setAttribute(TABINDEX, '-1');
-        }
-
-        if (isElementTabbable(child)) {
-          if (disabled) {
-            child.setAttribute(TABINDEX, '-1');
-          } else if (
-            !internalState.isInnerZone &&
-            ((!internalState.activeElement && !internalState.defaultFocusElement) ||
-              internalState.activeElement === child)
-          ) {
-            internalState.defaultFocusElement = child;
-            if (child.getAttribute(TABINDEX) !== '0') {
-              child.setAttribute(TABINDEX, '0');
-            }
-          } else if (child.getAttribute(TABINDEX) !== '-1') {
-            child.setAttribute(TABINDEX, '-1');
-          }
-        } else if (child.tagName === 'svg' && child.getAttribute('focusable') !== 'false') {
-          // Disgusting IE hack. Sad face.
-          child.setAttribute('focusable', 'false');
-        }
-      } else if (child.getAttribute(IS_FOCUSABLE_ATTRIBUTE) === 'true') {
-        if (
-          !internalState.isInnerZone &&
-          ((!internalState.activeElement && !internalState.defaultFocusElement) ||
-            internalState.activeElement === child)
-        ) {
-          internalState.defaultFocusElement = child;
-          if (child.getAttribute(TABINDEX) !== '0') {
-            child.setAttribute(TABINDEX, '0');
-          }
-        } else if (child.getAttribute(TABINDEX) !== '-1') {
-          child.setAttribute(TABINDEX, '-1');
-        }
-      }
-
-      updateTabIndexes(child);
-    }
   };
 
   const isContentEditableElement = (element: HTMLElement): boolean => {
@@ -1126,7 +1191,7 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     return true;
   };
 
-  const shouldWrapFocus = (
+  const wrapFocus = (
     element: HTMLElement,
     noWrapDataAttribute: 'data-no-vertical-wrap' | 'data-no-horizontal-wrap',
   ): boolean => {
@@ -1136,13 +1201,112 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
   /**
    * Returns true if the element is a descendant of the FocusZone through a React portal.
    */
-  const portalContainsElement = (element: HTMLElement): boolean => {
+  const portalElement = (element: HTMLElement): boolean => {
     return element && !!root.current && portalContainsElement(element, root.current);
   };
 
-  const getDocument = (): Document => {
-    return getDocument(root.current)!;
+  const evaluateFocusBeforeRender = (): void => {
+    if (doc) {
+      const focusedElement = doc.activeElement as HTMLElement;
+
+      // Only update the index path if we are not parked on the root.
+      if (focusedElement !== root.current) {
+        const shouldRestoreFocus = elementContains(root.current, focusedElement, false);
+        internalState.lastIndexPath = shouldRestoreFocus
+          ? getElementIndexPath(root.current as HTMLElement, focusedElement)
+          : undefined;
+      }
+    }
   };
+
+  // Updates eventHandlers and cleans up focusStack when the component unmounts.
+  React.useEffect(() => {
+    FocusZone.allInstances[id] = id;
+
+    if (root.current) {
+      let parentElement = getParent(root.current, ALLOW_VIRTUAL_ELEMENTS);
+
+      while (parentElement && parentElement !== doc?.body && parentElement.nodeType === 1) {
+        if (isElementFocusZone(parentElement)) {
+          internalState.isInnerZone = true;
+          break;
+        }
+        parentElement = getParent(parentElement, ALLOW_VIRTUAL_ELEMENTS);
+      }
+
+      if (!internalState.isInnerZone) {
+        FocusZone.outerZones.add(id);
+
+        if (windowElement && FocusZone.outerZones.size === 1) {
+          windowElement.addEventListener('keydown', FocusZone.onKeyDownCapture, true);
+        }
+      }
+
+      root.current && root.current.addEventListener('blur', onBlur, true);
+
+      // Assign initial tab indexes so that we can set initial focus as appropriate.
+      updateTabIndexes();
+
+      if (defaultTabbableElement && typeof defaultTabbableElement === 'string') {
+        internalState.activeElement = doc?.querySelector(defaultTabbableElement) as HTMLElement;
+      } else if (defaultActiveElement) {
+        internalState.activeElement = doc?.querySelector(defaultActiveElement) as HTMLElement;
+      }
+
+      if (shouldFocusOnMount) {
+        focus();
+      }
+    }
+
+    return () => {
+      if (!internalState.isInnerZone) {
+        FocusZone.outerZones.delete(id);
+
+        // If this is the last outer zone, remove the keydown listener.
+        if (windowElement && FocusZone.outerZones.size === 0) {
+          windowElement.removeEventListener('keydown', FocusZone.onKeyDownCapture, true);
+        }
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Should only run on mount
+  }, []);
+
+  React.useEffect(() => {
+    const doc = getDocument();
+
+    if (
+      doc &&
+      internalState.lastIndexPath &&
+      (doc.activeElement === doc.body ||
+        doc.activeElement === null ||
+        (!preventFocusRestoration && doc.activeElement === root.current))
+    ) {
+      // The element has been removed after the render, attempt to restore focus.
+      const elementToFocus = getFocusableByIndexPath(root.current as HTMLElement, internalState.lastIndexPath);
+
+      if (elementToFocus) {
+        setActiveElement(elementToFocus, true);
+        elementToFocus.focus();
+        setParkedFocus(false);
+      } else {
+        // We had a focus path to restore, but now that path is unresolvable. Park focus
+        // on the container until we can try again.
+        setParkedFocus(true);
+      }
+    }
+  }, [internalState.lastIndexPath, preventFocusRestoration, setActiveElement, setParkedFocus]);
+
+  // Cleanup lifecyle method for internalState.
+  useUnmount(() => {
+    if (root.current) {
+      root.current.removeEventListener('blur', onBlur, true);
+    }
+
+    internalState.activeElement = null;
+    internalState.defaultFocusElement = null;
+  });
+
+  useComponentRef(componentRef, root, focus, focusElement, setFocusAlignment);
 
   evaluateFocusBeforeRender();
 
@@ -1164,7 +1328,9 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
       className={css(getRootClass(), className)}
       ref={mergedRef}
       data-focuszone-id={id}
+      // eslint-disable-next-line react/jsx-no-bind
       onKeyDown={onKeyDown}
+      // eslint-disable-next-line react/jsx-no-bind
       onFocus={onFocus}
       onMouseDownCapture={onMouseDown}
     >
@@ -1172,3 +1338,28 @@ export const FocusZone = React.forwardRef<HTMLElement, IFocusZoneProps>((props, 
     </Tag>
   );
 });
+FocusZone.displayName = COMPONENT_NAME;
+FocusZone.allInstances = {};
+FocusZone.outerZones = new Set();
+FocusZone.onKeyDownCapture = (ev: KeyboardEvent) => {
+  // eslint-disable-next-line @fluentui/deprecated-keyboard-event-props, deprecation/deprecation
+  if (ev.which === KeyCodes.tab) {
+    FocusZone.outerZones.forEach((zone: string) => zone.updateTabIndexes());
+  }
+};
+FocusZone.getOuterZones = () => {
+  FocusZone.outerZones.size;
+};
+
+const useUnmount = (unmountFunction: () => void) => {
+  const unmountRef = React.useRef(unmountFunction);
+  unmountRef.current = unmountFunction;
+  React.useEffect(
+    () => () => {
+      if (unmountRef.current) {
+        unmountRef.current();
+      }
+    },
+    [unmountFunction],
+  );
+};
