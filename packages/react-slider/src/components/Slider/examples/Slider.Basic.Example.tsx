@@ -23,13 +23,6 @@ export const SliderBasicExample: React.FunctionComponent = () => {
         // eslint-disable-next-line react/jsx-no-bind
         onChange={sliderOnChange}
       />
-      <Slider
-        label="Example with formatted value"
-        max={100}
-        ariaValueText={sliderAriaValueText}
-        valueFormat={sliderValueFormat}
-        showValue
-      />
       <Slider label="Origin from zero" min={-5} max={5} step={1} defaultValue={2} showValue originFromZero />
     </Stack>
   );

@@ -8,30 +8,19 @@ import * as _ from 'lodash';
 import * as glob from 'glob';
 import * as path from 'path';
 
-// import * as DataUtil from '@uifabric/example-data';
 import { create } from '@uifabric/utilities/lib/test';
 import * as mergeStylesSerializer from '@uifabric/jest-serializer-merge-styles';
 import { resetIds } from 'office-ui-fabric-react/lib/Utilities';
 /* eslint-disable @typescript-eslint/naming-convention */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// declare const global: any;
-
 export const defaultSnapshotTests: TestObject = {
   /** Component examples match snapshots */
   'component-examples-match-snapshot': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
-    // const ReactDOM = require('react-dom');
     const snapshotsStateMap = new Map<string, ISnapshotState>();
     const jestSnapshot = require('jest-snapshot');
-    const { componentPath } = testInfo;
+    const { componentPath, excludedExampleSnapshotTest } = testInfo;
     const rootPath = componentPath.replace(/[\\/]src[\\/].*/, '');
-    // const RealDate = Date;
-    // const realToLocaleString = global.Date.prototype.toLocaleString;
-    // const realToLocaleTimeString = global.Date.prototype.toLocaleTimeString;
-    // const realToLocaleDateString = global.Date.prototype.toLocaleDateString;
-    // const constantDate = new Date(Date.UTC(2017, 0, 6, 4, 41, 20));
     const examplePaths: string[] = glob.sync(path.resolve(rootPath, 'src/components/**/examples/*Example*.tsx'));
-    // const createPortal = ReactDOM.createPortal;
 
     // jest-snapshot currently has no DefinitelyTyped or module defs so type the one object we care about for now here
     interface ISnapshotState {
@@ -45,14 +34,12 @@ export const defaultSnapshotTests: TestObject = {
       save(): void;
     }
 
-    let globalSnapshotState: ISnapshotState;
-
     jestSnapshot.addSerializer(mergeStylesSerializer);
 
     expect.extend({
       toMatchSpecificSnapshot(received, snapshotFile) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        globalSnapshotState = (this as any).snapshotState;
+        const globalSnapshotState: ISnapshotState = (this as any).snapshotState;
 
         // Append .shot to prevent jest failure when it finds .snaps without associated tests.
         const absoluteSnapshotFile = rootPath + '/src/components/__snapshots__/' + snapshotFile + '.shot';
@@ -78,88 +65,11 @@ export const defaultSnapshotTests: TestObject = {
       },
     });
 
-    // function setCacheFullWarning(enabled: boolean) {
-    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //   (window as any).FabricConfig = {
-    //     enableClassNameCacheFullWarning: enabled,
-    //   };
-    // }
-
-    // beforeAll(() => {
-    //   // Mock createPortal to capture its component hierarchy in snapshot output.
-    //   ReactDOM.createPortal = jest.fn(element => {
-    //     return element;
-    //   });
-
-    //   // Ensure test output is consistent across machine locale and time zone config.
-    //   const mockToLocaleString = () => {
-    //     return constantDate.toUTCString();
-    //   };
-
-    //   global.Date.prototype.toLocaleString = mockToLocaleString;
-    //   global.Date.prototype.toLocaleTimeString = mockToLocaleString;
-    //   global.Date.prototype.toLocaleDateString = mockToLocaleString;
-
-    //   // Prevent random and time elements from failing repeated tests.
-    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //   (global.Date as any) = class {
-    //     public static now() {
-    //       return new RealDate(constantDate);
-    //     }
-
-    //     constructor() {
-    //       return new RealDate(constantDate);
-    //     }
-    //   };
-
-    //   jest.spyOn(DataUtil, 'lorem').mockImplementation(() => {
-    //     return 'lorem text';
-    //   });
-    //   jest.spyOn(Math, 'random').mockImplementation(() => {
-    //     return 0;
-    //   });
-
-    //   // Enable cache full warning. If warning occurs, the test will fail.
-    //   // This helps us catch mutating styles which cause cache to always miss.
-    //   setCacheFullWarning(true);
-    // });
-
-    // afterAll(() => {
-    //   jest.restoreAllMocks();
-
-    //   ReactDOM.createPortal = createPortal;
-
-    //   global.Date = RealDate;
-    //   global.Date.prototype.toLocaleString = realToLocaleString;
-    //   global.Date.prototype.toLocaleTimeString = realToLocaleTimeString;
-    //   global.Date.prototype.toLocaleDateString = realToLocaleDateString;
-
-    //   snapshotsStateMap.forEach(snapshotState => {
-    //     if (snapshotState.getUncheckedCount() > 0) {
-    //       snapshotState.removeUncheckedKeys();
-    //     }
-
-    //     snapshotState.save();
-
-    //     // Report results to global state
-    //     // TODO: This module is currently not reporting any snapshots without corresponding test cases.
-    //     //       We should ideally follow Jest behavior and error out or show "obsolete" snapshot output.
-    //     if (globalSnapshotState) {
-    //       globalSnapshotState.unmatched += snapshotState.unmatched;
-    //       globalSnapshotState.matched += snapshotState.matched;
-    //       globalSnapshotState.updated += snapshotState.updated;
-    //       globalSnapshotState.added += snapshotState.added;
-    //     }
-    //   });
-
-    //   setCacheFullWarning(false);
-    // });
-
     for (const examplePath of examplePaths) {
       const exampleFile = path.basename(examplePath);
-      // if (excludedExampleSnapshotTest?.includes(exampleFile)) {
-      //   continue;
-      // }
+      if (excludedExampleSnapshotTest?.includes(exampleFile)) {
+        continue;
+      }
 
       it(`renders ${exampleFile} correctly`, () => {
         // Resetting ids for each example creates predictability in generated ids.
