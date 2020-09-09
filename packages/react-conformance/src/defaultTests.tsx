@@ -8,7 +8,6 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import * as path from 'path';
 import consoleUtil from './utils/consoleUtil';
-
 /* eslint-disable @typescript-eslint/naming-convention */
 
 export const defaultTests: TestObject = {
@@ -98,6 +97,24 @@ export const defaultTests: TestObject = {
         const topLevelFile = require(path.join(rootPath, 'src', displayName));
 
         expect(topLevelFile[displayName]).toBe(Component);
+      });
+    }
+  },
+
+  /** Ensure that there is a version import in each corresponding top level component file */
+  'has-top-level-version-import': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
+    if (!testInfo.isInternal) {
+      const { componentPath } = testInfo;
+      const rootPath = componentPath.replace(/[\\/]src[\\/].*/, '');
+      const componentName = path.basename(componentPath).split('.')[0];
+      const packageName = path.basename(rootPath) || 'office-ui-fabric-react';
+
+      it(`${componentName} imports the ${packageName} version file`, () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).__packages__ = null;
+        require(componentPath);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        expect((window as any).__packages__[packageName]).not.toBeUndefined();
       });
     }
   },
