@@ -50,6 +50,16 @@ describe('Callout', () => {
   isConformant({
     Component: Callout,
     displayName: 'Callout',
+    snapshots: [
+      {
+        componentName: 'Callout',
+        render: (
+          <CalloutContent>
+            <div>Content</div>
+          </CalloutContent>
+        ),
+      },
+    ],
   });
 
   it('target id strings does not throw exception', () => {

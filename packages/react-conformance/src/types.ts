@@ -41,7 +41,7 @@ export interface IsConformantOptions<TProps = {}> {
   excludedExampleSnapshotTest?: string[];
 
   /**
-   * If there are snapshot tests that aren't supposed to run on a component, this allows to opt out of any test.
+   * Optional container for custom component scenarios to be used in snapshot testing.
    */
   snapshots?: ISnapshots[];
 
@@ -89,8 +89,12 @@ export interface TestObject<TProps = {}> {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface ISnapshots {
+  /* Optional string that will be auto-assigned as the name of the component in the snapshot test description. */
   componentName?: string;
+  /* Optional string that will be auto-assigned as the description of the snapshot test. */
   description?: string;
+  /* Optional string that allows for a manual created description of the snapshot test. */
   name?: string;
+  /* Required snapshot scenario to be rendered. */
   render: JSX.Element;
 }
