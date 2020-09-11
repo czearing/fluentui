@@ -81,22 +81,22 @@ export const defaultTests: TestObject = {
     });
   },
 
-  'has-top-level-version-import': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
-    if (!testInfo.isInternal) {
-      const { componentPath } = testInfo;
-      const rootPath = componentPath.replace(/[\\/]src[\\/].*/, '');
-      const componentName = path.basename(componentPath).split('.')[0];
-      const packageName = path.basename(rootPath) || 'office-ui-fabric-react';
+  // 'has-top-level-version-import': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
+  //   if (!testInfo.isInternal) {
+  //     const { componentPath } = testInfo;
+  //     const rootPath = componentPath.replace(/[\\/]src[\\/].*/, '');
+  //     const componentName = path.basename(componentPath).split('.')[0];
+  //     const packageName = path.basename(rootPath) || 'office-ui-fabric-react';
 
-      it(`${componentName} imports the ${packageName} version file`, () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).__packages__ = null;
-        require(componentPath);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        expect((window as any).__packages__[packageName]).not.toBeUndefined();
-      });
-    }
-  },
+  //     it(`${componentName} imports the ${packageName} version file`, () => {
+  //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //       (window as any).__packages__ = null;
+  //       require(componentPath);
+  //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //       expect((window as any).__packages__[packageName]).not.toBeUndefined();
+  //     });
+  //   }
+  // },
 
   /** Constructor/component name matches filename */
   'name-matches-filename': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
