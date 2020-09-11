@@ -35,6 +35,9 @@ export interface IsConformantOptions<TProps = {}> {
    * If there are tests that aren't supposed to run on a component, this allows to opt out of any test.
    */
   disabledTests?: Tests[];
+  /**
+   * If there are snapshot tests that aren't supposed to run on an example, this allows to opt out of the tests.
+   */
   excludedExampleSnapshotTest?: string[];
   /**
    * Optional flag that means the component is not exported at top level.

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SpinButton renders Callout.Basic.Example.tsx correctly: Callout.Basic.Example.tsx 1`] = `
+exports[`FocusTrapZone renders Callout.Basic.Example.tsx correctly: Callout.Basic.Example.tsx 1`] = `
 <div
   className=
 
@@ -134,7 +134,7 @@ exports[`SpinButton renders Callout.Basic.Example.tsx correctly: Callout.Basic.E
 </div>
 `;
 
-exports[`SpinButton renders Callout.Cover.Example.tsx correctly: Callout.Cover.Example.tsx 1`] = `
+exports[`FocusTrapZone renders Callout.Cover.Example.tsx correctly: Callout.Cover.Example.tsx 1`] = `
 Array [
   <div
     className=
@@ -487,7 +487,7 @@ Array [
 ]
 `;
 
-exports[`SpinButton renders Callout.Directional.Example.tsx correctly: Callout.Directional.Example.tsx 1`] = `
+exports[`FocusTrapZone renders Callout.Directional.Example.tsx correctly: Callout.Directional.Example.tsx 1`] = `
 Array [
   <div
     className=
@@ -1588,7 +1588,7 @@ Array [
 ]
 `;
 
-exports[`SpinButton renders Callout.FocusTrap.Example.tsx correctly: Callout.FocusTrap.Example.tsx 1`] = `
+exports[`FocusTrapZone renders Callout.FocusTrap.Example.tsx correctly: Callout.FocusTrap.Example.tsx 1`] = `
 <div
   className=
 
@@ -1722,7 +1722,7 @@ exports[`SpinButton renders Callout.FocusTrap.Example.tsx correctly: Callout.Foc
 </div>
 `;
 
-exports[`SpinButton renders Callout.Status.Example.tsx correctly: Callout.Status.Example.tsx 1`] = `
+exports[`FocusTrapZone renders Callout.Status.Example.tsx correctly: Callout.Status.Example.tsx 1`] = `
 <div
   className=
 
@@ -1856,7 +1856,7 @@ exports[`SpinButton renders Callout.Status.Example.tsx correctly: Callout.Status
 </div>
 `;
 
-exports[`SpinButton renders ChoiceGroup.Basic.Example.tsx correctly: ChoiceGroup.Basic.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ChoiceGroup.Basic.Example.tsx correctly: ChoiceGroup.Basic.Example.tsx 1`] = `
 <div
   className=
       ms-ChoiceFieldGroup
@@ -2449,7 +2449,7 @@ exports[`SpinButton renders ChoiceGroup.Basic.Example.tsx correctly: ChoiceGroup
 </div>
 `;
 
-exports[`SpinButton renders ChoiceGroup.Controlled.Example.tsx correctly: ChoiceGroup.Controlled.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ChoiceGroup.Controlled.Example.tsx correctly: ChoiceGroup.Controlled.Example.tsx 1`] = `
 <div
   className=
       ms-ChoiceFieldGroup
@@ -3033,7 +3033,7 @@ exports[`SpinButton renders ChoiceGroup.Controlled.Example.tsx correctly: Choice
 </div>
 `;
 
-exports[`SpinButton renders ChoiceGroup.Custom.Example.tsx correctly: ChoiceGroup.Custom.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ChoiceGroup.Custom.Example.tsx correctly: ChoiceGroup.Custom.Example.tsx 1`] = `
 <div
   className=
       ms-ChoiceFieldGroup
@@ -3804,7 +3804,7 @@ exports[`SpinButton renders ChoiceGroup.Custom.Example.tsx correctly: ChoiceGrou
 </div>
 `;
 
-exports[`SpinButton renders ChoiceGroup.Icon.Example.tsx correctly: ChoiceGroup.Icon.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ChoiceGroup.Icon.Example.tsx correctly: ChoiceGroup.Icon.Example.tsx 1`] = `
 <div
   className=
       ms-ChoiceFieldGroup
@@ -4512,7 +4512,7 @@ exports[`SpinButton renders ChoiceGroup.Icon.Example.tsx correctly: ChoiceGroup.
 </div>
 `;
 
-exports[`SpinButton renders ChoiceGroup.Image.Example.tsx correctly: ChoiceGroup.Image.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ChoiceGroup.Image.Example.tsx correctly: ChoiceGroup.Image.Example.tsx 1`] = `
 <div
   className=
       ms-ChoiceFieldGroup
@@ -5180,7 +5180,7 @@ exports[`SpinButton renders ChoiceGroup.Image.Example.tsx correctly: ChoiceGroup
 </div>
 `;
 
-exports[`SpinButton renders ChoiceGroup.Label.Example.tsx correctly: ChoiceGroup.Label.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ChoiceGroup.Label.Example.tsx correctly: ChoiceGroup.Label.Example.tsx 1`] = `
 <div>
   <label
     className=
@@ -5808,7 +5808,7 @@ exports[`SpinButton renders ChoiceGroup.Label.Example.tsx correctly: ChoiceGroup
 </div>
 `;
 
-exports[`SpinButton renders Coachmark.Basic.Example.tsx correctly: Coachmark.Basic.Example.tsx 1`] = `
+exports[`FocusTrapZone renders Coachmark.Basic.Example.tsx correctly: Coachmark.Basic.Example.tsx 1`] = `
 <div>
   <div
     className=
@@ -6153,7 +6153,7 @@ exports[`SpinButton renders Coachmark.Basic.Example.tsx correctly: Coachmark.Bas
 </div>
 `;
 
-exports[`SpinButton renders ComboBox.Basic.Example.tsx correctly: ComboBox.Basic.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ComboBox.Basic.Example.tsx correctly: ComboBox.Basic.Example.tsx 1`] = `
 <div>
   <div
     className="ms-ComboBox-container "
@@ -6686,7 +6686,7 @@ exports[`SpinButton renders ComboBox.Basic.Example.tsx correctly: ComboBox.Basic
 </div>
 `;
 
-exports[`SpinButton renders ComboBox.Controlled.Example.tsx correctly: ComboBox.Controlled.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ComboBox.Controlled.Example.tsx correctly: ComboBox.Controlled.Example.tsx 1`] = `
 <div
   className="ms-ComboBox-container "
   style={
@@ -7084,7 +7084,7 @@ exports[`SpinButton renders ComboBox.Controlled.Example.tsx correctly: ComboBox.
 </div>
 `;
 
-exports[`SpinButton renders ComboBox.ControlledMulti.Example.tsx correctly: ComboBox.ControlledMulti.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ComboBox.ControlledMulti.Example.tsx correctly: ComboBox.ControlledMulti.Example.tsx 1`] = `
 <div
   className="ms-ComboBox-container "
   style={
@@ -7503,7 +7503,7 @@ exports[`SpinButton renders ComboBox.ControlledMulti.Example.tsx correctly: Comb
 </div>
 `;
 
-exports[`SpinButton renders ComboBox.CustomStyled.Example.tsx correctly: ComboBox.CustomStyled.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ComboBox.CustomStyled.Example.tsx correctly: ComboBox.CustomStyled.Example.tsx 1`] = `
 <div
   className=
       ms-Fabric
@@ -8318,7 +8318,7 @@ exports[`SpinButton renders ComboBox.CustomStyled.Example.tsx correctly: ComboBo
 </div>
 `;
 
-exports[`SpinButton renders ComboBox.ErrorHandling.Example.tsx correctly: ComboBox.ErrorHandling.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ComboBox.ErrorHandling.Example.tsx correctly: ComboBox.ErrorHandling.Example.tsx 1`] = `
 <div>
   <div
     className="ms-ComboBox-container "
@@ -9054,7 +9054,7 @@ exports[`SpinButton renders ComboBox.ErrorHandling.Example.tsx correctly: ComboB
 </div>
 `;
 
-exports[`SpinButton renders ComboBox.Toggles.Example.tsx correctly: ComboBox.Toggles.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ComboBox.Toggles.Example.tsx correctly: ComboBox.Toggles.Example.tsx 1`] = `
 <div
   className=
       ms-Fabric
@@ -9743,7 +9743,7 @@ exports[`SpinButton renders ComboBox.Toggles.Example.tsx correctly: ComboBox.Tog
 </div>
 `;
 
-exports[`SpinButton renders ComboBox.Virtualized.Example.tsx correctly: ComboBox.Virtualized.Example.tsx 1`] = `
+exports[`FocusTrapZone renders ComboBox.Virtualized.Example.tsx correctly: ComboBox.Virtualized.Example.tsx 1`] = `
 <div
   className=
       ms-Fabric
@@ -10160,1076 +10160,202 @@ exports[`SpinButton renders ComboBox.Virtualized.Example.tsx correctly: ComboBox
 </div>
 `;
 
-exports[`SpinButton renders ContextualMenu.Checkmarks.Example.tsx correctly: ContextualMenu.Checkmarks.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Checkmarks.Example.tsx correctly: ContextualMenu.Checkmarks.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.CustomMenuItem.Example.tsx correctly: ContextualMenu.CustomMenuItem.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.CustomMenuItem.Example.tsx correctly: ContextualMenu.CustomMenuItem.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.CustomMenuList.Example.tsx correctly: ContextualMenu.CustomMenuList.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.CustomMenuList.Example.tsx correctly: ContextualMenu.CustomMenuList.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.Customization.Example.tsx correctly: ContextualMenu.Customization.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Customization.Example.tsx correctly: ContextualMenu.Customization.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.CustomizationWithNoWrap.Example.tsx correctly: ContextualMenu.CustomizationWithNoWrap.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.CustomizationWithNoWrap.Example.tsx correctly: ContextualMenu.CustomizationWithNoWrap.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.Default.Example.tsx correctly: ContextualMenu.Default.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Default.Example.tsx correctly: ContextualMenu.Default.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.Directional.Example.tsx correctly: ContextualMenu.Directional.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Directional.Example.tsx correctly: ContextualMenu.Directional.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.Header.Example.tsx correctly: ContextualMenu.Header.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Header.Example.tsx correctly: ContextualMenu.Header.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.Icon.Example.tsx correctly: ContextualMenu.Icon.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Icon.Example.tsx correctly: ContextualMenu.Icon.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.Icon.SecondaryText.Example.tsx correctly: ContextualMenu.Icon.SecondaryText.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Icon.SecondaryText.Example.tsx correctly: ContextualMenu.Icon.SecondaryText.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.Persisted.Example.tsx correctly: ContextualMenu.Persisted.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Persisted.Example.tsx correctly: ContextualMenu.Persisted.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.ScrollBar.Example.tsx correctly: ContextualMenu.ScrollBar.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.ScrollBar.Example.tsx correctly: ContextualMenu.ScrollBar.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.Section.Example.tsx correctly: ContextualMenu.Section.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Section.Example.tsx correctly: ContextualMenu.Section.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ContextualMenu.Submenu.Example.tsx correctly: ContextualMenu.Submenu.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ContextualMenu.Submenu.Example.tsx correctly: ContextualMenu.Submenu.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Dropdown.Basic.Example.tsx correctly: Dropdown.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Dropdown.Basic.Example.tsx correctly: Dropdown.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Dropdown.Controlled.Example.tsx correctly: Dropdown.Controlled.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Dropdown.Controlled.Example.tsx correctly: Dropdown.Controlled.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Dropdown.ControlledMulti.Example.tsx correctly: Dropdown.ControlledMulti.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Dropdown.ControlledMulti.Example.tsx correctly: Dropdown.ControlledMulti.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Dropdown.Custom.Example.tsx correctly: Dropdown.Custom.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Dropdown.Custom.Example.tsx correctly: Dropdown.Custom.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Dropdown.Error.Example.tsx correctly: Dropdown.Error.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Dropdown.Error.Example.tsx correctly: Dropdown.Error.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Dropdown.Required.Example.tsx correctly: Dropdown.Required.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Dropdown.Required.Example.tsx correctly: Dropdown.Required.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders FocusTrapZone.Box.Click.Example.tsx correctly: FocusTrapZone.Box.Click.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders FocusTrapZone.Box.Click.Example.tsx correctly: FocusTrapZone.Box.Click.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders FocusTrapZone.Box.Example.tsx correctly: FocusTrapZone.Box.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders FocusTrapZone.Box.Example.tsx correctly: FocusTrapZone.Box.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders FocusTrapZone.Box.FocusOnCustomElement.Example.tsx correctly: FocusTrapZone.Box.FocusOnCustomElement.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders FocusTrapZone.Box.FocusOnCustomElement.Example.tsx correctly: FocusTrapZone.Box.FocusOnCustomElement.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders FocusTrapZone.DialogInPanel.Example.tsx correctly: FocusTrapZone.DialogInPanel.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders FocusTrapZone.DialogInPanel.Example.tsx correctly: FocusTrapZone.DialogInPanel.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders FocusTrapZone.FocusZone.Example.tsx correctly: FocusTrapZone.FocusZone.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders FocusTrapZone.FocusZone.Example.tsx correctly: FocusTrapZone.FocusZone.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders FocusTrapZone.Nested.Example.tsx correctly: FocusTrapZone.Nested.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders FocusTrapZone.Nested.Example.tsx correctly: FocusTrapZone.Nested.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Image.Center.Example.tsx correctly: Image.Center.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Image.Center.Example.tsx correctly: Image.Center.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Image.CenterContain.Example.tsx correctly: Image.CenterContain.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Image.CenterContain.Example.tsx correctly: Image.CenterContain.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Image.CenterCover.Example.tsx correctly: Image.CenterCover.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Image.CenterCover.Example.tsx correctly: Image.CenterCover.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Image.Contain.Example.tsx correctly: Image.Contain.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Image.Contain.Example.tsx correctly: Image.Contain.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Image.Cover.Example.tsx correctly: Image.Cover.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Image.Cover.Example.tsx correctly: Image.Cover.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Image.Default.Example.tsx correctly: Image.Default.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Image.Default.Example.tsx correctly: Image.Default.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Image.MaximizeFrame.Example.tsx correctly: Image.MaximizeFrame.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Image.MaximizeFrame.Example.tsx correctly: Image.MaximizeFrame.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Image.None.Example.tsx correctly: Image.None.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Image.None.Example.tsx correctly: Image.None.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Keytips.Basic.Example.tsx correctly: Keytips.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Keytips.Basic.Example.tsx correctly: Keytips.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Keytips.Button.Example.tsx correctly: Keytips.Button.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Keytips.Button.Example.tsx correctly: Keytips.Button.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Keytips.CommandBar.Example.tsx correctly: Keytips.CommandBar.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Keytips.CommandBar.Example.tsx correctly: Keytips.CommandBar.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Keytips.Dynamic.Example.tsx correctly: Keytips.Dynamic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Keytips.Dynamic.Example.tsx correctly: Keytips.Dynamic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Keytips.Overflow.Example.tsx correctly: Keytips.Overflow.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Keytips.Overflow.Example.tsx correctly: Keytips.Overflow.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Layer.Basic.Example.tsx correctly: Layer.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Layer.Basic.Example.tsx correctly: Layer.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Layer.Customized.Example.tsx correctly: Layer.Customized.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Layer.Customized.Example.tsx correctly: Layer.Customized.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Layer.Hosted.Example.tsx correctly: Layer.Hosted.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Layer.Hosted.Example.tsx correctly: Layer.Hosted.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Layer.NestedLayers.Example.tsx correctly: Layer.NestedLayers.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Layer.NestedLayers.Example.tsx correctly: Layer.NestedLayers.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders MessageBar.Basic.Example.tsx correctly: MessageBar.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders MessageBar.Basic.Example.tsx correctly: MessageBar.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Modal.Basic.Example.tsx correctly: Modal.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Modal.Basic.Example.tsx correctly: Modal.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Modal.Modeless.Example.tsx correctly: Modal.Modeless.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Modal.Modeless.Example.tsx correctly: Modal.Modeless.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders OverflowSet.Basic.Example.tsx correctly: OverflowSet.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders OverflowSet.Basic.Example.tsx correctly: OverflowSet.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders OverflowSet.BasicReversed.Example.tsx correctly: OverflowSet.BasicReversed.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders OverflowSet.BasicReversed.Example.tsx correctly: OverflowSet.BasicReversed.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders OverflowSet.Custom.Example.tsx correctly: OverflowSet.Custom.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders OverflowSet.Custom.Example.tsx correctly: OverflowSet.Custom.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders OverflowSet.Vertical.Example.tsx correctly: OverflowSet.Vertical.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders OverflowSet.Vertical.Example.tsx correctly: OverflowSet.Vertical.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Persona.Alternate.Example.tsx correctly: Persona.Alternate.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Persona.Alternate.Example.tsx correctly: Persona.Alternate.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Persona.Basic.Example.tsx correctly: Persona.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Persona.Basic.Example.tsx correctly: Persona.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Persona.Colors.Example.tsx correctly: Persona.Colors.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Persona.Colors.Example.tsx correctly: Persona.Colors.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Persona.CustomCoinRender.Example.tsx correctly: Persona.CustomCoinRender.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Persona.CustomCoinRender.Example.tsx correctly: Persona.CustomCoinRender.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Persona.CustomRender.Example.tsx correctly: Persona.CustomRender.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Persona.CustomRender.Example.tsx correctly: Persona.CustomRender.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Persona.Initials.Example.tsx correctly: Persona.Initials.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Persona.Initials.Example.tsx correctly: Persona.Initials.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Persona.Presence.Example.tsx correctly: Persona.Presence.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Persona.Presence.Example.tsx correctly: Persona.Presence.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Persona.PresenceColor.Example.tsx correctly: Persona.PresenceColor.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Persona.PresenceColor.Example.tsx correctly: Persona.PresenceColor.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Persona.UnknownPersona.Example.tsx correctly: Persona.UnknownPersona.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Persona.UnknownPersona.Example.tsx correctly: Persona.UnknownPersona.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Rating.Basic.Example.tsx correctly: Rating.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Rating.Basic.Example.tsx correctly: Rating.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Rating.ButtonControlled.Example.tsx correctly: Rating.ButtonControlled.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Rating.ButtonControlled.Example.tsx correctly: Rating.ButtonControlled.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ResizeGroup.FlexBox.Example.tsx correctly: ResizeGroup.FlexBox.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ResizeGroup.FlexBox.Example.tsx correctly: ResizeGroup.FlexBox.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ResizeGroup.OverflowSet.Example.tsx correctly: ResizeGroup.OverflowSet.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ResizeGroup.OverflowSet.Example.tsx correctly: ResizeGroup.OverflowSet.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders ResizeGroup.VerticalOverflowSet.Example.tsx correctly: ResizeGroup.VerticalOverflowSet.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders ResizeGroup.VerticalOverflowSet.Example.tsx correctly: ResizeGroup.VerticalOverflowSet.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SearchBox.CustomIcon.Example.tsx correctly: SearchBox.CustomIcon.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SearchBox.CustomIcon.Example.tsx correctly: SearchBox.CustomIcon.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SearchBox.Disabled.Example.tsx correctly: SearchBox.Disabled.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SearchBox.Disabled.Example.tsx correctly: SearchBox.Disabled.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SearchBox.FullSize.Example.tsx correctly: SearchBox.FullSize.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SearchBox.FullSize.Example.tsx correctly: SearchBox.FullSize.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SearchBox.Small.Example.tsx correctly: SearchBox.Small.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SearchBox.Small.Example.tsx correctly: SearchBox.Small.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SearchBox.Underlined.Example.tsx correctly: SearchBox.Underlined.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SearchBox.Underlined.Example.tsx correctly: SearchBox.Underlined.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SelectedPeopleList.Basic.Example.tsx correctly: SelectedPeopleList.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SelectedPeopleList.Basic.Example.tsx correctly: SelectedPeopleList.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SelectedPeopleList.Controlled.Example.tsx correctly: SelectedPeopleList.Controlled.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SelectedPeopleList.Controlled.Example.tsx correctly: SelectedPeopleList.Controlled.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Shimmer.Application.Example.tsx correctly: Shimmer.Application.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Shimmer.Application.Example.tsx correctly: Shimmer.Application.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Shimmer.Basic.Example.tsx correctly: Shimmer.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Shimmer.Basic.Example.tsx correctly: Shimmer.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Shimmer.CustomElements.Example.tsx correctly: Shimmer.CustomElements.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Shimmer.CustomElements.Example.tsx correctly: Shimmer.CustomElements.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Shimmer.LoadData.Example.tsx correctly: Shimmer.LoadData.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Shimmer.LoadData.Example.tsx correctly: Shimmer.LoadData.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders Shimmer.Styling.Example.tsx correctly: Shimmer.Styling.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders Shimmer.Styling.Example.tsx correctly: Shimmer.Styling.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SpinButton.Basic.Example.tsx correctly: SpinButton.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SpinButton.Basic.Example.tsx correctly: SpinButton.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SpinButton.BasicDisabled.Example.tsx correctly: SpinButton.BasicDisabled.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SpinButton.BasicDisabled.Example.tsx correctly: SpinButton.BasicDisabled.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SpinButton.BasicWithEndPosition.Example.tsx correctly: SpinButton.BasicWithEndPosition.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SpinButton.BasicWithEndPosition.Example.tsx correctly: SpinButton.BasicWithEndPosition.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SpinButton.BasicWithIcon.Example.tsx correctly: SpinButton.BasicWithIcon.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SpinButton.BasicWithIcon.Example.tsx correctly: SpinButton.BasicWithIcon.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SpinButton.BasicWithIconDisabled.Example.tsx correctly: SpinButton.BasicWithIconDisabled.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SpinButton.BasicWithIconDisabled.Example.tsx correctly: SpinButton.BasicWithIconDisabled.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SpinButton.CustomStyled.Example.tsx correctly: SpinButton.CustomStyled.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SpinButton.CustomStyled.Example.tsx correctly: SpinButton.CustomStyled.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SpinButton.Stateful.Example.tsx correctly: SpinButton.Stateful.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SpinButton.Stateful.Example.tsx correctly: SpinButton.Stateful.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders SwatchColorPicker.Basic.Example.tsx correctly: SwatchColorPicker.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders SwatchColorPicker.Basic.Example.tsx correctly: SwatchColorPicker.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TeachingBubble.Basic.Example.tsx correctly: TeachingBubble.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TeachingBubble.Basic.Example.tsx correctly: TeachingBubble.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TeachingBubble.Condensed.Example.tsx correctly: TeachingBubble.Condensed.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TeachingBubble.Condensed.Example.tsx correctly: TeachingBubble.Condensed.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TeachingBubble.Illustration.Example.tsx correctly: TeachingBubble.Illustration.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TeachingBubble.Illustration.Example.tsx correctly: TeachingBubble.Illustration.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TeachingBubble.MultiStep.Example.tsx correctly: TeachingBubble.MultiStep.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TeachingBubble.MultiStep.Example.tsx correctly: TeachingBubble.MultiStep.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TeachingBubble.SmallHeadline.Example.tsx correctly: TeachingBubble.SmallHeadline.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TeachingBubble.SmallHeadline.Example.tsx correctly: TeachingBubble.SmallHeadline.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TeachingBubble.Wide.Example.tsx correctly: TeachingBubble.Wide.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TeachingBubble.Wide.Example.tsx correctly: TeachingBubble.Wide.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TeachingBubble.WideIllustration.Example.tsx correctly: TeachingBubble.WideIllustration.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TeachingBubble.WideIllustration.Example.tsx correctly: TeachingBubble.WideIllustration.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TextField.Basic.Example.tsx correctly: TextField.Basic.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TextField.Basic.Example.tsx correctly: TextField.Basic.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TextField.Borderless.Example.tsx correctly: TextField.Borderless.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TextField.Borderless.Example.tsx correctly: TextField.Borderless.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TextField.Controlled.Example.tsx correctly: TextField.Controlled.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TextField.Controlled.Example.tsx correctly: TextField.Controlled.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TextField.CustomRender.Example.tsx correctly: TextField.CustomRender.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TextField.CustomRender.Example.tsx correctly: TextField.CustomRender.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TextField.ErrorMessage.Example.tsx correctly: TextField.ErrorMessage.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TextField.ErrorMessage.Example.tsx correctly: TextField.ErrorMessage.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TextField.Masked.Example.tsx correctly: TextField.Masked.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TextField.Masked.Example.tsx correctly: TextField.Masked.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TextField.Multiline.Example.tsx correctly: TextField.Multiline.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TextField.Multiline.Example.tsx correctly: TextField.Multiline.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TextField.PrefixAndSuffix.Example.tsx correctly: TextField.PrefixAndSuffix.Example.tsx 1`] = `null`;
+exports[`FocusTrapZone renders TextField.PrefixAndSuffix.Example.tsx correctly: TextField.PrefixAndSuffix.Example.tsx 1`] = `null`;
 
-exports[`SpinButton renders TextField.Styled.Example.tsx correctly: TextField.Styled.Example.tsx 1`] = `null`;
-
-exports[`SpinButton renders correctly 1`] = `
-<div
-  className=
-
-      {
-        font-size: 14px;
-        min-width: 86px;
-        outline: none;
-        width: 100%;
-      }
->
-  <div
-    className=
-
-        {
-          align-items: center;
-          display: inline-flex;
-          float: left;
-          height: 32px;
-          margin-right: 10px;
-        }
-  >
-    <label
-      className=
-          ms-Label
-          {
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-font-smoothing: antialiased;
-            box-shadow: none;
-            box-sizing: border-box;
-            color: #323130;
-            display: block;
-            font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 20px;
-            margin-bottom: 0px;
-            margin-left: 0px;
-            margin-right: 0px;
-            margin-top: 0px;
-            overflow-wrap: break-word;
-            padding-bottom: 5px;
-            padding-left: 0;
-            padding-right: 0;
-            padding-top: 5px;
-            pointer-events: none;
-            word-wrap: break-word;
-          }
-      htmlFor="input0"
-      id="Label1"
-    >
-      label
-    </label>
-  </div>
-  <div
-    className=
-
-        {
-          box-sizing: border-box;
-          display: flex;
-          height: 32px;
-          min-width: 86px;
-          position: relative;
-        }
-        &:after {
-          border-color: #605e5c;
-          border-radius: 2px;
-          border-style: solid;
-          border-width: 1px;
-          bottom: 0px;
-          content: '';
-          left: 0px;
-          pointer-events: none;
-          position: absolute;
-          right: 0px;
-          top: 0px;
-        }
-        &:hover:after {
-          border-color: #323130;
-        }
-        @media screen and (-ms-high-contrast: active){&:hover:after {
-          border-color: Highlight;
-        }
-  >
-    <input
-      aria-disabled={false}
-      aria-labelledby="Label1"
-      aria-valuemax={100}
-      aria-valuemin={0}
-      aria-valuenow={0}
-      autoComplete="off"
-      className=
-          ms-spinButton-input
-          {
-            background-color: #ffffff;
-            border-radius: 2px 0 0 2px;
-            border-style: none;
-            box-shadow: none;
-            box-sizing: border-box;
-            color: #323130;
-            cursor: text;
-            display: block;
-            flex: 1;
-            font-size: 14px;
-            height: 100%;
-            margin-bottom: 0px;
-            margin-left: 0px;
-            margin-right: 0px;
-            margin-top: 0px;
-            min-width: 61px;
-            outline: 0px;
-            overflow: hidden;
-            padding-bottom: 0;
-            padding-left: 9px;
-            padding-right: 8px;
-            padding-top: 0;
-            text-overflow: ellipsis;
-            user-select: text;
-            white-space: nowrap;
-          }
-          &::selection {
-            background-color: #0078d4;
-            color: #ffffff;
-          }
-          @media screen and (-ms-high-contrast: active){&::selection {
-            background-color: Highlight;
-            border-color: Highlight;
-            color: HighlightText;
-          }
-      data-lpignore={true}
-      disabled={false}
-      id="input0"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onInput={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      role="spinbutton"
-      type="text"
-      value="0"
-    />
-    <span
-      className=
-
-          {
-            cursor: default;
-            display: block;
-            height: 100%;
-          }
-    >
-      <button
-        className=
-            ms-Button
-            ms-Button--icon
-            ms-UpButton
-            {
-              -moz-osx-font-smoothing: grayscale;
-              -webkit-font-smoothing: antialiased;
-              background-color: transparent;
-              border-radius: 2px;
-              border: none;
-              box-sizing: border-box;
-              color: #605e5c;
-              cursor: default;
-              display: block;
-              font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
-              font-size: 14px;
-              font-weight: 400;
-              height: 50%;
-              outline: none;
-              padding-bottom: 0px;
-              padding-left: 0px;
-              padding-right: 0px;
-              padding-top: 0px;
-              position: relative;
-              text-align: center;
-              text-decoration: none;
-              user-select: none;
-              width: 23px;
-            }
-            &::-moz-focus-inner {
-              border: 0;
-            }
-            .ms-Fabric--isFocusVisible &:focus:after {
-              border: 1px solid transparent;
-              bottom: 2px;
-              content: "";
-              left: 2px;
-              outline: 1px solid #605e5c;
-              position: absolute;
-              right: 2px;
-              top: 2px;
-              z-index: 1;
-            }
-            @media screen and (-ms-high-contrast: active){.ms-Fabric--isFocusVisible &:focus:after {
-              bottom: -2px;
-              left: -2px;
-              outline-color: ButtonText;
-              right: -2px;
-              top: -2px;
-            }
-            &:active > * {
-              left: 0px;
-              position: relative;
-              top: 0px;
-            }
-            &.ms-DownButton {
-              border-radius: 0 0 2px 0;
-            }
-            &.ms-UpButton {
-              border-radius: 0 2px 0 0;
-            }
-            &:hover {
-              background-color: #f3f2f1;
-              color: #323130;
-            }
-            @media screen and (-ms-high-contrast: active){&:hover {
-              border-color: Highlight;
-              color: Highlight;
-            }
-            &:active {
-              background-color: #edebe9;
-              color: #323130;
-            }
-            @media screen and (-ms-high-contrast: active){&:active {
-              background-color: Highlight;
-              color: HighlightText;
-            }
-        data-is-focusable={false}
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        onKeyPress={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        tabIndex={-1}
-        type="button"
-      >
-        <span
-          className=
-              ms-Button-flexContainer
-              {
-                align-items: center;
-                display: flex;
-                flex-wrap: nowrap;
-                height: 100%;
-                justify-content: center;
-              }
-          data-automationid="splitbuttonprimary"
-        >
-          <i
-            aria-hidden={true}
-            className=
-                ms-Icon
-                ms-Button-icon
-                {
-                  display: inline-block;
-                }
-                {
-                  -moz-osx-font-smoothing: grayscale;
-                  -webkit-font-smoothing: antialiased;
-                  font-family: "FabricMDL2Icons-2";
-                  font-style: normal;
-                  font-weight: normal;
-                  speak: none;
-                }
-                {
-                  flex-shrink: 0;
-                  font-size: 8px;
-                  height: 16px;
-                  line-height: 16px;
-                  margin-bottom: 0px;
-                  margin-left: 0px;
-                  margin-right: 0px;
-                  margin-top: 0px;
-                  text-align: center;
-                }
-            data-icon-name="ChevronUpSmall"
-            role="presentation"
-            style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons-2\\"",
-              }
-            }
-          >
-            
-          </i>
-        </span>
-      </button>
-      <button
-        className=
-            ms-Button
-            ms-Button--icon
-            ms-DownButton
-            {
-              -moz-osx-font-smoothing: grayscale;
-              -webkit-font-smoothing: antialiased;
-              background-color: transparent;
-              border-radius: 2px;
-              border: none;
-              box-sizing: border-box;
-              color: #605e5c;
-              cursor: default;
-              display: block;
-              font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
-              font-size: 14px;
-              font-weight: 400;
-              height: 50%;
-              outline: none;
-              padding-bottom: 0px;
-              padding-left: 0px;
-              padding-right: 0px;
-              padding-top: 0px;
-              position: relative;
-              text-align: center;
-              text-decoration: none;
-              user-select: none;
-              width: 23px;
-            }
-            &::-moz-focus-inner {
-              border: 0;
-            }
-            .ms-Fabric--isFocusVisible &:focus:after {
-              border: 1px solid transparent;
-              bottom: 2px;
-              content: "";
-              left: 2px;
-              outline: 1px solid #605e5c;
-              position: absolute;
-              right: 2px;
-              top: 2px;
-              z-index: 1;
-            }
-            @media screen and (-ms-high-contrast: active){.ms-Fabric--isFocusVisible &:focus:after {
-              bottom: -2px;
-              left: -2px;
-              outline-color: ButtonText;
-              right: -2px;
-              top: -2px;
-            }
-            &:active > * {
-              left: 0px;
-              position: relative;
-              top: 0px;
-            }
-            &.ms-DownButton {
-              border-radius: 0 0 2px 0;
-            }
-            &.ms-UpButton {
-              border-radius: 0 2px 0 0;
-            }
-            &:hover {
-              background-color: #f3f2f1;
-              color: #323130;
-            }
-            @media screen and (-ms-high-contrast: active){&:hover {
-              border-color: Highlight;
-              color: Highlight;
-            }
-            &:active {
-              background-color: #edebe9;
-              color: #323130;
-            }
-            @media screen and (-ms-high-contrast: active){&:active {
-              background-color: Highlight;
-              color: HighlightText;
-            }
-        data-is-focusable={false}
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        onKeyPress={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        tabIndex={-1}
-        type="button"
-      >
-        <span
-          className=
-              ms-Button-flexContainer
-              {
-                align-items: center;
-                display: flex;
-                flex-wrap: nowrap;
-                height: 100%;
-                justify-content: center;
-              }
-          data-automationid="splitbuttonprimary"
-        >
-          <i
-            aria-hidden={true}
-            className=
-                ms-Icon
-                ms-Button-icon
-                {
-                  display: inline-block;
-                }
-                {
-                  -moz-osx-font-smoothing: grayscale;
-                  -webkit-font-smoothing: antialiased;
-                  font-family: "FabricMDL2Icons-3";
-                  font-style: normal;
-                  font-weight: normal;
-                  speak: none;
-                }
-                {
-                  flex-shrink: 0;
-                  font-size: 8px;
-                  height: 16px;
-                  line-height: 16px;
-                  margin-bottom: 0px;
-                  margin-left: 0px;
-                  margin-right: 0px;
-                  margin-top: 0px;
-                  text-align: center;
-                }
-            data-icon-name="ChevronDownSmall"
-            role="presentation"
-            style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons-3\\"",
-              }
-            }
-          >
-            
-          </i>
-        </span>
-      </button>
-    </span>
-  </div>
-</div>
-`;
-
-exports[`SpinButton renders correctly with user-provided values 1`] = `
-<div
-  className=
-
-      {
-        font-size: 14px;
-        min-width: 86px;
-        outline: none;
-        width: 100%;
-      }
->
-  <div
-    className=
-
-        {
-          align-items: center;
-          display: inline-flex;
-          float: left;
-          height: 32px;
-          margin-right: 10px;
-        }
-  >
-    <label
-      className=
-          ms-Label
-          {
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-font-smoothing: antialiased;
-            box-shadow: none;
-            box-sizing: border-box;
-            color: #323130;
-            display: block;
-            font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 20px;
-            margin-bottom: 0px;
-            margin-left: 0px;
-            margin-right: 0px;
-            margin-top: 0px;
-            overflow-wrap: break-word;
-            padding-bottom: 5px;
-            padding-left: 0;
-            padding-right: 0;
-            padding-top: 5px;
-            pointer-events: none;
-            word-wrap: break-word;
-          }
-      htmlFor="input0"
-      id="Label1"
-    >
-      label
-    </label>
-  </div>
-  <div
-    className=
-
-        {
-          box-sizing: border-box;
-          display: flex;
-          height: 32px;
-          min-width: 86px;
-          position: relative;
-        }
-        &:after {
-          border-color: #605e5c;
-          border-radius: 2px;
-          border-style: solid;
-          border-width: 1px;
-          bottom: 0px;
-          content: '';
-          left: 0px;
-          pointer-events: none;
-          position: absolute;
-          right: 0px;
-          top: 0px;
-        }
-        &:hover:after {
-          border-color: #323130;
-        }
-        @media screen and (-ms-high-contrast: active){&:hover:after {
-          border-color: Highlight;
-        }
-    data-test="test"
-  >
-    <input
-      aria-disabled={false}
-      aria-labelledby="Label1"
-      aria-valuemax={100}
-      aria-valuemin={0}
-      aria-valuenow={0}
-      aria-valuetext="0 pt"
-      autoComplete="off"
-      className=
-          ms-spinButton-input
-          {
-            background-color: #ffffff;
-            border-radius: 2px 0 0 2px;
-            border-style: none;
-            box-shadow: none;
-            box-sizing: border-box;
-            color: #323130;
-            cursor: text;
-            display: block;
-            flex: 1;
-            font-size: 14px;
-            height: 100%;
-            margin-bottom: 0px;
-            margin-left: 0px;
-            margin-right: 0px;
-            margin-top: 0px;
-            min-width: 61px;
-            outline: 0px;
-            overflow: hidden;
-            padding-bottom: 0;
-            padding-left: 9px;
-            padding-right: 8px;
-            padding-top: 0;
-            text-overflow: ellipsis;
-            user-select: text;
-            white-space: nowrap;
-          }
-          &::selection {
-            background-color: #0078d4;
-            color: #ffffff;
-          }
-          @media screen and (-ms-high-contrast: active){&::selection {
-            background-color: Highlight;
-            border-color: Highlight;
-            color: HighlightText;
-          }
-      data-lpignore={true}
-      disabled={false}
-      id="input0"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onInput={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      role="spinbutton"
-      type="text"
-      value="0"
-    />
-    <span
-      className=
-
-          {
-            cursor: default;
-            display: block;
-            height: 100%;
-          }
-    >
-      <button
-        className=
-            ms-Button
-            ms-Button--icon
-            ms-UpButton
-            {
-              -moz-osx-font-smoothing: grayscale;
-              -webkit-font-smoothing: antialiased;
-              background-color: transparent;
-              border-radius: 2px;
-              border: none;
-              box-sizing: border-box;
-              color: #605e5c;
-              cursor: default;
-              display: block;
-              font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
-              font-size: 14px;
-              font-weight: 400;
-              height: 50%;
-              outline: none;
-              padding-bottom: 0px;
-              padding-left: 0px;
-              padding-right: 0px;
-              padding-top: 0px;
-              position: relative;
-              text-align: center;
-              text-decoration: none;
-              user-select: none;
-              width: 23px;
-            }
-            &::-moz-focus-inner {
-              border: 0;
-            }
-            .ms-Fabric--isFocusVisible &:focus:after {
-              border: 1px solid transparent;
-              bottom: 2px;
-              content: "";
-              left: 2px;
-              outline: 1px solid #605e5c;
-              position: absolute;
-              right: 2px;
-              top: 2px;
-              z-index: 1;
-            }
-            @media screen and (-ms-high-contrast: active){.ms-Fabric--isFocusVisible &:focus:after {
-              bottom: -2px;
-              left: -2px;
-              outline-color: ButtonText;
-              right: -2px;
-              top: -2px;
-            }
-            &:active > * {
-              left: 0px;
-              position: relative;
-              top: 0px;
-            }
-            &.ms-DownButton {
-              border-radius: 0 0 2px 0;
-            }
-            &.ms-UpButton {
-              border-radius: 0 2px 0 0;
-            }
-            &:hover {
-              background-color: #f3f2f1;
-              color: #323130;
-            }
-            @media screen and (-ms-high-contrast: active){&:hover {
-              border-color: Highlight;
-              color: Highlight;
-            }
-            &:active {
-              background-color: #edebe9;
-              color: #323130;
-            }
-            @media screen and (-ms-high-contrast: active){&:active {
-              background-color: Highlight;
-              color: HighlightText;
-            }
-        data-is-focusable={false}
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        onKeyPress={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        tabIndex={-1}
-        type="button"
-      >
-        <span
-          className=
-              ms-Button-flexContainer
-              {
-                align-items: center;
-                display: flex;
-                flex-wrap: nowrap;
-                height: 100%;
-                justify-content: center;
-              }
-          data-automationid="splitbuttonprimary"
-        >
-          <i
-            aria-hidden={true}
-            className=
-                ms-Icon
-                ms-Button-icon
-                {
-                  display: inline-block;
-                }
-                {
-                  -moz-osx-font-smoothing: grayscale;
-                  -webkit-font-smoothing: antialiased;
-                  font-family: "FabricMDL2Icons-2";
-                  font-style: normal;
-                  font-weight: normal;
-                  speak: none;
-                }
-                {
-                  flex-shrink: 0;
-                  font-size: 8px;
-                  height: 16px;
-                  line-height: 16px;
-                  margin-bottom: 0px;
-                  margin-left: 0px;
-                  margin-right: 0px;
-                  margin-top: 0px;
-                  text-align: center;
-                }
-            data-icon-name="ChevronUpSmall"
-            role="presentation"
-            style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons-2\\"",
-              }
-            }
-          >
-            
-          </i>
-        </span>
-      </button>
-      <button
-        className=
-            ms-Button
-            ms-Button--icon
-            ms-DownButton
-            {
-              -moz-osx-font-smoothing: grayscale;
-              -webkit-font-smoothing: antialiased;
-              background-color: transparent;
-              border-radius: 2px;
-              border: none;
-              box-sizing: border-box;
-              color: #605e5c;
-              cursor: default;
-              display: block;
-              font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
-              font-size: 14px;
-              font-weight: 400;
-              height: 50%;
-              outline: none;
-              padding-bottom: 0px;
-              padding-left: 0px;
-              padding-right: 0px;
-              padding-top: 0px;
-              position: relative;
-              text-align: center;
-              text-decoration: none;
-              user-select: none;
-              width: 23px;
-            }
-            &::-moz-focus-inner {
-              border: 0;
-            }
-            .ms-Fabric--isFocusVisible &:focus:after {
-              border: 1px solid transparent;
-              bottom: 2px;
-              content: "";
-              left: 2px;
-              outline: 1px solid #605e5c;
-              position: absolute;
-              right: 2px;
-              top: 2px;
-              z-index: 1;
-            }
-            @media screen and (-ms-high-contrast: active){.ms-Fabric--isFocusVisible &:focus:after {
-              bottom: -2px;
-              left: -2px;
-              outline-color: ButtonText;
-              right: -2px;
-              top: -2px;
-            }
-            &:active > * {
-              left: 0px;
-              position: relative;
-              top: 0px;
-            }
-            &.ms-DownButton {
-              border-radius: 0 0 2px 0;
-            }
-            &.ms-UpButton {
-              border-radius: 0 2px 0 0;
-            }
-            &:hover {
-              background-color: #f3f2f1;
-              color: #323130;
-            }
-            @media screen and (-ms-high-contrast: active){&:hover {
-              border-color: Highlight;
-              color: Highlight;
-            }
-            &:active {
-              background-color: #edebe9;
-              color: #323130;
-            }
-            @media screen and (-ms-high-contrast: active){&:active {
-              background-color: Highlight;
-              color: HighlightText;
-            }
-        data-is-focusable={false}
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        onKeyPress={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        tabIndex={-1}
-        type="button"
-      >
-        <span
-          className=
-              ms-Button-flexContainer
-              {
-                align-items: center;
-                display: flex;
-                flex-wrap: nowrap;
-                height: 100%;
-                justify-content: center;
-              }
-          data-automationid="splitbuttonprimary"
-        >
-          <i
-            aria-hidden={true}
-            className=
-                ms-Icon
-                ms-Button-icon
-                {
-                  display: inline-block;
-                }
-                {
-                  -moz-osx-font-smoothing: grayscale;
-                  -webkit-font-smoothing: antialiased;
-                  font-family: "FabricMDL2Icons-3";
-                  font-style: normal;
-                  font-weight: normal;
-                  speak: none;
-                }
-                {
-                  flex-shrink: 0;
-                  font-size: 8px;
-                  height: 16px;
-                  line-height: 16px;
-                  margin-bottom: 0px;
-                  margin-left: 0px;
-                  margin-right: 0px;
-                  margin-top: 0px;
-                  text-align: center;
-                }
-            data-icon-name="ChevronDownSmall"
-            role="presentation"
-            style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons-3\\"",
-              }
-            }
-          >
-            
-          </i>
-        </span>
-      </button>
-    </span>
-  </div>
-</div>
-`;
+exports[`FocusTrapZone renders TextField.Styled.Example.tsx correctly: TextField.Styled.Example.tsx 1`] = `null`;
