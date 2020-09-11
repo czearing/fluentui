@@ -1,0 +1,128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonGrid renders correctly 1`] = `
+<div
+  className=
+      ms-FocusZone
+      &:focus {
+        outline: none;
+      }
+  data-focuszone-id="FocusZone1"
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onMouseDownCapture={[Function]}
+>
+  <table
+    className=
+
+        {
+          outline: none;
+          padding-bottom: 2px;
+          padding-left: 2px;
+          padding-right: 2px;
+          padding-top: 2px;
+        }
+    id="id__0"
+    role="grid"
+  >
+    <tbody>
+      <tr
+        role="row"
+      >
+        <td
+          className=
+
+              {
+                padding-bottom: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+              }
+          role="presentation"
+        />
+        <td
+          className=
+
+              {
+                padding-bottom: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+              }
+          role="presentation"
+        />
+        <td
+          className=
+
+              {
+                padding-bottom: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+              }
+          role="presentation"
+        />
+        <td
+          className=
+
+              {
+                padding-bottom: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+              }
+          role="presentation"
+        />
+      </tr>
+      <tr
+        role="row"
+      >
+        <td
+          className=
+
+              {
+                padding-bottom: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+              }
+          role="presentation"
+        />
+        <td
+          className=
+
+              {
+                padding-bottom: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+              }
+          role="presentation"
+        />
+        <td
+          className=
+
+              {
+                padding-bottom: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+              }
+          role="presentation"
+        />
+        <td
+          className=
+
+              {
+                padding-bottom: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+              }
+          role="presentation"
+        />
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

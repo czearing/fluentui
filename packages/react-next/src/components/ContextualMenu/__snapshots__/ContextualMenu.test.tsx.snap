@@ -494,3 +494,5 @@ exports[`ContextualMenu ContextualMenu snapshot ContextualMenu should be present
   </span>
 </button>
 `;
+
+exports[`ContextualMenu renders correctly 1`] = `null`;

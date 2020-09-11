@@ -2,6 +2,7 @@ import * as fs from 'fs';
 
 import { IsConformantOptions } from './types';
 import { defaultTests } from './defaultTests';
+import { defaultSnapshotTests } from './defaultSnapshotTests';
 import { merge } from './utils/merge';
 import { getComponentDoc } from './utils/getComponentDoc';
 
@@ -27,6 +28,13 @@ export function isConformant(...testInfo: Partial<IsConformantOptions>[]) {
         defaultTests[test](componentInfo, mergedOptions);
       }
     }
+
+    for (const test of Object.keys(defaultSnapshotTests)) {
+      if (!disabledTests.includes(test)) {
+        defaultSnapshotTests[test](componentInfo, mergedOptions);
+      }
+    }
+
     if (extraTests) {
       for (const test of Object.keys(extraTests)) {
         extraTests[test](componentInfo, mergedOptions);

@@ -36,6 +36,16 @@ export interface IsConformantOptions<TProps = {}> {
    */
   disabledTests?: Tests[];
   /**
+   * If there are snapshot tests that aren't supposed to run on a component, this allows to opt out of any test.
+   */
+  excludedExampleSnapshotTest?: string[];
+
+  /**
+   * If there are snapshot tests that aren't supposed to run on a component, this allows to opt out of any test.
+   */
+  snapshots?: ISnapshots[];
+
+  /**
    * Optional flag that means the component is not exported at top level.
    * @defaultvalue false
    */
@@ -75,4 +85,12 @@ export type ConformanceTest<TProps = {}> = (componentInfo: ComponentDoc, testInf
 
 export interface TestObject<TProps = {}> {
   [key: string]: ConformanceTest<TProps>;
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export interface ISnapshots {
+  componentName?: string;
+  description?: string;
+  name?: string;
+  render: JSX.Element;
 }

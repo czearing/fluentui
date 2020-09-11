@@ -1,5 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ResizeGroup renders correctly 1`] = `
+<div>
+  <div
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+  >
+    <div
+      data-automation-id="visibleContent"
+      style={
+        Object {
+          "position": "fixed",
+          "visibility": "hidden",
+        }
+      }
+    />
+  </div>
+</div>
+`;
+
 exports[`ResizeGroup renders the ResizeGroup correctly 1`] = `
 <div
   className="TestClassName"

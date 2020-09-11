@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FocusTrapZone renders correctly 1`] = `
+<div
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onFocusCapture={[Function]}
+>
+  <div
+    aria-hidden={true}
+    data-is-visible={true}
+    onFocus={[Function]}
+    style={
+      Object {
+        "pointerEvents": "none",
+        "position": "fixed",
+      }
+    }
+    tabIndex={0}
+  />
+  <div
+    aria-hidden={true}
+    data-is-visible={true}
+    onFocus={[Function]}
+    style={
+      Object {
+        "pointerEvents": "none",
+        "position": "fixed",
+      }
+    }
+    tabIndex={0}
+  />
+</div>
+`;

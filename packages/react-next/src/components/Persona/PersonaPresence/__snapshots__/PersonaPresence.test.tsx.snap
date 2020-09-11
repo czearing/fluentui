@@ -498,6 +498,48 @@ exports[`PersonaPresence renders busy 1`] = `
 </div>
 `;
 
+exports[`PersonaPresence renders correctly 1`] = `
+<div
+  className=
+      ms-Persona-presence
+      {
+        -ms-high-contrast-adjust: none;
+        background-clip: content-box;
+        border-radius: 50%;
+        border: 2px solid #ffffff;
+        bottom: -2px;
+        box-sizing: content-box;
+        height: 12px;
+        position: absolute;
+        right: -2px;
+        text-align: center;
+        top: auto;
+        width: 12px;
+      }
+      @media screen and (-ms-high-contrast: active){& {
+        background-color: WindowText;
+        border-color: Window;
+      }
+  role="presentation"
+>
+  <i
+    aria-hidden={true}
+    className=
+        ms-Persona-presenceIcon
+        {
+          color: #ffffff;
+          display: inline-block;
+          font-size: 6px;
+          line-height: 12px;
+          vertical-align: top;
+        }
+        @media screen and (-ms-high-contrast: active){& {
+          color: Window;
+        }
+  />
+</div>
+`;
+
 exports[`PersonaPresence renders do not disturb + out of office 1`] = `
 <div
   className=

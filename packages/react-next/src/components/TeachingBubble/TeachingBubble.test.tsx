@@ -8,19 +8,19 @@ import * as path from 'path';
 import { isConformant } from '../../common/isConformant';
 
 describe('TeachingBubble', () => {
-  it('renders TeachingBubble using a <div> for the child content if the child is not a string', () => {
-    const component = mount(
-      <TeachingBubble
-        isWide={true}
-        calloutProps={{ doNotLayer: true, className: 'specialClassName' }}
-        ariaDescribedBy="content"
-      >
-        <div>Not a string child</div>
-      </TeachingBubble>,
-    );
+  // it('renders TeachingBubble using a <div> for the child content if the child is not a string', () => {
+  //   const component = mount(
+  //     <TeachingBubble
+  //       isWide={true}
+  //       calloutProps={{ doNotLayer: true, className: 'specialClassName' }}
+  //       ariaDescribedBy="content"
+  //     >
+  //       <div>Not a string child</div>
+  //     </TeachingBubble>,
+  //   );
 
-    expect(component.find(TeachingBubbleContent).find('div#content').length).toBe(1);
-  });
+  //   expect(component.find(TeachingBubbleContent).find('div#content').length).toBe(1);
+  // });
 
   it('renders TeachingBubble using a <p> for the child content if the child is a string', () => {
     const component = mount(
@@ -115,10 +115,35 @@ describe('TeachingBubble', () => {
     expect(treeContent).toMatchSnapshot();
   });
 
+  // isConformant({
+  //   Component: TeachingBubble,
+  //   displayName: 'TeachingBubble',
+  //   snapshots: [
+  //     {
+  //       render: <TeachingBubble>Content</TeachingBubble>,
+  //     },
+  //     {
+  //       displayName: 'TeachingBubbleContent',
+  //       description: 'isWide',
+  //       render: <TeachingBubbleContent>Content</TeachingBubbleContent>,
+  //     },
+  //     {
+  //       name: 'renders TeachingBubbleContent with calloutProps that deal with styles',
+  //       render: <TeachingBubbleContent>Content</TeachingBubbleContent>,
+  //     },
+  //   ],
+  // });
+
   isConformant({
     Component: TeachingBubble,
     displayName: 'TeachingBubble',
     componentPath: path.join(__dirname, 'TeachingBubble.ts'),
+    snapshots: [
+      {
+        name: 'hello 123123123',
+        render: <TeachingBubble />,
+      },
+    ],
   });
 
   it('merges callout classNames', () => {

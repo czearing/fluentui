@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`OverflowSet renders correctly 1`] = `
+<div
+  className=
+      ms-OverflowSet
+      {
+        display: flex;
+        flex-wrap: nowrap;
+        position: relative;
+      }
+  role="group"
+/>
+`;
+
 exports[`OverflowSet snapshot tests basicSnapshot 1`] = `
 <div
   className=

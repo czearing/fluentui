@@ -510,3 +510,5 @@ exports[`Modal renders Modeless Modal correctly 1`] = `
   </div>
 </span>
 `;
+
+exports[`Modal renders correctly 1`] = `null`;
