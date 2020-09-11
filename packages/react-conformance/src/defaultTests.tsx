@@ -66,6 +66,38 @@ export const defaultTests: TestObject = {
     });
   },
 
+  'component-contains-classname': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
+    it(`has a className prop`, () => {
+      const { Component, wrapperComponent, helperComponents = [], requiredProps, customMount = mount } = testInfo;
+      const mergedProps: Partial<{}> = {
+        ...requiredProps,
+        className: 'testComponentClassName',
+      };
+
+      const wrapper = customMount(<Component {...mergedProps} />);
+      const component = getComponent(wrapper, helperComponents, wrapperComponent);
+
+      expect(component.find('[testComponentClassName]'));
+    });
+  },
+
+  'has-top-level-version-import': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
+    if (!testInfo.isInternal) {
+      const { componentPath } = testInfo;
+      const rootPath = componentPath.replace(/[\\/]src[\\/].*/, '');
+      const componentName = path.basename(componentPath).split('.')[0];
+      const packageName = path.basename(rootPath) || 'office-ui-fabric-react';
+
+      it(`${componentName} imports the ${packageName} version file`, () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).__packages__ = null;
+        require(componentPath);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        expect((window as any).__packages__[packageName]).not.toBeUndefined();
+      });
+    }
+  },
+
   /** Constructor/component name matches filename */
   'name-matches-filename': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
     it(`Component/constructor name matches filename`, () => {
