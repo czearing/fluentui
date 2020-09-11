@@ -66,20 +66,20 @@ export const defaultTests: TestObject = {
     });
   },
 
-  'component-contains-classname': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
-    it(`has a className prop`, () => {
-      const { Component, wrapperComponent, helperComponents = [], requiredProps, customMount = mount } = testInfo;
-      const mergedProps: Partial<{}> = {
-        ...requiredProps,
-        className: 'testComponentClassName',
-      };
+  // 'component-contains-classname': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
+  //   it(`has a className prop`, () => {
+  //     const { Component, wrapperComponent, helperComponents = [], requiredProps, customMount = mount } = testInfo;
+  //     const mergedProps: Partial<{}> = {
+  //       ...requiredProps,
+  //       className: 'testComponentClassName',
+  //     };
 
-      const wrapper = customMount(<Component {...mergedProps} />);
-      const component = getComponent(wrapper, helperComponents, wrapperComponent);
+  //     const wrapper = customMount(<Component {...mergedProps} />);
+  //     const component = getComponent(wrapper, helperComponents, wrapperComponent);
 
-      expect(component.find('[testComponentClassName]'));
-    });
-  },
+  //     expect(component.find('[testComponentClassName]'));
+  //   });
+  // },
 
   // 'has-top-level-version-import': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
   //   if (!testInfo.isInternal) {
