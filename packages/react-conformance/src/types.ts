@@ -91,10 +91,16 @@ export interface TestObject<TProps = {}> {
 export interface ISnapshots {
   /* Optional string that will be auto-assigned as the name of the component in the snapshot test description. */
   componentName?: string;
+
   /* Optional string that will be auto-assigned as the description of the snapshot test. */
   description?: string;
+
   /* Optional string that allows for a manual created description of the snapshot test. */
   name?: string;
+
+  /* Optional boolean to have snapshot test render with createPortal. */
+  createPortal?: boolean;
+
   /* Required snapshot scenario to be rendered. */
   render: JSX.Element;
 }

@@ -6,13 +6,13 @@ import { isConformant } from '../../../common/isConformant';
 import { SelectedPeopleList, IExtendedPersonaProps } from './SelectedPeopleList';
 
 describe('SelectedPeopleList', () => {
-  describe('Element keying behavior', () => {
-    isConformant({
-      Component: SelectedPeopleList,
-      displayName: 'SelectedPeopleList',
-      disabledTests: [`has-top-level-file`],
-    });
+  isConformant({
+    Component: SelectedPeopleList,
+    displayName: 'SelectedPeopleList',
+    disabledTests: [`has-top-level-file`],
+  });
 
+  describe('Element keying behavior', () => {
     it('renders keyed personas when there is no context menu', () => {
       const r = renderer.create(<SelectedPeopleList />);
       expect(r.root.instance).toBeInstanceOf(SelectedPeopleList);

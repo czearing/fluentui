@@ -7,34 +7,6 @@ import * as path from 'path';
 import { isConformant } from '../../common/isConformant';
 
 describe('TeachingBubble', () => {
-  it('renders TeachingBubble using a <div> for the child content if the child is not a string', () => {
-    const component = mount(
-      <TeachingBubble
-        isWide={true}
-        calloutProps={{ doNotLayer: true, className: 'specialClassName' }}
-        ariaDescribedBy="content"
-      >
-        <div>Not a string child</div>
-      </TeachingBubble>,
-    );
-
-    expect(component.find(TeachingBubbleContent).find('div#content').length).toBe(1);
-  });
-
-  it('renders TeachingBubble using a <p> for the child content if the child is a string', () => {
-    const component = mount(
-      <TeachingBubble
-        isWide={true}
-        calloutProps={{ doNotLayer: true, className: 'specialClassName' }}
-        ariaDescribedBy="content"
-      >
-        Not a string child
-      </TeachingBubble>,
-    );
-
-    expect(component.find(TeachingBubbleContent).find('p#content').length).toBe(1);
-  });
-
   isConformant({
     Component: TeachingBubble,
     displayName: 'TeachingBubble',
@@ -83,7 +55,6 @@ describe('TeachingBubble', () => {
           </TeachingBubbleContent>
         ),
       },
-
       {
         componentName: 'TeachingBubbleContent',
         description: 'hasSmallHeadline',
@@ -106,6 +77,34 @@ describe('TeachingBubble', () => {
         ),
       },
     ],
+  });
+
+  it('renders TeachingBubble using a <div> for the child content if the child is not a string', () => {
+    const component = mount(
+      <TeachingBubble
+        isWide={true}
+        calloutProps={{ doNotLayer: true, className: 'specialClassName' }}
+        ariaDescribedBy="content"
+      >
+        <div>Not a string child</div>
+      </TeachingBubble>,
+    );
+
+    expect(component.find(TeachingBubbleContent).find('div#content').length).toBe(1);
+  });
+
+  it('renders TeachingBubble using a <p> for the child content if the child is a string', () => {
+    const component = mount(
+      <TeachingBubble
+        isWide={true}
+        calloutProps={{ doNotLayer: true, className: 'specialClassName' }}
+        ariaDescribedBy="content"
+      >
+        Not a string child
+      </TeachingBubble>,
+    );
+
+    expect(component.find(TeachingBubbleContent).find('p#content').length).toBe(1);
   });
 
   it('merges callout classNames', () => {

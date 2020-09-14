@@ -11,6 +11,22 @@ describe('Modal', () => {
     Component: Modal,
     displayName: 'Modal',
     componentPath: path.join(__dirname, 'Modal.ts'),
+    snapshots: [
+      {
+        name: 'test',
+        createPortal: true,
+        render: (
+          <Modal
+            isOpen={true}
+            isModeless={true}
+            className={'test-className'}
+            containerClassName={'test-containerClassName'}
+          >
+            Test Content
+          </Modal>
+        ),
+      },
+    ],
   });
   it('renders Modal correctly', () => {
     // Mock createPortal to capture its component hierarchy in snapshot output.
@@ -24,6 +40,7 @@ describe('Modal', () => {
         Test Content
       </Modal>,
     );
+    console.log(component.toJSON());
     expect(component.toJSON()).toMatchSnapshot();
 
     ReactDOM.createPortal.mockClear();
