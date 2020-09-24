@@ -3,7 +3,7 @@ import { ComponentDoc } from 'react-docgen-typescript';
 import { getComponent } from './utils/getComponent';
 import { mount } from 'enzyme';
 import parseDocblock from './utils/parseDocblock';
-
+import chalk from 'chalk';
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as path from 'path';
@@ -98,6 +98,33 @@ export const defaultTests: TestObject = {
         const topLevelFile = require(path.join(rootPath, 'src', displayName));
 
         expect(topLevelFile[displayName]).toBe(Component);
+      });
+    }
+  },
+
+  /** Ensures component has top level version import in package/src/componentName */
+  'has-top-level-version-import': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
+    if (!testInfo.isInternal) {
+      const { componentPath, packageVersion, displayName } = testInfo;
+
+      it(`${displayName} imports the ${packageVersion} version file`, () => {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (window as any).__packages__ = null;
+          require(componentPath);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          expect((window as any).__packages__[packageVersion]).not.toBeUndefined();
+        } catch (e) {
+          console.error(
+            chalk.yellow(
+              `It appears that ` +
+                chalk.red.underline.bold(displayName) +
+                ` seems to not have a correct version import. Here's a list of the components imported
+                  top level versions: "` +
+                chalk.green.underline.bold((window as any).__packages__),
+            ),
+          );
+        }
       });
     }
   },
