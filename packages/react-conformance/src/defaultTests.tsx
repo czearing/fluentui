@@ -106,11 +106,13 @@ export const defaultTests: TestObject = {
   'has-top-level-version-import': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
     if (!testInfo.isInternal) {
       it(`has corresponding top-level version import `, () => {
+        const { componentPath, packageVersion } = testInfo;
         try {
-          const { packageVersion, componentPath } = testInfo;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (window as any).__packages__ = null;
+          // (window as any).__packages__ = null;
+          delete require.cache[componentPath];
           require(componentPath);
+
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           expect((window as any).__packages__[packageVersion]).not.toBeUndefined();
         } catch (e) {

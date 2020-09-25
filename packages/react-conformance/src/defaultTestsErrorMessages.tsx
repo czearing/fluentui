@@ -21,9 +21,9 @@ export const defaultTestErrorMessages = {
         chalk.yellow(
           defaultErrorMessage(
             displayName,
-            'version import for' +
+            'version import for ' +
               version +
-              ` in` +
+              ` in ` +
               chalk.green.italic(path.join(componentPath.replace(/[\\/]src[\\/].*/, ''), 'src', displayName + '.ts')),
           ) +
             resolveErrorMessages([
