@@ -4,7 +4,7 @@ export function isConformant(testInfo: Omit<IsConformantOptions, 'componentPath'
   const defaultOptions = {
     disabledTests: ['has-docblock', 'kebab-aria-attributes'],
     componentPath: module!.parent!.filename.replace('.test', ''),
-    packageVersion: '@fluentui/react-tabs',
+    packageVersion: '@fluentui/react-tabs123',
   };
 
   baseIsConformant(defaultOptions, testInfo);

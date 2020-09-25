@@ -106,24 +106,46 @@ export const defaultTests: TestObject = {
   'has-top-level-version-import': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
     if (!testInfo.isInternal) {
       const { componentPath, packageVersion, displayName } = testInfo;
+      const rootPath = componentPath.replace(/[\\/]src[\\/].*/, '');
 
-      it(`${displayName} imports the ${packageVersion} version file`, () => {
+      it(`has corresponding top-level version import `, () => {
         try {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (window as any).__packages__ = null;
-          require(componentPath);
+          // (window as any).__packages__ = null;
+          let packages = ((window as any).__packages__ = require(rootPath));
+
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           expect((window as any).__packages__[packageVersion]).not.toBeUndefined();
         } catch (e) {
-          console.error(
-            chalk.yellow(
-              `It appears that ` +
-                chalk.red.underline.bold(displayName) +
-                ` seems to not have a correct version import. Here's a list of the components imported
-                  top level versions: "` +
-                chalk.green.underline.bold((window as any).__packages__),
-            ),
-          );
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const packages = (window as any).__packages__;
+          if (packages === null) {
+            console.error(
+              chalk.yellow(
+                `It appears that ` +
+                  chalk.red.underline.bold(displayName) +
+                  ` doesn't have a version import for ` +
+                  chalk.red(packageVersion) +
+                  ` in ` +
+                  chalk.green.underline.italic(path.join(rootPath, 'src', displayName + '.ts')) +
+                  `.`,
+              ),
+            );
+          } else {
+            console.warn(
+              chalk.yellow(
+                `It appears that ` +
+                  chalk.red.underline.bold(displayName) +
+                  ` doesn't have a correct version import for ` +
+                  chalk.red.underline.bold(packageVersion) +
+                  (` Here's a list of it's` +
+                    `
+                    top level version files: "`) +
+                  chalk.green.italic(JSON.stringify(packages, undefined, 1) + `"`),
+              ),
+            );
+            throw Error;
+          }
         }
       });
     }
