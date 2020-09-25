@@ -1,3 +1,4 @@
+import '../version';
 import * as React from 'react';
 import { styled } from '@uifabric/utilities';
 import { IPivotProps, IPivotStyleProps, IPivotStyles } from './Pivot.types';

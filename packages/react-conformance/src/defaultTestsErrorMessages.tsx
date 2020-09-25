@@ -19,14 +19,15 @@ export const defaultTestErrorMessages = {
     if (packages === null) {
       console.log(
         chalk.yellow(
-          defaultErrorMessage(displayName, 'version import for ') +
-            version +
-            ` in ` +
-            chalk.green.underline.italic(
-              path.join(componentPath.replace(/[\\/]src[\\/].*/, ''), 'src', displayName + '.ts'),
-            ) +
+          defaultErrorMessage(
+            displayName,
+            'version import for' +
+              version +
+              ` in` +
+              chalk.green.italic(path.join(componentPath.replace(/[\\/]src[\\/].*/, ''), 'src', displayName + '.ts')),
+          ) +
             resolveErrorMessages([
-              'Make sure that your index.ts file contains an ' + chalk.red.bold(' import ./version'),
+              'Make sure that your index.ts file contains an ' + chalk.red.bold('{ import ./version }') + '.',
               'Make sure that your version.ts file is configured correctly.',
             ]),
         ),
@@ -36,12 +37,15 @@ export const defaultTestErrorMessages = {
     } else {
       console.log(
         chalk.yellow(
-          defaultErrorMessage(displayName, 'correct version import package name for ') +
-            version +
-            paragraph() +
-            `Here's a list of it's top level version files:` +
-            paragraph() +
-            chalk.green.italic(formatObject(packages)) +
+          defaultErrorMessage(
+            displayName,
+            'correct version import package name for' +
+              version +
+              paragraph() +
+              `Here's a list of it's top level version files:` +
+              paragraph() +
+              chalk.green.italic(formatObject(packages)),
+          ) +
             resolveErrorMessages([
               'Make sure that the packageVersion ' + version + ' is named correctly in isConformant.',
               'Make sure that your version.ts file calls setVersion with the correct package name.',
@@ -70,7 +74,7 @@ function resolveErrorMessages(resolveMessages: string[]) {
  *  @param errorMessage Why the test is failing.
  */
 function defaultErrorMessage(displayName: string, errorMessage: string) {
-  return `It appears that ` + chalk.red.underline.bold(displayName) + ` doesn't have a ` + errorMessage;
+  return `It appears that ` + chalk.red.underline.bold(displayName) + ` doesn't have a ` + errorMessage + ' ';
 }
 
 /** Generates a paragraph.
