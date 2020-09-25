@@ -105,18 +105,14 @@ export const defaultTests: TestObject = {
   /** Ensures component has top level version import in package/src/componentName */
   'has-top-level-version-import': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
     if (!testInfo.isInternal) {
-      const { componentPath, packageVersion, displayName } = testInfo;
-      const rootPath = componentPath.replace(/[\\/]src[\\/].*/, '');
-
       it(`has corresponding top-level version import `, () => {
         try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          // (window as any).__packages__ = null;
-
+          const { packageVersion } = testInfo;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           expect((window as any).__packages__[packageVersion]).not.toBeUndefined();
         } catch (e) {
           defaultTestErrorMessages['has-top-level-version-import'](componentInfo, testInfo);
+          throw Error;
         }
       });
     }
