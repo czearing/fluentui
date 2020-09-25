@@ -112,7 +112,6 @@ export const defaultTests: TestObject = {
         try {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           // (window as any).__packages__ = null;
-          let packages = ((window as any).__packages__ = require(rootPath));
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           expect((window as any).__packages__[packageVersion]).not.toBeUndefined();
@@ -132,16 +131,30 @@ export const defaultTests: TestObject = {
               ),
             );
           } else {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const formatVersions = (obj: any) => {
+              const results = [];
+
+              for (const libName of Object.keys(obj)) {
+                results.push(`${libName}: ${obj[libName].join(', ')}`);
+              }
+
+              return results.join('\n');
+            };
+
             console.warn(
               chalk.yellow(
                 `It appears that ` +
                   chalk.red.underline.bold(displayName) +
                   ` doesn't have a correct version import for ` +
                   chalk.red.underline.bold(packageVersion) +
-                  (` Here's a list of it's` +
-                    `
-                    top level version files: "`) +
-                  chalk.green.italic(JSON.stringify(packages, undefined, 1) + `"`),
+                  `.` +
+                  `
+                    Here's a list of it's top level version files:"` +
+                  (`
+` +
+                    chalk.green.italic(formatVersions(packages))) +
+                  `"`,
               ),
             );
             throw Error;
