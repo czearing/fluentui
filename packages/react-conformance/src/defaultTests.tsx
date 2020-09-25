@@ -112,7 +112,7 @@ export const defaultTests: TestObject = {
           expect((window as any).__packages__[packageVersion]).not.toBeUndefined();
         } catch (e) {
           defaultTestErrorMessages['has-top-level-version-import'](componentInfo, testInfo);
-          throw Error;
+          throw new Error();
         }
       });
     }
