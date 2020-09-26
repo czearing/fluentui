@@ -120,4 +120,4 @@ export const MessageBarBase: React.FunctionComponent<IMessageBarProps> = React.f
     </div>
   );
 });
-MessageBarBase.displayName = COMPONENT_NAME;
+// MessageBarBase.displayName = COMPONENT_NAME;

@@ -56,13 +56,18 @@ export const defaultTests: TestObject = {
     const { Component } = testInfo;
 
     it(`has a displayName or constructor name`, () => {
-      const constructorName = Component.prototype?.constructor.name;
-      const displayName = Component.displayName || constructorName;
+      try {
+        const constructorName = Component.prototype?.constructor.name;
+        const displayName = Component.displayName || constructorName;
 
-      // This check is needed in case the Component is wrapped with the v7 styled() helper, which returns a wrapper
-      // component with constructor name Wrapped, and adds a Styled prefix to the displayName. Components passed to
-      // styled() typically have Base in their name, so remove that too.
-      expect(displayName).toMatch(new RegExp(`^(Customized|Styled)?${testInfo.displayName}(Base)?$`));
+        // This check is needed in case the Component is wrapped with the v7 styled() helper, which returns a wrapper
+        // component with constructor name Wrapped, and adds a Styled prefix to the displayName. Components passed to
+        // styled() typically have Base in their name, so remove that too.
+        expect(displayName).toMatch(new RegExp(`^(Customized|Styled)?${testInfo.displayName}(Base)?$`));
+      } catch (e) {
+        defaultTestErrorMessages['component-has-displayname'](componentInfo, testInfo);
+        throw new Error();
+      }
     });
   },
 
@@ -108,8 +113,6 @@ export const defaultTests: TestObject = {
       it(`has corresponding top-level version import `, () => {
         const { componentPath, packageVersion } = testInfo;
         try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          // (window as any).__packages__ = null;
           delete require.cache[componentPath];
           require(componentPath);
 
