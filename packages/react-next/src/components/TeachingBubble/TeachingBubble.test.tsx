@@ -119,6 +119,7 @@ describe('TeachingBubble', () => {
     Component: TeachingBubble,
     displayName: 'TeachingBubble',
     componentPath: path.join(__dirname, 'TeachingBubble.ts'),
+    disabledTests: ['component-handles-ref'],
   });
 
   it('merges callout classNames', () => {

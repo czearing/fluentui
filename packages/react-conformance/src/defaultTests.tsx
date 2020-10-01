@@ -48,6 +48,38 @@ export const defaultTests: TestObject = {
     });
   },
 
+  /** Component handles ref */
+  'component-handles-ref': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
+    it(`handles ref`, () => {
+      const { customMount = mount, Component, requiredProps } = testInfo;
+      const rootRef = React.createRef<HTMLDivElement>();
+      const mergedProps: Partial<{}> = {
+        ...requiredProps,
+        ref: rootRef,
+      };
+      customMount(<Component {...mergedProps} />);
+
+      expect(rootRef.current).toBeDefined;
+    });
+  },
+
+  /** Component has ref applied to the root component DOM node */
+  'component-has-root-ref': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
+    it(`ref exists on root element`, () => {
+      const { customMount = mount, Component, requiredProps, helperComponents = [], wrapperComponent } = testInfo;
+      const rootRef = React.createRef<HTMLDivElement>();
+      const mergedProps: Partial<{}> = {
+        ...requiredProps,
+        ref: rootRef,
+      };
+
+      const el = customMount(<Component {...mergedProps} />);
+      const component = getComponent(el, helperComponents, wrapperComponent);
+
+      expect(rootRef.current).toBe(component.getDOMNode());
+    });
+  },
+
   /**
    * If functional component: component has a displayName
    * Else: component's constructor is a named function and matches displayName
@@ -164,6 +196,7 @@ export const defaultTests: TestObject = {
           helperComponents = [],
           asPropHandlesRef,
         } = testInfo;
+
         const MyComponent = asPropHandlesRef ? React.forwardRef((props, ref) => null) : () => null;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

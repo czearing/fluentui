@@ -27,6 +27,7 @@ describe('Image', () => {
   isConformant({
     Component: Image,
     displayName: 'Image',
+    disabledTests: ['component-has-root-ref'],
   });
 
   it('renders an image', done => {

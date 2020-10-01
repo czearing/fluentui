@@ -32,6 +32,7 @@ describe('SpinButton', () => {
   isConformant({
     Component: SpinButton,
     displayName: 'SpinButton',
+    disabledTests: ['component-handles-ref', 'component-has-root-ref'],
   });
 
   it('renders correctly', () => {
