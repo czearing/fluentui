@@ -81,6 +81,7 @@ describe('FocusZone', () => {
     disabledTests: [
       // Their is no existing top level FocusZone.ts file.
       'has-top-level-file',
+      'component-has-root-ref',
     ],
     asPropHandlesRef: true,
   });

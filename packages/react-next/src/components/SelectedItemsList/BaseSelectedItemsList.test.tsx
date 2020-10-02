@@ -32,7 +32,7 @@ describe('SelectedItemsList', () => {
     isConformant({
       Component: BaseSelectedItemsList,
       displayName: 'BaseSelectedItemsList',
-      disabledTests: ['component-has-root-ref', 'component-has-root-ref'`has-top-level-file`],
+      disabledTests: ['component-has-root-ref', 'component-has-root-ref', 'has-top-level-file'],
     });
 
     it('can remove items', () => {

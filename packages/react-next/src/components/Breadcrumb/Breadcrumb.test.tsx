@@ -93,6 +93,7 @@ describe('Breadcrumb', () => {
   isConformant({
     Component: Breadcrumb,
     displayName: 'Breadcrumb',
+    disabledTests: ['component-has-root-ref'],
   });
 
   it('renders items with expected element type', () => {

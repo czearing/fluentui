@@ -10,7 +10,7 @@ describe('SelectedPeopleList', () => {
     isConformant({
       Component: SelectedPeopleList,
       displayName: 'SelectedPeopleList',
-      disabledTests: [`has-top-level-file`, 'component-handles-ref'],
+      disabledTests: [`has-top-level-file`, 'component-handles-ref', 'component-has-root-ref'],
     });
 
     it('renders keyed personas when there is no context menu', () => {

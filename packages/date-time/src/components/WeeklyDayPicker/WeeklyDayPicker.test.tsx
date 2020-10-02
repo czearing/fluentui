@@ -40,5 +40,6 @@ describe('WeeklyDayPicker', () => {
   isConformant({
     Component: WeeklyDayPicker,
     displayName: 'WeeklyDayPicker',
+    disabledTests: ['component-has-root-ref'],
   });
 });
