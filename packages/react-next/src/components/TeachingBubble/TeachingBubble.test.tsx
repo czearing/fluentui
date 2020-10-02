@@ -119,7 +119,7 @@ describe('TeachingBubble', () => {
     Component: TeachingBubble,
     displayName: 'TeachingBubble',
     componentPath: path.join(__dirname, 'TeachingBubble.ts'),
-    disabledTests: ['component-has-root-ref'],
+    passesUnhandledPropsTo: TeachingBubbleContent,
   });
 
   it('merges callout classNames', () => {

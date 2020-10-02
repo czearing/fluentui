@@ -50,7 +50,7 @@ describe('Callout', () => {
   isConformant({
     Component: Callout,
     displayName: 'Callout',
-    disabledTests: ['component-has-root-ref'],
+    passesUnhandledPropsTo: CalloutContent,
   });
 
   it('target id strings does not throw exception', () => {

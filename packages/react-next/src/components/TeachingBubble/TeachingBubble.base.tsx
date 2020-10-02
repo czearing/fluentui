@@ -79,9 +79,7 @@ export const TeachingBubbleBase: React.FunctionComponent<ITeachingBubbleProps> =
       styles={calloutStyles}
       hideOverflow
     >
-      <div ref={mergedRootRef}>
-        <TeachingBubbleContent {...props} />
-      </div>
+      <TeachingBubbleContent ref={mergedRootRef} {...props} />
     </Callout>
   );
 });

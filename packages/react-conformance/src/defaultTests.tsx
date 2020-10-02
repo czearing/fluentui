@@ -51,12 +51,13 @@ export const defaultTests: TestObject = {
   /** Component handles ref */
   'component-handles-ref': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
     it(`handles ref`, () => {
-      const { customMount = mount, Component, requiredProps } = testInfo;
+      const { customMount = mount, Component, requiredProps, elementRefName = 'ref' } = testInfo;
       const rootRef = React.createRef<HTMLDivElement>();
       const mergedProps: Partial<{}> = {
         ...requiredProps,
-        ref: rootRef,
+        [elementRefName]: rootRef,
       };
+
       customMount(<Component {...mergedProps} />);
 
       expect(rootRef.current).toBeDefined;
@@ -66,14 +67,25 @@ export const defaultTests: TestObject = {
   /** Component has ref applied to the root component DOM node */
   'component-has-root-ref': (componentInfo: ComponentDoc, testInfo: IsConformantOptions) => {
     it(`ref exists on root element`, () => {
-      const { customMount = mount, Component, requiredProps, helperComponents = [], wrapperComponent } = testInfo;
+      const {
+        customMount = mount,
+        Component,
+        requiredProps,
+        helperComponents = [],
+        wrapperComponent,
+        elementRefName = 'ref',
+        passesUnhandledPropsTo,
+      } = testInfo;
+
       const rootRef = React.createRef<HTMLDivElement>();
       const mergedProps: Partial<{}> = {
         ...requiredProps,
-        ref: rootRef,
+        [elementRefName]: rootRef,
       };
 
-      const el = customMount(<Component {...mergedProps} />);
+      const el = passesUnhandledPropsTo
+        ? customMount(<Component {...mergedProps} />).find(passesUnhandledPropsTo)
+        : customMount(<Component {...mergedProps} />);
       const component = getComponent(el, helperComponents, wrapperComponent);
 
       expect(rootRef.current).toBe(component.getDOMNode());
