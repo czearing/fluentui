@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ITheme, IStyle } from '@fluentui/react/lib/Styling';
 import { IStyleFunctionOrObject } from '@fluentui/react/lib/Utilities';
 import { IHoverCardStyleProps, IHoverCardStyles } from '@fluentui/react/lib/HoverCard';
-import { IOverflowSetProps } from '@fluentui/react/lib/OverflowSet';
+import { IOverflowSetProps } from '@fluentui/react-next/lib/OverflowSet';
 import { IFocusZoneProps } from '@fluentui/react-focus';
 
 export interface ILegendOverflowData {
@@ -22,7 +22,7 @@ export interface ILegendsStyles {
   root: IStyle;
 
   /**
-   * Style set for Legend. This is a wrapping class for text of legend and the rectange box that represents a legend
+   * Style set for Legend. This is a wrapping class for text of legend and the rectangle box that represents a legend
    */
   legend: IStyle;
 
@@ -47,7 +47,7 @@ export interface ILegendsStyles {
   hoverChange: IStyle;
 
   /**
-   * Style for the text that indicates the no.of legends that are in hovercard due to lack of space
+   * Style for the text that indicates the no.of legends that are in HoverCard due to lack of space
    */
   overflowIndicationTextStyle: IStyle;
 
@@ -114,7 +114,7 @@ export interface ILegendsProps {
   legends: ILegend[];
 
   /**
-   * Additional CSS class(es) to apply to the legneds component.
+   * Additional CSS class(es) to apply to the legends component.
    */
   className?: string;
 
@@ -172,8 +172,8 @@ export interface ILegendsProps {
 
   /**
    * Defines the function that is executed upon hiding of hover card
-   * make sure to send prop  when  the prop  is canSelectMultipleLegends is set to ture
-   * and empty the selecetd state legends
+   * make sure to send prop  when  the prop  is canSelectMultipleLegends is set to true
+   * and empty the selected state legends
    */
   onLegendHoverCardLeave?: VoidFunction;
 }
