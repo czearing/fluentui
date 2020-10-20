@@ -2,6 +2,7 @@ import * as React from 'react';
 import { css } from '../../Utilities';
 import { ILayerHostProps } from './LayerHost.types';
 import { notifyHostChanged } from './Layer.notification';
+import { useUnmount } from '@uifabric/react-hooks';
 
 export const LayerHost: React.FunctionComponent<ILayerHostProps> = props => {
   const { id, className } = props;
@@ -16,17 +17,4 @@ export const LayerHost: React.FunctionComponent<ILayerHostProps> = props => {
   });
 
   return <div {...props} className={css('ms-LayerHost', className)} />;
-};
-
-const useUnmount = (unmountFunction: () => void) => {
-  const unmountRef = React.useRef(unmountFunction);
-  unmountRef.current = unmountFunction;
-  React.useEffect(
-    () => () => {
-      if (unmountRef.current) {
-        unmountRef.current();
-      }
-    },
-    [],
-  );
 };

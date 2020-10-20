@@ -4,7 +4,7 @@ import { Fabric } from '../../Fabric';
 import { ILayerProps, ILayerStyleProps, ILayerStyles } from './Layer.types';
 import { classNamesFunction, setPortalAttribute, setVirtualParent } from '../../Utilities';
 import { registerLayer, getDefaultTarget, unregisterLayer } from './Layer.notification';
-import { useMergedRefs, useWarnings } from '@uifabric/react-hooks';
+import { useMergedRefs, useWarnings, useUnmount, useMountSync } from '@uifabric/react-hooks';
 import { useDocument } from '@fluentui/react-window-provider';
 
 const getClassNames = classNamesFunction<ILayerStyleProps, ILayerStyles>();
@@ -89,7 +89,15 @@ export const LayerBase: React.FunctionComponent<ILayerProps> = React.forwardRef<
       onLayerDidMount?.();
     };
 
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
+      // If the hostID updates:
+      //
+      // Recreate the layer element.
+      createLayerElement();
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- should only run if the hostId updates.
+    }, [hostId]);
+
+    useMountSync(() => {
       // During the initial render and any hostId updates:
       //
       // Check if the user provided a hostId prop and register the layer with the ID.
@@ -100,8 +108,7 @@ export const LayerBase: React.FunctionComponent<ILayerProps> = React.forwardRef<
       else {
         createLayerElement();
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- should only run on mount and if the hostId updates.
-    }, [hostId]);
+    });
 
     useUnmount(() => {
       // During component unmount:
@@ -200,16 +207,3 @@ function useDebugWarnings(props: ILayerProps) {
     });
   }
 }
-
-const useUnmount = (unmountFunction: () => void) => {
-  const unmountRef = React.useRef(unmountFunction);
-  unmountRef.current = unmountFunction;
-  React.useLayoutEffect(
-    () => () => {
-      if (unmountRef.current) {
-        unmountRef.current();
-      }
-    },
-    [],
-  );
-};
