@@ -69,7 +69,8 @@ export interface IStackSlots {
 export interface IStackProps
   extends ISlottableProps<IStackSlots>,
     IStyleableComponentProps<IStackProps, IStackTokens, IStackStyles>,
-    React.HTMLAttributes<HTMLElement> {
+    React.HTMLAttributes<HTMLElement>,
+    React.RefAttributes<HTMLElement> {
   /**
    * Defines how to render the Stack.
    */
