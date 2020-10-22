@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { createComponent } from '@fluentui/foundation-legacy';
-import { ITextProps } from './Text.types';
-import { TextView } from './Text.view';
-import { TextStyles as styles } from './Text.styles';
+import { styled } from '../../Utilities';
+import { ITextProps, ITextStyles, ITextStyleProps } from './Text.types';
+import { TextBase } from './Text.base';
+import { getStyles } from './Text.styles';
 
-export const Text: React.FunctionComponent<ITextProps> = createComponent(TextView, {
-  displayName: 'Text',
-  styles,
-});
-
-export default Text;
+export const Text: React.FunctionComponent<ITextProps> = styled<ITextProps, ITextStyleProps, ITextStyles>(
+  TextBase,
+  getStyles,
+  undefined,
+  {
+    scope: 'Text',
+  },
+);

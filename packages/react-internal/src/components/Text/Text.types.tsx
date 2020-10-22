@@ -1,13 +1,6 @@
 import * as React from 'react';
-import {
-  IComponentStyles,
-  IHTMLSlot,
-  ISlotProp,
-  IComponent,
-  IStyleableComponentProps,
-  ISlottableProps,
-} from '@fluentui/foundation-legacy';
-import { IFontStyles } from '../../Styling';
+import { ISlotProp, IComponent } from '@fluentui/foundation-legacy';
+import { IFontStyles, IStyle, ITheme } from '../../Styling';
 
 /**
  * {@docCategory Text}
@@ -36,18 +29,17 @@ export type ITextSlot = ISlotProp<ITextProps, string>;
 /**
  * {@docCategory Text}
  */
-export interface ITextSlots {
-  root?: IHTMLSlot;
-}
+// export interface ITextSlots {
+//   root?: IHTMLSlot;
+// }
+
+// export interface ITooltipHostProps extends React.HTMLAttributes<HTMLDivElement | TooltipHostBase> {
 
 /**
  * Inputs to the component
  * {@docCategory Text}
  */
-export interface ITextProps
-  extends ISlottableProps<ITextSlots>,
-    IStyleableComponentProps<ITextProps, ITextTokens, ITextStyles>,
-    React.HTMLAttributes<HTMLElement> {
+export interface ITextProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Optionally render the component as another component type or primitive.
    */
@@ -75,12 +67,25 @@ export interface ITextProps
   nowrap?: boolean;
 }
 
-/**
- * {@docCategory Text}
- */
+// /**
+//  * {@docCategory Text}
+//  */
 export interface ITextTokens {}
 
 /**
  * {@docCategory Text}
  */
-export type ITextStyles = IComponentStyles<ITextSlots>;
+export interface ITextStyleProps {
+  theme: ITheme;
+  className?: string;
+}
+
+/**
+ * {@docCategory Text}
+ */
+export interface ITextStyles {
+  /**
+   * Style for root element.
+   */
+  root: IStyle;
+}
