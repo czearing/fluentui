@@ -1,27 +1,21 @@
-import { getGlobalClassNames } from '../../../Styling';
-import { IStackItemComponent, IStackItemStyles, IStackItemStylesReturnType } from './StackItem.types';
-
-const GlobalClassNames = {
-  root: 'ms-StackItem',
-};
+import { IStyle } from '../../../Styling';
+import { IStackItemStyleProps, IStackItemStyles } from './StackItem.types';
 
 const alignMap: { [key: string]: string } = {
   start: 'flex-start',
   end: 'flex-end',
 };
 
-export const StackItemStyles: IStackItemComponent['styles'] = (props, theme, tokens): IStackItemStylesReturnType => {
-  const { grow, shrink, disableShrink, align, verticalFill, order, className } = props;
-
-  const classNames = getGlobalClassNames(GlobalClassNames, theme);
+export const getStyles = (props: IStackItemStyleProps): IStackItemStyles => {
+  const { margin, padding, grow, shrink, disableShrink, align, verticalFill, order, className, theme } = props;
 
   return {
     root: [
+      'ms-StackItem',
       theme.fonts.medium,
-      classNames.root,
       {
-        margin: tokens.margin,
-        padding: tokens.padding,
+        margin,
+        padding,
         height: verticalFill ? '100%' : 'auto',
         width: 'auto',
       },
@@ -40,8 +34,6 @@ export const StackItemStyles: IStackItemComponent['styles'] = (props, theme, tok
         order: order,
       },
       className,
-    ],
-    // TODO: this cast may be hiding some potential issues with styling and name
-    //        lookups and should be removed
-  } as IStackItemStyles;
+    ] as IStyle,
+  };
 };

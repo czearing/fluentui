@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { IStyle } from '@fluentui/style-utilities';
+import { IStyle, ITheme } from '@fluentui/style-utilities';
+import { IStyleFunctionOrObject } from '../../../Utilities';
 
 /**
  * {@docCategory Stack}
@@ -9,6 +10,11 @@ export interface IStackItemProps extends React.HTMLAttributes<HTMLElement>, Reac
    * Defines a CSS class name used to style the StackItem.
    */
   className?: string;
+
+  /**
+   * Call to provide customized styling that will layer on top of the variant rules.
+   */
+  styles?: IStyleFunctionOrObject<IStackItemStyleProps, IStackItemStyles>;
 
   /**
    * Defines how much to grow the StackItem in proportion to its siblings.
@@ -33,6 +39,11 @@ export interface IStackItemProps extends React.HTMLAttributes<HTMLElement>, Reac
   align?: 'auto' | 'stretch' | 'baseline' | 'start' | 'center' | 'end';
 
   /**
+   * Theme values.
+   */
+  theme: ITheme;
+
+  /**
    * Defines whether the StackItem should take up 100% of the height of its parent.
    * @defaultvalue true
    */
@@ -48,17 +59,27 @@ export interface IStackItemProps extends React.HTMLAttributes<HTMLElement>, Reac
 /**
  * {@docCategory Stack}
  */
-export interface IStackItemStyleProps {
-  /**
-   * Defines the margin to be applied to the StackItem relative to its container.
-   */
-  margin?: number | string;
 
-  /**
-   * Defines the padding to be applied to the StackItem contents relative to its border.
-   */
-  padding?: number | string;
-}
+export type IStackItemStyleProps = Required<Pick<IStackItemProps, 'theme'>> &
+  Pick<IStackItemProps, 'grow' | 'shrink' | 'disableShrink' | 'align' | 'verticalFill' | 'order'> & {
+    /**
+     * Theme values.
+     */
+    theme: ITheme;
+    /**
+     * Root element class name.
+     */
+    className?: string;
+    /**
+     * Defines the margin to be applied to the StackItem relative to its container.
+     */
+    margin?: number | string;
+
+    /**
+     * Defines the padding to be applied to the StackItem contents relative to its border.
+     */
+    padding?: number | string;
+  };
 
 /**
  * {@docCategory Stack}

@@ -1,25 +1,27 @@
-/** @jsx withSlots */
 import * as React from 'react';
-import { withSlots, createComponent, getSlots } from '@fluentui/foundation-legacy';
-import { IStackItemComponent, IStackItemProps, IStackItemSlots } from './StackItem.types';
-import { StackItemStyles as styles } from './StackItem.styles';
+import { classNamesFunction } from '../../../Utilities';
+import { IStackItemStyleProps, IStackItemProps, IStackItemStyles } from './StackItem.types';
 
-const StackItemView: IStackItemComponent['view'] = props => {
-  const { children } = props;
-  if (React.Children.count(children) < 1) {
-    return null;
-  }
+const getClassNames = classNamesFunction<IStackItemStyleProps, IStackItemStyles>();
 
-  const Slots = getSlots<IStackItemProps, IStackItemSlots>(props, {
-    root: 'div',
+export const StackItemBase: React.FunctionComponent<IStackItemProps> = React.forwardRef<
+  HTMLDivElement,
+  IStackItemProps
+>((props, forwardedRef) => {
+  const { children, styles, theme, className } = props;
+
+  const classNames = getClassNames(styles!, {
+    theme: theme!,
+    className,
   });
 
-  return <Slots.root>{children}</Slots.root>;
-};
-
-export const StackItem: React.FunctionComponent<IStackItemProps> = createComponent(StackItemView, {
-  displayName: 'StackItem',
-  styles,
+  return (
+    (React.Children.count(children) > 1 && (
+      <div className={classNames.root} ref={forwardedRef}>
+        {children}
+      </div>
+    )) ||
+    null
+  );
 });
-
-export default StackItem;
+StackItemBase.displayName = 'StackItem';

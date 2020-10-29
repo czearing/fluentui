@@ -99,17 +99,17 @@ export interface IStackProps extends React.HTMLAttributes<HTMLElement>, React.Re
    * @defaultvalue false
    */
   wrap?: boolean;
+
+  /**
+   * Theme values.
+   */
+  theme: ITheme;
 }
 
 /**
  * {@docCategory Stack}
  */
 export interface IStackStyleProps {
-  /**
-   * Theme values.
-   */
-  theme: ITheme;
-
   /**
    * Root element class name.
    */
