@@ -34,6 +34,8 @@ export const getStyles = (props: IStackItemStyleProps): IStackItemStyles => {
         order: order,
       },
       className,
+      // TODO: This cast may be hiding some potential issues with styling and name
+      //       lookups and should be removed
     ] as IStyle,
   };
 };

@@ -12,11 +12,6 @@ export interface IStackItemProps extends React.HTMLAttributes<HTMLElement>, Reac
   className?: string;
 
   /**
-   * Call to provide customized styling that will layer on top of the variant rules.
-   */
-  styles?: IStyleFunctionOrObject<IStackItemStyleProps, IStackItemStyles>;
-
-  /**
    * Defines how much to grow the StackItem in proportion to its siblings.
    */
   grow?: boolean | number | 'inherit' | 'initial' | 'unset';
@@ -41,7 +36,12 @@ export interface IStackItemProps extends React.HTMLAttributes<HTMLElement>, Reac
   /**
    * Theme values.
    */
-  theme: ITheme;
+  theme?: ITheme;
+
+  /**
+   * Call to provide customized styling that will layer on top of the variant rules.
+   */
+  styles?: IStyleFunctionOrObject<IStackItemStyleProps, IStackItemStyles>;
 
   /**
    * Defines whether the StackItem should take up 100% of the height of its parent.
@@ -63,10 +63,6 @@ export interface IStackItemProps extends React.HTMLAttributes<HTMLElement>, Reac
 export type IStackItemStyleProps = Required<Pick<IStackItemProps, 'theme'>> &
   Pick<IStackItemProps, 'grow' | 'shrink' | 'disableShrink' | 'align' | 'verticalFill' | 'order'> & {
     /**
-     * Theme values.
-     */
-    theme: ITheme;
-    /**
      * Root element class name.
      */
     className?: string;
@@ -79,6 +75,10 @@ export type IStackItemStyleProps = Required<Pick<IStackItemProps, 'theme'>> &
      * Defines the padding to be applied to the StackItem contents relative to its border.
      */
     padding?: number | string;
+    /**
+     * Theme values.
+     */
+    theme?: ITheme;
   };
 
 /**

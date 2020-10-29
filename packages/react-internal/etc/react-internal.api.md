@@ -4897,48 +4897,34 @@ export interface ISpinnerStyles {
 export function isRelativeUrl(url: string): boolean;
 
 // @public (undocumented)
-export type IStackComponent = IComponent<IStackProps, IStackTokens, IStackStyles>;
-
-// @public (undocumented)
-export type IStackItemComponent = IComponent<IStackItemProps, IStackItemTokens, IStackItemStyles>;
-
-// @public (undocumented)
-export interface IStackItemProps extends IStackItemSlots, IStyleableComponentProps<IStackItemProps, IStackItemTokens, IStackItemStyles> {
+export interface IStackItemProps extends React.HTMLAttributes<HTMLElement>, React.RefAttributes<HTMLElement> {
     align?: 'auto' | 'stretch' | 'baseline' | 'start' | 'center' | 'end';
     className?: string;
     disableShrink?: boolean;
     grow?: boolean | number | 'inherit' | 'initial' | 'unset';
     order?: number | string;
     shrink?: boolean | number | 'inherit' | 'initial' | 'unset';
+    styles?: IStyleFunctionOrObject<IStackItemStyleProps, IStackItemStyles>;
+    theme?: ITheme;
     verticalFill?: boolean;
 }
 
 // @public (undocumented)
-export type IStackItemSlot = ISlotProp<IStackItemProps>;
-
-// @public (undocumented)
-export interface IStackItemSlots {
-    // (undocumented)
-    root?: IHTMLSlot;
-}
-
-// @public (undocumented)
-export type IStackItemStyles = IComponentStyles<IStackItemSlots>;
-
-// @public (undocumented)
-export type IStackItemStylesReturnType = ReturnType<Extract<IStackItemComponent['styles'], Function>>;
-
-// @public (undocumented)
-export type IStackItemTokenReturnType = ReturnType<Extract<IStackItemComponent['tokens'], Function>>;
-
-// @public (undocumented)
-export interface IStackItemTokens {
+export type IStackItemStyleProps = Required<Pick<IStackItemProps, 'theme'>> & Pick<IStackItemProps, 'grow' | 'shrink' | 'disableShrink' | 'align' | 'verticalFill' | 'order'> & {
+    className?: string;
     margin?: number | string;
     padding?: number | string;
+    theme?: ITheme;
+};
+
+// @public (undocumented)
+export interface IStackItemStyles {
+    // (undocumented)
+    root: IStyle;
 }
 
 // @public (undocumented)
-export interface IStackProps extends ISlottableProps<IStackSlots>, IStyleableComponentProps<IStackProps, IStackTokens, IStackStyles>, React.HTMLAttributes<HTMLElement> {
+export interface IStackProps extends React.HTMLAttributes<HTMLElement>, React.RefAttributes<HTMLElement> {
     as?: React.ElementType<React.HTMLAttributes<HTMLElement>>;
     disableShrink?: boolean;
     // @deprecated
@@ -4953,35 +4939,26 @@ export interface IStackProps extends ISlottableProps<IStackSlots>, IStyleableCom
     // @deprecated
     padding?: number | string;
     reversed?: boolean;
+    styles?: IStyleFunctionOrObject<IStackStyleProps, IStackStyles>;
+    theme?: ITheme;
     verticalAlign?: Alignment;
     verticalFill?: boolean;
     wrap?: boolean;
 }
 
 // @public (undocumented)
-export type IStackSlot = ISlotProp<IStackProps>;
-
-// @public (undocumented)
-export interface IStackSlots {
-    inner?: IHTMLSlot;
-    root?: IHTMLSlot;
-}
-
-// @public (undocumented)
-export type IStackStyles = IComponentStyles<IStackSlots>;
-
-// @public (undocumented)
-export type IStackStylesReturnType = ReturnType<Extract<IStackComponent['styles'], Function>>;
-
-// @public (undocumented)
-export type IStackTokenReturnType = ReturnType<Extract<IStackComponent['tokens'], Function>>;
-
-// @public (undocumented)
-export interface IStackTokens {
+export type IStackStyleProps = Required<Pick<IStackProps, 'theme'>> & Pick<IStackProps, 'verticalFill' | 'horizontal' | 'reversed' | 'grow' | 'gap' | 'wrap' | 'horizontalAlign' | 'verticalAlign' | 'disableShrink'> & {
+    className?: string;
     childrenGap?: number | string;
     maxHeight?: number | string;
     maxWidth?: number | string;
     padding?: number | string;
+};
+
+// @public (undocumented)
+export interface IStackStyles {
+    inner: IStyle;
+    root: IStyle;
 }
 
 // @public (undocumented)
@@ -6554,12 +6531,15 @@ export enum SpinnerType {
 }
 
 // @public (undocumented)
-export const Stack: React.FunctionComponent<IStackProps> & {
-    Item: React.FunctionComponent<IStackItemProps>;
-};
+export const Stack: React.FunctionComponent<IStackProps> & StackStatics;
 
 // @public (undocumented)
 export const StackItem: React.FunctionComponent<IStackItemProps>;
+
+// @public (undocumented)
+export type StackStatics = {
+    Item: typeof StackItem;
+};
 
 // @public (undocumented)
 export class Sticky extends React.Component<IStickyProps, IStickyState> {

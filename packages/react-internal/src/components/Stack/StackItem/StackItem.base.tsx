@@ -8,11 +8,17 @@ export const StackItemBase: React.FunctionComponent<IStackItemProps> = React.for
   HTMLDivElement,
   IStackItemProps
 >((props, forwardedRef) => {
-  const { children, styles, theme, className } = props;
+  const { children, styles, theme, className, grow, shrink, disableShrink, align, verticalFill, order } = props;
 
   const classNames = getClassNames(styles!, {
     theme: theme!,
     className,
+    grow,
+    shrink,
+    disableShrink,
+    align,
+    verticalFill,
+    order,
   });
 
   return (

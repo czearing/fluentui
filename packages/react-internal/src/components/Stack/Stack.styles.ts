@@ -14,6 +14,7 @@ const GlobalClassNames = {
 
 export const getStyles = (props: IStackStyleProps): IStackStyles => {
   const {
+    childrenGap,
     verticalFill,
     horizontal,
     reversed,
@@ -23,16 +24,13 @@ export const getStyles = (props: IStackStyleProps): IStackStyles => {
     verticalAlign,
     disableShrink,
     className,
+    theme,
+    maxHeight,
+    maxWidth,
+    padding,
   } = props;
 
   const classNames = getGlobalClassNames(GlobalClassNames, theme);
-
-  /* eslint-disable deprecation/deprecation */
-  const childrenGap = tokens && tokens.childrenGap ? tokens.childrenGap : props.gap;
-  const maxHeight = tokens && tokens.maxHeight ? tokens.maxHeight : props.maxHeight;
-  const maxWidth = tokens && tokens.maxWidth ? tokens.maxWidth : props.maxWidth;
-  const padding = tokens && tokens.padding ? tokens.padding : props.padding;
-  /* eslint-enable deprecation/deprecation */
 
   const { rowGap, columnGap } = parseGap(childrenGap, theme);
 
