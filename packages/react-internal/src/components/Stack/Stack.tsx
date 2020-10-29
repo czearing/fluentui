@@ -16,17 +16,4 @@ export const Stack: React.FunctionComponent<IStackProps> & StackStatics = styled
 >(StackBase, getStyles, undefined, {
   scope: 'Stack',
 }) as any;
-
-// const StackStatics = {
-//   Item: StackItem,
-// };
-
-// export const Stack: React.FunctionComponent<IStackProps> & {
-//   Item: React.FunctionComponent<IStackItemProps>;
-// } = createComponent(StackView, {
-//   displayName: 'Stack',
-//   styles,
-//   statics: StackStatics,
-// });
-
-// export default Stack;
+Stack.Item = StackItem;

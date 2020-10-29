@@ -27,6 +27,16 @@ export const StackBase: React.FunctionComponent<IStackProps> = React.forwardRef<
     } = props;
 
     const nativeProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(rest, htmlElementProperties);
+
+    // const nativeProps = getNativeProps<React.InputHTMLAttributes<HTMLInputElement>>(props, inputProperties, [
+    //   'className',
+    //   'placeholder',
+    //   'onFocus',
+    //   'onBlur',
+    //   'value',
+    //   'role',
+    // ]);
+
     const stylesProps: IStackStyleProps = {
       theme: theme!,
       verticalFill,
@@ -98,10 +108,10 @@ function useDebugWarning(props: IStackProps) {
       name: 'StackView',
       props,
       deprecations: {
-        gap: 'tokens.childrenGap',
-        maxHeight: 'tokens.maxHeight',
-        maxWidth: 'tokens.maxWidth',
-        padding: 'tokens.padding',
+        gap: 'childrenGap',
+        maxHeight: 'maxHeight',
+        maxWidth: 'maxWidth',
+        padding: 'padding',
       },
     });
   }
