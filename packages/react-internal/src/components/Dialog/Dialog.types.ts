@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { IModalProps } from '../../Modal';
-import { DialogBase } from './Dialog.base';
-import { DialogType, IDialogContentProps } from './DialogContent.types';
+import { IDialogContentProps } from './DialogContent.types';
 import { IButtonProps } from '../../compat/Button';
-import { IWithResponsiveModeState } from '../../utilities/decorators/withResponsiveMode';
 import { IAccessiblePopupProps } from '../../common/IAccessiblePopupProps';
 import { IStyle, ITheme } from '../../Styling';
 import { IRefObject, IStyleFunctionOrObject } from '../../Utilities';
+import { ResponsiveMode } from '../../utilities/decorators/withResponsiveMode';
 import { ICSSRule, ICSSPixelUnitRule } from '@fluentui/merge-styles/lib/IRawStyleBase';
 
 /**
@@ -18,8 +17,8 @@ export interface IDialog {}
  * {@docCategory Dialog}
  */
 export interface IDialogProps
-  extends React.ClassAttributes<DialogBase>,
-    IWithResponsiveModeState,
+  extends React.InputHTMLAttributes<HTMLElement | HTMLInputElement>,
+    React.RefAttributes<HTMLDivElement>,
     IAccessiblePopupProps {
   /**
    * Optional callback to access the IDialog interface. Use this instead of ref for accessing
@@ -59,6 +58,12 @@ export interface IDialogProps
    * Props to be passed through to Modal
    */
   modalProps?: IModalProps;
+
+  /**
+   * The specified responsiveMode value for Modal to use.
+   * @defaultvalue ResponsiveMode.small
+   */
+  responsiveMode?: ResponsiveMode;
 
   /**
    * Whether the dialog is displayed.
@@ -111,19 +116,6 @@ export interface IDialogProps
    * @deprecated Use `onLayerDidMount` instead.
    */
   onLayerMounted?: () => void;
-
-  /**
-   * The type of Dialog to display.
-   * @defaultvalue DialogType.normal
-   * @deprecated Pass through via `dialogContentProps` instead.
-   */
-  type?: DialogType;
-
-  /**
-   * The title text to display at the top of the dialog.
-   * @deprecated Pass through via `dialogContentProps` instead.
-   */
-  title?: string | JSX.Element;
 
   /**
    * The subtext to display in the dialog.

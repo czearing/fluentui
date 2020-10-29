@@ -576,13 +576,7 @@ export const DEFAULT_MASK_CHAR = "_";
 export const Dialog: React.FunctionComponent<IDialogProps>;
 
 // @public (undocumented)
-export class DialogBase extends React.Component<IDialogProps, {}> {
-    constructor(props: IDialogProps);
-    // (undocumented)
-    static defaultProps: IDialogProps;
-    // (undocumented)
-    render(): JSX.Element;
-}
+export const DialogBase: React.FunctionComponent<IDialogProps>;
 
 // @public (undocumented)
 export const DialogContent: React.FunctionComponent<IDialogContentProps>;
@@ -2236,7 +2230,7 @@ export interface IDialogFooterStyles {
 }
 
 // @public (undocumented)
-export interface IDialogProps extends React.ClassAttributes<DialogBase>, IWithResponsiveModeState, IAccessiblePopupProps {
+export interface IDialogProps extends React.InputHTMLAttributes<HTMLElement | HTMLInputElement>, React.RefAttributes<HTMLDivElement>, IAccessiblePopupProps {
     // @deprecated
     ariaDescribedById?: string;
     // @deprecated
@@ -2267,16 +2261,13 @@ export interface IDialogProps extends React.ClassAttributes<DialogBase>, IWithRe
     onLayerDidMount?: () => void;
     // @deprecated
     onLayerMounted?: () => void;
+    responsiveMode?: ResponsiveMode;
     styles?: IStyleFunctionOrObject<IDialogStyleProps, IDialogStyles>;
     // @deprecated
     subText?: string;
     theme?: ITheme;
     // @deprecated
-    title?: string | JSX.Element;
-    // @deprecated
     topButtonsProps?: IButtonProps[];
-    // @deprecated
-    type?: DialogType;
 }
 
 // @public (undocumented)
