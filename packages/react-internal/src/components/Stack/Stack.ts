@@ -1,21 +1,14 @@
 import * as React from 'react';
-import { createComponent } from '@fluentui/foundation-legacy';
-import { StackItem } from './StackItem/StackItem';
-import { styles } from './Stack.styles';
-import { IStackProps } from './Stack.types';
-import { StackView } from './Stack.view';
-import { IStackItemProps } from './StackItem/StackItem.types';
+import { StackBase } from './Stack.base';
+import { getStyles } from './Stack.styles';
+import { IStackProps, IStackStyleProps, IStackStyles } from './Stack.types';
+import { styled } from '@uifabric/utilities';
 
-const StackStatics = {
-  Item: StackItem,
-};
-
-export const Stack: React.FunctionComponent<IStackProps> & {
-  Item: React.FunctionComponent<IStackItemProps>;
-} = createComponent(StackView, {
-  displayName: 'Stack',
-  styles,
-  statics: StackStatics,
-});
-
-export default Stack;
+export const Stack: React.FunctionComponent<IStackProps> = styled<IStackProps, IStackStyleProps, IStackStyles>(
+  StackBase,
+  getStyles,
+  undefined,
+  {
+    scope: 'Stack',
+  },
+);

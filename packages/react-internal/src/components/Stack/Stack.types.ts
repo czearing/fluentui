@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  IComponentStyles,
-  IHTMLSlot,
-  ISlotProp,
-  IComponent,
-  IStyleableComponentProps,
-  ISlottableProps,
-} from '@fluentui/foundation-legacy';
+import { IStyle, ITheme } from '@fluentui/style-utilities';
 
 /**
  * Defines a type made by the union of the different values that the align-items and justify-content flexbox
@@ -26,51 +19,7 @@ export type Alignment =
 /**
  * {@docCategory Stack}
  */
-export type IStackComponent = IComponent<IStackProps, IStackTokens, IStackStyles>;
-
-// The following two types are redundant with IStackComponent but are needed until TS function return widening issue
-// is resolved: https://github.com/Microsoft/TypeScript/issues/241
-// For now, these helper types can be used to provide return type safety when specifying tokens and styles functions.
-
-/**
- * {@docCategory Stack}
- */
-export type IStackTokenReturnType = ReturnType<Extract<IStackComponent['tokens'], Function>>;
-
-/**
- * {@docCategory Stack}
- */
-export type IStackStylesReturnType = ReturnType<Extract<IStackComponent['styles'], Function>>;
-
-/**
- * {@docCategory Stack}
- */
-export type IStackSlot = ISlotProp<IStackProps>;
-
-/**
- * {@docCategory Stack}
- */
-export interface IStackSlots {
-  /**
-   * Defines root slot of the component.
-   */
-  root?: IHTMLSlot;
-
-  /**
-   * Defines a slot that is placed inside the root slot in order to achieve wrapping. Only used when the wrap
-   * property is set to true.
-   */
-  inner?: IHTMLSlot;
-}
-
-/**
- * {@docCategory Stack}
- */
-export interface IStackProps
-  extends ISlottableProps<IStackSlots>,
-    IStyleableComponentProps<IStackProps, IStackTokens, IStackStyles>,
-    React.HTMLAttributes<HTMLElement>,
-    React.RefAttributes<HTMLElement> {
+export interface IStackProps extends React.HTMLAttributes<HTMLElement>, React.RefAttributes<HTMLElement> {
   /**
    * Defines how to render the Stack.
    */
@@ -155,7 +104,17 @@ export interface IStackProps
 /**
  * {@docCategory Stack}
  */
-export interface IStackTokens {
+export interface IStackStyleProps {
+  /**
+   * Theme values.
+   */
+  theme: ITheme;
+
+  /**
+   * Root element class name.
+   */
+  className?: string;
+
   /**
    * Defines the spacing between Stack children.
    * The property is specified as a value for 'row gap', followed optionally by a value for 'column gap'.
@@ -182,4 +141,13 @@ export interface IStackTokens {
 /**
  * {@docCategory Stack}
  */
-export type IStackStyles = IComponentStyles<IStackSlots>;
+export interface IStackStyles {
+  /** Root element. */
+  root: IStyle;
+
+  /**
+   * Defines a slot that is placed inside the root slot in order to achieve wrapping. Only used when the wrap
+   * property is set to true.
+   */
+  inner: IStyle;
+}

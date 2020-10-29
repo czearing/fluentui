@@ -1,48 +1,10 @@
-import {
-  IComponentStyles,
-  IHTMLSlot,
-  IComponent,
-  ISlotProp,
-  IStyleableComponentProps,
-} from '@fluentui/foundation-legacy';
+import * as React from 'react';
+import { IStyle } from '@fluentui/style-utilities';
 
 /**
  * {@docCategory Stack}
  */
-export type IStackItemComponent = IComponent<IStackItemProps, IStackItemTokens, IStackItemStyles>;
-
-/**
- * {@docCategory Stack}
- */
-export type IStackItemSlot = ISlotProp<IStackItemProps>;
-
-/**
- * {@docCategory Stack}
- */
-export interface IStackItemSlots {
-  root?: IHTMLSlot;
-}
-
-// The following two types are redundant with IStackItemComponent but are needed until TS function return widening
-// issue is resolved: https://github.com/Microsoft/TypeScript/issues/241
-// For now, these helper types can be used to provide return type safety when specifying tokens and styles functions.
-
-/**
- * {@docCategory Stack}
- */
-export type IStackItemTokenReturnType = ReturnType<Extract<IStackItemComponent['tokens'], Function>>;
-
-/**
- * {@docCategory Stack}
- */
-export type IStackItemStylesReturnType = ReturnType<Extract<IStackItemComponent['styles'], Function>>;
-
-/**
- * {@docCategory Stack}
- */
-export interface IStackItemProps
-  extends IStackItemSlots,
-    IStyleableComponentProps<IStackItemProps, IStackItemTokens, IStackItemStyles> {
+export interface IStackItemProps extends React.HTMLAttributes<HTMLElement>, React.RefAttributes<HTMLElement> {
   /**
    * Defines a CSS class name used to style the StackItem.
    */
@@ -86,7 +48,7 @@ export interface IStackItemProps
 /**
  * {@docCategory Stack}
  */
-export interface IStackItemTokens {
+export interface IStackItemStyleProps {
   /**
    * Defines the margin to be applied to the StackItem relative to its container.
    */
@@ -101,4 +63,6 @@ export interface IStackItemTokens {
 /**
  * {@docCategory Stack}
  */
-export type IStackItemStyles = IComponentStyles<IStackItemSlots>;
+export interface IStackItemStyles {
+  root: IStyle;
+}
