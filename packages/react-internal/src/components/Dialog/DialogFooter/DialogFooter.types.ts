@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { DialogFooterBase } from './DialogFooter.base';
-import { IStyle, ITheme } from '../../Styling';
-import { IRefObject, IStyleFunctionOrObject } from '../../Utilities';
+import { IStyle, ITheme } from '../../../Styling';
+import { IRefObject, IStyleFunctionOrObject } from '../../../Utilities';
 
 /**
  * {@docCategory Dialog}
@@ -11,8 +10,9 @@ export interface IDialogFooter {}
 /**
  * {@docCategory Dialog}
  */
-// eslint-disable-next-line deprecation/deprecation
-export interface IDialogFooterProps extends React.Props<DialogFooterBase> {
+export interface IDialogFooterProps
+  extends React.InputHTMLAttributes<HTMLElement>,
+    React.RefAttributes<HTMLDivElement> {
   /**
    * Gets the component ref.
    */

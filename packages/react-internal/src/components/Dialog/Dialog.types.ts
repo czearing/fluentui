@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IModalProps } from '../../Modal';
-import { IDialogContentProps } from './DialogContent.types';
+import { IDialogContentProps } from './DialogContent/DialogContent.types';
 import { IButtonProps } from '../../compat/Button';
 import { IAccessiblePopupProps } from '../../common/IAccessiblePopupProps';
 import { IStyle, ITheme } from '../../Styling';
@@ -17,7 +17,7 @@ export interface IDialog {}
  * {@docCategory Dialog}
  */
 export interface IDialogProps
-  extends React.InputHTMLAttributes<HTMLElement | HTMLInputElement>,
+  extends React.InputHTMLAttributes<HTMLElement>,
     React.RefAttributes<HTMLDivElement>,
     IAccessiblePopupProps {
   /**

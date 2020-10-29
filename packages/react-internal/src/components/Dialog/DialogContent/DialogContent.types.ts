@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { DialogContentBase } from './DialogContent.base';
-import { IButtonProps } from '../../compat/Button';
-import { ResponsiveMode } from '../../utilities/decorators/withResponsiveMode';
-import { IStyle, ITheme } from '../../Styling';
-import { IRefObject, IStyleFunctionOrObject } from '../../Utilities';
+import { IButtonProps } from '../../../compat/Button';
+import { ResponsiveMode } from '../../../utilities/decorators/withResponsiveMode';
+import { IStyle, ITheme } from '../../../Styling';
+import { IRefObject, IStyleFunctionOrObject } from '../../../Utilities';
 
 export { ResponsiveMode }; // Exported because the type is an optional prop and not exported otherwise.
 
@@ -15,7 +14,9 @@ export interface IDialogContent {}
 /**
  * {@docCategory Dialog}
  */
-export interface IDialogContentProps extends React.ClassAttributes<DialogContentBase> {
+export interface IDialogContentProps
+  extends React.InputHTMLAttributes<HTMLElement>,
+    React.RefAttributes<HTMLDivElement> {
   /**
    * Optional callback to access the IDialogContent interface. Use this instead of ref for accessing
    * the public methods and properties of the component.

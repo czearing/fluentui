@@ -5,7 +5,7 @@ import {
   IconFontSizes,
   ScreenWidthMinSmall,
   ScreenWidthMaxSmall,
-} from '../../Styling';
+} from '../../../Styling';
 
 const GlobalClassNames = {
   contentLgHeader: 'ms-Dialog-lgHeader',

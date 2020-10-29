@@ -4,8 +4,8 @@ import * as renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
 import { Dialog } from './Dialog';
 import { DialogBase } from './Dialog.base';
-import { DialogContent } from './DialogContent';
-import { DialogType } from './DialogContent.types'; // for express fluent assertions
+import { DialogContent } from './DialogContent/DialogContent';
+import { DialogType } from './DialogContent/DialogContent.types'; // for express fluent assertions
 import { resetIds, setWarningCallback } from '@fluentui/utilities';
 import { act } from 'react-dom/test-utils';
 import { isConformant } from '../../common/isConformant';

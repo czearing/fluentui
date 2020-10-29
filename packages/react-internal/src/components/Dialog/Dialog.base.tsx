@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { classNamesFunction } from '../../Utilities';
 import { IDialogProps, IDialogStyleProps, IDialogStyles } from './Dialog.types';
-import { DialogType, IDialogContentProps } from './DialogContent.types';
+import { DialogType, IDialogContentProps } from './DialogContent/DialogContent.types';
+import { DialogContent } from './DialogContent/DialogContent';
 import { Modal, IModalProps, IDragOptions } from '../../Modal';
 import { ILayerProps } from '../../Layer';
 import { ResponsiveMode } from '../../utilities/decorators/withResponsiveMode';
 import { useId, useConst, useWarnings } from '@fluentui/react-hooks';
 
 const getClassNames = classNamesFunction<IDialogStyleProps, IDialogStyles>();
-
-import { DialogContent } from './DialogContent';
 
 const DefaultModalProps: IModalProps = {
   isDarkOverlay: false,
@@ -112,7 +111,6 @@ export const DialogBase: React.FunctionComponent<IDialogProps> = React.forwardRe
       ...props.dialogContentProps,
       draggableHeaderClassName: internalState.dialogDraggableClassName,
       titleProps: {
-        // eslint-disable-next-line deprecation/deprecation
         id: props.dialogContentProps?.titleId || defaultTitleTextId,
         ...props.dialogContentProps?.titleProps,
       },
@@ -155,6 +153,7 @@ export const DialogBase: React.FunctionComponent<IDialogProps> = React.forwardRe
         onDismissed={mergedModalProps.onDismissed}
         responsiveMode={responsiveMode}
         {...mergedModalProps}
+        ref={forwardedRef}
         isDarkOverlay={mergedModalProps.isDarkOverlay}
         isBlocking={mergedModalProps.isBlocking}
         isOpen={isOpen !== undefined ? isOpen : !hidden}
