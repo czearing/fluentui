@@ -1,8 +1,35 @@
 # Change Log - @fluentui/react-internal
 
-This log was last generated on Tue, 24 Nov 2020 12:29:52 GMT and should not be manually modified.
+This log was last generated on Wed, 02 Dec 2020 12:37:40 GMT and should not be manually modified.
 
 <!-- Start content -->
+
+## [8.0.0-beta.21](https://github.com/microsoft/fluentui/tree/@fluentui/react-internal_v8.0.0-beta.21)
+
+Wed, 02 Dec 2020 12:37:40 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@fluentui/react-internal_v8.0.0-beta.20..@fluentui/react-internal_v8.0.0-beta.21)
+
+### Changes
+
+- SpinButton: remove defaults for min and max ([PR #16109](https://github.com/microsoft/fluentui/pull/16109) by elcraig@microsoft.com)
+
+## [8.0.0-beta.20](https://github.com/microsoft/fluentui/tree/@fluentui/react-internal_v8.0.0-beta.20)
+
+Tue, 01 Dec 2020 12:38:05 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@fluentui/react-internal_v8.0.0-beta.19..@fluentui/react-internal_v8.0.0-beta.20)
+
+### Changes
+
+- SpinButton: Fix function component conversion issues revealed by eslint-plugin-react-hooks ([PR #15431](https://github.com/microsoft/fluentui/pull/15431) by czearing@outlook.com)
+
+## [8.0.0-beta.19](https://github.com/microsoft/fluentui/tree/@fluentui/react-internal_v8.0.0-beta.19)
+
+Thu, 26 Nov 2020 12:28:18 GMT 
+[Compare changes](https://github.com/microsoft/fluentui/compare/@fluentui/react-internal_v8.0.0-beta.18..@fluentui/react-internal_v8.0.0-beta.19)
+
+### Changes
+
+- Only attempt to handle keydown event for tooltip close if the tooltip is currently open ([PR #16011](https://github.com/microsoft/fluentui/pull/16011) by stefhan@microsoft.com)
 
 ## [8.0.0-beta.18](https://github.com/microsoft/fluentui/tree/@fluentui/react-internal_v8.0.0-beta.18)
 
