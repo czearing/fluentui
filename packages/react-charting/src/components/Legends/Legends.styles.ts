@@ -37,7 +37,7 @@ export const getStyles = (props: ILegendStyleProps): ILegendsStyles => {
     rect: {
       selectors: {
         [HighContrastSelector]: {
-          backgroundImage: `linear-gradient(to right, ${props.colorOnSelectedState}, ${props.colorOnSelectedState})`,
+          content: `linear-gradient(to right, ${props.colorOnSelectedState}, ${props.colorOnSelectedState})`,
           opacity: props.colorOnSelectedState === palette.white ? '0.6' : '',
         },
       },

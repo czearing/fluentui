@@ -277,7 +277,7 @@ exports[`LineChart snapShot testing renders LineChart correctly 1`] = `
                           width: 12px;
                         }
                         @media screen and (-ms-high-contrast: active){& {
-                          background-image: linear-gradient(to right, red, red);
+                          content: linear-gradient(to right, red, red);
                           opacity: ;
                         }
                   />
@@ -568,7 +568,7 @@ exports[`LineChart snapShot testing renders enabledLegendsWrapLines correctly 1`
                     width: 12px;
                   }
                   @media screen and (-ms-high-contrast: active){& {
-                    background-image: linear-gradient(to right, red, red);
+                    content: linear-gradient(to right, red, red);
                     opacity: ;
                   }
             />
@@ -1037,7 +1037,7 @@ exports[`LineChart snapShot testing renders hideTooltip correctly 1`] = `
                           width: 12px;
                         }
                         @media screen and (-ms-high-contrast: active){& {
-                          background-image: linear-gradient(to right, red, red);
+                          content: linear-gradient(to right, red, red);
                           opacity: ;
                         }
                   />
@@ -1345,7 +1345,7 @@ exports[`LineChart snapShot testing renders showXAxisLablesTooltip correctly 1`]
                           width: 12px;
                         }
                         @media screen and (-ms-high-contrast: active){& {
-                          background-image: linear-gradient(to right, red, red);
+                          content: linear-gradient(to right, red, red);
                           opacity: ;
                         }
                   />
@@ -1653,7 +1653,7 @@ exports[`LineChart snapShot testing renders wrapXAxisLables correctly 1`] = `
                           width: 12px;
                         }
                         @media screen and (-ms-high-contrast: active){& {
-                          background-image: linear-gradient(to right, red, red);
+                          content: linear-gradient(to right, red, red);
                           opacity: ;
                         }
                   />
@@ -1961,7 +1961,7 @@ exports[`LineChart snapShot testing renders yAxisTickFormat correctly 1`] = `
                           width: 12px;
                         }
                         @media screen and (-ms-high-contrast: active){& {
-                          background-image: linear-gradient(to right, red, red);
+                          content: linear-gradient(to right, red, red);
                           opacity: ;
                         }
                   />
