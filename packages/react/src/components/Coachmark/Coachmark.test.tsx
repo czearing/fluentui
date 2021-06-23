@@ -4,6 +4,7 @@ import { safeCreate, safeMount } from '@fluentui/test-utilities';
 import { resetIds } from '@fluentui/utilities';
 import { isConformant } from '../../common/isConformant';
 import * as path from 'path';
+import { act } from 'react-test-renderer';
 
 const ReactDOM = require('react-dom');
 
@@ -12,10 +13,12 @@ describe('Coachmark', () => {
 
   beforeEach(() => {
     resetIds();
+    jest.useFakeTimers();
   });
 
   afterEach(() => {
     ReactDOM.createPortal = createPortal;
+    jest.useRealTimers();
   });
 
   // Conformance Tests:
@@ -61,6 +64,27 @@ describe('Coachmark', () => {
     safeCreate(<Coachmark beaconColorOne="green" beaconColorTwo="blue" color="red" target="test" />, component => {
       const tree = component!.toJSON();
       expect(tree).toMatchSnapshot();
+    });
+  });
+
+  // Behavior Tests:
+  it('correctly handles (onAnimationOpenStart)', () => {
+    const onAnimationOpenStart = jest.fn();
+
+    safeMount(<Coachmark onAnimationOpenStart={onAnimationOpenStart} target="test-target" />, component => {
+      expect(onAnimationOpenStart).toHaveBeenCalledTimes(0);
+
+      act(() => {
+        jest.runOnlyPendingTimers();
+      });
+
+      expect(onAnimationOpenStart).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        jest.runOnlyPendingTimers();
+      });
+
+      expect(onAnimationOpenStart).toHaveBeenCalledTimes(1);
     });
   });
 
