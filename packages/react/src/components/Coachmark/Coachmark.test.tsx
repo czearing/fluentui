@@ -4,21 +4,26 @@ import { safeCreate, safeMount } from '@fluentui/test-utilities';
 import { resetIds } from '@fluentui/utilities';
 import { isConformant } from '../../common/isConformant';
 import * as path from 'path';
-import { act } from 'react-test-renderer';
 
 const ReactDOM = require('react-dom');
 
 describe('Coachmark', () => {
   const createPortal = ReactDOM.createPortal;
 
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   beforeEach(() => {
     resetIds();
-    jest.useFakeTimers();
   });
 
   afterEach(() => {
     ReactDOM.createPortal = createPortal;
-    jest.useRealTimers();
   });
 
   // Conformance Tests:
@@ -68,21 +73,46 @@ describe('Coachmark', () => {
   });
 
   // Behavior Tests:
+  // it('correctly handles (onMouseMove)', () => {
+  //   const onMouseMove = jest.fn();
+
+  //   safeMount(<Coachmark onMouseMove={onMouseMove} target="test-target" />, component => {
+  //     expect(onMouseMove).toHaveBeenCalledTimes(0);
+  //     component.update();
+  //     component.simulate('mousedown', { type: 'mousedown', clientX: 1000, clientY: 1000, buttons: 1 });
+  //     component.simulate('mousemove', { type: 'mousemove', clientX: 2000, clientY: 1000 });
+  //     component.simulate('mouseup');
+
+  //     expect(onMouseMove).toHaveBeenCalledTimes(1);
+
+  //     // component.simulate('mousemove', { type: 'mousemove', clientX: 0, clientY: 20 });
+  //     // expect(onMouseMove).toHaveBeenCalledTimes(1);
+  //   });
+  // });
+
+  // it('correctly handles (onDismiss)', () => {
+  //   const onDismiss = jest.fn();
+
+  //   safeMount(<Coachmark onDismiss={onDismiss} target="test-target" />, component => {
+  //     expect(onDismiss).toHaveBeenCalledTimes(0);
+
+  //     component.setProps({ isCollapsed: false });
+  //     component.update();
+  //     expect(onDismiss).toHaveBeenCalledTimes(1);
+  //   });
+  // });
+
   it('correctly handles (onAnimationOpenStart)', () => {
     const onAnimationOpenStart = jest.fn();
 
     safeMount(<Coachmark onAnimationOpenStart={onAnimationOpenStart} target="test-target" />, component => {
       expect(onAnimationOpenStart).toHaveBeenCalledTimes(0);
 
-      act(() => {
-        jest.runOnlyPendingTimers();
-      });
+      jest.runOnlyPendingTimers();
 
       expect(onAnimationOpenStart).toHaveBeenCalledTimes(1);
 
-      act(() => {
-        jest.runOnlyPendingTimers();
-      });
+      jest.runOnlyPendingTimers();
 
       expect(onAnimationOpenStart).toHaveBeenCalledTimes(1);
     });
