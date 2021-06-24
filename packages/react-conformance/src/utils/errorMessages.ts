@@ -19,6 +19,9 @@ export const errorMessageColors = {
   sectionBackground: chalk.white.bold.italic.bgHex('#2e2e2e'),
 };
 
+/**
+ * Utility used for displaying error messages within defaultTests.
+ */
 export function getErrorMessage(params: {
   /** Component display name */
   displayName: string;
