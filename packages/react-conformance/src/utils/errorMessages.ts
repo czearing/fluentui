@@ -3,7 +3,6 @@ import { EOL } from 'os';
 
 /** Console message colors used in the test. */
 export const errorMessageColors = {
-  // Colors for the defaultErrorMessage section.
   testErrorText: chalk.yellow,
   testErrorName: chalk.white,
   testErrorInfo: chalk.green,
@@ -20,7 +19,18 @@ export const errorMessageColors = {
 };
 
 /**
- * Utility used for displaying error messages within defaultTests.
+ * Utility used for displaying error messages for defaultTests.
+ *
+ * ### Message Layout:
+ *
+ * * It appears that `displayName`
+ * * `overview`
+ * * `details`
+ * * Possible solutions: `suggestions`
+ * * Also check the original error message in case there's some other issue: `error`
+ *
+ * ### Example
+ *
  */
 export function getErrorMessage(params: {
   /** Component display name */
