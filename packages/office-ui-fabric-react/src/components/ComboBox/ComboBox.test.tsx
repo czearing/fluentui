@@ -411,7 +411,7 @@ describe('ComboBox', () => {
       expect(wrapper.find('input').props().value).toEqual('One');
     },
   );
-
+  //
   it('Can change selected option with keyboard', () => {
     wrapper = mount(<ComboBox defaultSelectedKey="1" options={DEFAULT_OPTIONS2} />);
     wrapper.find('input').simulate('keydown', { which: KeyCodes.down });
