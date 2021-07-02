@@ -75,12 +75,12 @@ export const TeachingBubbleBase: React.FunctionComponent<ITeachingBubbleProps> =
 
   return (
     <Callout
+      className={classNames.root}
       target={target || targetElement}
       onDismiss={onDismiss}
-      {...calloutProps}
-      className={classNames.root}
       styles={calloutStyles}
       hideOverflow
+      {...calloutProps}
     >
       <div ref={mergedRootRef}>
         <TeachingBubbleContent {...props} />
