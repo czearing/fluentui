@@ -100,7 +100,7 @@ export const TeachingBubbleContentBase: React.FunctionComponent<ITeachingBubbleP
 
     headerContent = (
       <div className={classNames.header}>
-        <HeaderWrapperAs role="heading" className={classNames.headline} id={ariaLabelledBy}>
+        <HeaderWrapperAs className={classNames.headline} role="heading" id={ariaLabelledBy}>
           {headline}
         </HeaderWrapperAs>
       </div>
@@ -124,8 +124,8 @@ export const TeachingBubbleContentBase: React.FunctionComponent<ITeachingBubbleP
       <Stack className={classNames.footer} horizontal horizontalAlign={customFooterContent ? 'space-between' : 'end'}>
         <Stack.Item align="center">{<span>{customFooterContent}</span>}</Stack.Item>
         <Stack.Item>
-          {secondaryButtonProps && <DefaultButton {...secondaryButtonProps} className={classNames.secondaryButton} />}
-          {primaryButtonProps && <PrimaryButton {...primaryButtonProps} className={classNames.primaryButton} />}
+          {secondaryButtonProps && <DefaultButton className={classNames.secondaryButton} {...secondaryButtonProps} />}
+          {primaryButtonProps && <PrimaryButton className={classNames.primaryButton} {...primaryButtonProps} />}
         </Stack.Item>
       </Stack>
     );
