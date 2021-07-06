@@ -22,7 +22,8 @@ export const LinkBasicExample: React.FunctionComponent = () => {
         It's not recommended to use Links with imgs because Links are meant to render textual inline content. Buttons
         are inline-block or in the case of imgs, block. However, it is possible to create a linked image button by
         making a button with an unstyled variant and adding the img content and href source to that.
-      </Text>
+      </Text>{' '}
+      This is a test
     </div>
   );
 };
